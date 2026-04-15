@@ -1,0 +1,1475 @@
+{
+  "글로벌비즈니스학부": {
+    "label": "경제학트랙/금융보험트랙",
+    "courses": [
+      {
+        "code": "GBA1002",
+        "name": "경제수학",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1034",
+        "name": "기초거시경제학",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1003",
+        "name": "미시경제학",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "GBA1006",
+        "name": "거시경제학",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "GBA1004",
+        "name": "경제학사",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1005",
+        "name": "정보경제학",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1007",
+        "name": "환경경제학",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1008",
+        "name": "문화경제학",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1009",
+        "name": "경제통계학",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1010",
+        "name": "공공경제학",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1011",
+        "name": "노동경제학",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1012",
+        "name": "국제경제학",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1016",
+        "name": "계량경제학",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1014",
+        "name": "경제발전론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1015",
+        "name": "금융경제학",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1030",
+        "name": "실용경제",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1033",
+        "name": "도시및지역경제학",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1038",
+        "name": "환율과개방거시경제",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1019",
+        "name": "엔지니어링경제학",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1021",
+        "name": "중앙은행론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1022",
+        "name": "산업조직론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1032",
+        "name": "비즈니스경제학",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1024",
+        "name": "글로벌경제의이론과실제",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1025",
+        "name": "행동경제학",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1026",
+        "name": "경제예측및시계열분석",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1035",
+        "name": "프로그램을활용한 경제분석",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1037",
+        "name": "캡스톤디자인",
+        "grade": "4",
+        "semester": "2",
+        "credits": 1,
+        "required": false
+      },
+      {
+        "code": "GBA1031",
+        "name": "졸업시험",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "GBA1029",
+        "name": "현장실습1",
+        "grade": "2.3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA1036",
+        "name": "표준현장실습1",
+        "grade": "2.3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2006",
+        "name": "경제경영수학",
+        "grade": "1",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2007",
+        "name": "경제경영통계학",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2002",
+        "name": "손해보험론",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2008",
+        "name": "금융계량분석",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2009",
+        "name": "증권시장과투자원리",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2010",
+        "name": "보험법규론",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2003",
+        "name": "생명보험론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2004",
+        "name": "투자원론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2011",
+        "name": "시사금융원서",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2012",
+        "name": "손해보험상품론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2013",
+        "name": "금융론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "GBA2014",
+        "name": "손해사정론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2015",
+        "name": "재무학원론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2016",
+        "name": "사회보험론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2017",
+        "name": "국제경제학",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2018",
+        "name": "재무정책",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2019",
+        "name": "채권투자분석",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2025",
+        "name": "해상보험",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2021",
+        "name": "국제금융론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2023",
+        "name": "금융기관론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2024",
+        "name": "선물및옵션시장론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2005",
+        "name": "금융기관경영론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2020",
+        "name": "보험분쟁사례분석",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2022",
+        "name": "금융정보시스템개론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2031",
+        "name": "캡스톤디자인",
+        "grade": "4",
+        "semester": "2",
+        "credits": 1,
+        "required": false
+      },
+      {
+        "code": "GBA2001",
+        "name": "졸업논문",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "GBA2028",
+        "name": "현장실습1",
+        "grade": "2.3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "GBA2030",
+        "name": "표준현장실습1",
+        "grade": "2.3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      }
+    ]
+  },
+  "국제무역학과": {
+    "label": "국제무역학과",
+    "courses": [
+      {
+        "code": "ITA0183",
+        "name": "무역학원론",
+        "grade": "1",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "ITA0154",
+        "name": "국제무역론",
+        "grade": "1",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0153",
+        "name": "무역상무론",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0157",
+        "name": "국제경영론",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0184",
+        "name": "무역과회계",
+        "grade": "1",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0145",
+        "name": "국제상거래의 실제와관습",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0149",
+        "name": "무역영어통신문",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0160",
+        "name": "관세법",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0161",
+        "name": "외환론",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0180",
+        "name": "국제통상론",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0185",
+        "name": "FTA관세특례법",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0158",
+        "name": "국제무역계약론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0159",
+        "name": "국제마케팅론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0166",
+        "name": "관세율표및상품학",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0187",
+        "name": "국제경제론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0193",
+        "name": "국제물류및국제운송론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0195",
+        "name": "FTA원산지기준",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0156",
+        "name": "국제서비스경영론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0165",
+        "name": "무역적하보험론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0171",
+        "name": "국제경제관계론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0173",
+        "name": "무역결제론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0188",
+        "name": "관세법실무",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0194",
+        "name": "물류정책및전략론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0146",
+        "name": "경제통합과FTA실무",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0163",
+        "name": "국제금융론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0168",
+        "name": "무역정책론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0175",
+        "name": "한국무역법규론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0189",
+        "name": "무역영어",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0190",
+        "name": "상사중재론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0164",
+        "name": "글로벌시장조사론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0167",
+        "name": "한국무역론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0174",
+        "name": "전자무역론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0176",
+        "name": "국제협상론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0182",
+        "name": "무역창업과경영",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0152",
+        "name": "졸업논문",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "ITA0179",
+        "name": "캡스톤디자인",
+        "grade": "2.3.4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": false
+      },
+      {
+        "code": "ITA0177",
+        "name": "현장실습1",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0178",
+        "name": "현장실습3",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 6,
+        "required": false
+      },
+      {
+        "code": "ITA0191",
+        "name": "표준현장실습1",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ITA0192",
+        "name": "표준현장실습3",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 6,
+        "required": false
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      }
+    ]
+  },
+  "경영학과": {
+    "label": "경영학과",
+    "courses": [
+      {
+        "code": "BAA0001",
+        "name": "인사관리",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "BAA0002",
+        "name": "마케팅",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "BAA0003",
+        "name": "경영과학",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0004",
+        "name": "증권시장론",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0074",
+        "name": "재무회계",
+        "grade": "2",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0005",
+        "name": "생산관리",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "BAA0010",
+        "name": "재무관리",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "BAA0006",
+        "name": "조직행동론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0081",
+        "name": "전산회계",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0090",
+        "name": "마케팅조사론 (캡스톤디자인)",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0007",
+        "name": "투자론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0012",
+        "name": "유통관리론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0021",
+        "name": "조직심리학",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0079",
+        "name": "ERP정보관리",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0086",
+        "name": "국제경영론",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0017",
+        "name": "노사관계론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0020",
+        "name": "기업재무론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0062",
+        "name": "소비자행동론",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0075",
+        "name": "원가회계",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0089",
+        "name": "경영데이터분석",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0011",
+        "name": "임금관리",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0023",
+        "name": "선물및옵션",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0063",
+        "name": "마케팅전략",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0080",
+        "name": "공급사슬관리",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0088",
+        "name": "경영전략론",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0028",
+        "name": "경영분석",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0061",
+        "name": "인간관계론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0076",
+        "name": "광고론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0087",
+        "name": "국제마케팅",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "BAA0030",
+        "name": "졸업논문",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "BAA0073",
+        "name": "캡스톤디자인",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": false
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      }
+    ]
+  },
+  "회계학과": {
+    "label": "회계학과",
+    "courses": [
+      {
+        "code": "ACA0005",
+        "name": "원가회계",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "ACA0007",
+        "name": "중급재무회계2",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "ACA0070",
+        "name": "세법개론Ⅱ",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0101",
+        "name": "회계자료처리론",
+        "grade": "2",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0010",
+        "name": "세무회계",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "ACA0076",
+        "name": "전산회계",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "ACA0001",
+        "name": "재무관리",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0008",
+        "name": "관리회계(캡스톤디자인)",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0099",
+        "name": "정부회계",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0108",
+        "name": "중급재무회계3",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0006",
+        "name": "회계정보시스템",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0015",
+        "name": "재무회계연습",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0016",
+        "name": "원가관리회계연습",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0049",
+        "name": "전산세무회계",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0107",
+        "name": "고급재무회계 (캡스톤디자인)",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0009",
+        "name": "회계감사",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0051",
+        "name": "재무제표분석",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0061",
+        "name": "ERP회계·인사시스템",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0062",
+        "name": "ERP제조·물류시스템",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0100",
+        "name": "전공영어특강 (캡스톤디자인)",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0011",
+        "name": "회계이론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0025",
+        "name": "회계감사연습",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0060",
+        "name": "세무회계연습",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0072",
+        "name": "컨설팅론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0026",
+        "name": "졸업논문",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "ACA0103",
+        "name": "현장실습1",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0104",
+        "name": "현장실습3",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 6,
+        "required": false
+      },
+      {
+        "code": "ACA0105",
+        "name": "표준현장실습1",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "ACA0106",
+        "name": "표준현장실습3",
+        "grade": "3.4",
+        "semester": "계 절",
+        "credits": 6,
+        "required": false
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      }
+    ]
+  },
+  "세무학과": {
+    "label": "세무학과",
+    "courses": [
+      {
+        "code": "TXA0016",
+        "name": "소득세회계",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0017",
+        "name": "원가회계",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0028",
+        "name": "국제조세법",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0052",
+        "name": "법인세1",
+        "grade": "3",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0055",
+        "name": "법인세2",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": true
+      },
+      {
+        "code": "TXA0018",
+        "name": "지방세법",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0022",
+        "name": "관리회계",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0031",
+        "name": "조세정책",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0069",
+        "name": "부가가치세회계",
+        "grade": "3",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0025",
+        "name": "법인세회계",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0058",
+        "name": "고급재무회계",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0061",
+        "name": "원천징수전산실무",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0064",
+        "name": "국제조세정책",
+        "grade": "4",
+        "semester": "1",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0029",
+        "name": "세무학세미나",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0057",
+        "name": "지방재정론",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0059",
+        "name": "세법특강",
+        "grade": "4",
+        "semester": "2",
+        "credits": 3,
+        "required": false
+      },
+      {
+        "code": "TXA0063",
+        "name": "졸업시험",
+        "grade": "4",
+        "semester": "1,2",
+        "credits": 0,
+        "required": true
+      },
+      {
+        "code": "1,2학기",
+        "name": "계절수업",
+        "grade": "구 분",
+        "semester": "1학기",
+        "credits": 3,
+        "required": false
+      }
+    ]
+  }
+}

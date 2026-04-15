@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>나의 시간표</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="index">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">TIME TABLE</div>
+      <nav class="side-nav">
+        <a class="side-link active" href="index.html">나의 시간표</a>
+        <a class="side-link" href="generate.html">시간표 생성</a>
+        <a class="side-link" href="settings.html">설정</a>
+      </nav>
+      <div class="side-logout">
+        <button class="logout-btn" type="button">로그아웃</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <div>
+          <h1>나의 시간표</h1>
+          <p class="subtext">과목 블록을 클릭하면 삭제할 수 있습니다.</p>
+        </div>
+        <div class="header-actions">
+          <div class="field compact">
+            <label for="yearSelect">학년도</label>
+            <select id="yearSelect"></select>
+          </div>
+          <div class="field compact">
+            <label for="semesterSelect">학기</label>
+            <select id="semesterSelect">
+              <option value="1학기">1학기</option>
+              <option value="2학기">2학기</option>
+              <option value="여름학기">여름학기</option>
+              <option value="겨울학기">겨울학기</option>
+            </select>
+          </div>
+        </div>
+      </header>
+
+      <section class="summary-grid two">
+        <article class="summary-card">
+          <span class="summary-label">신청학점</span>
+          <strong class="summary-value"><span id="appliedCredits">15</span>학점</strong>
+          <p class="summary-help">이번 학기에 담은 과목 기준</p>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">현재까지 총 학점</span>
+          <strong class="summary-value"><span id="totalCredits">82</span>학점</strong>
+          <p class="summary-help">누적 취득 학점</p>
+        </article>
+      </section>
+
+      <section class="board-grid">
+        <article class="card timetable-card">
+          <div class="card-head">
+            <h2>주간 시간표</h2>
+            <span class="small-note">09:00 ~ 18:00 / 30분 기준 정렬</span>
+          </div>
+          <div id="timetableContainer" class="timetable-container"></div>
+        </article>
+
+        <aside class="side-stack">
+          <article class="card">
+            <div class="card-head">
+              <h2>바로가기</h2>
+            </div>
+            <div class="button-group">
+              <a class="primary-btn full" href="generate.html">시간표 생성하기</a>
+              <a class="secondary-btn full" href="settings.html">설정</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h2>안내</h2>
+            </div>
+            <ul class="info-list">
+              <li>시간은 왼쪽에만 고정해 표시합니다.</li>
+              <li>과목 블록은 30분 단위로 정확히 맞춰 들어갑니다.</li>
+              <li>서로 다른 과목은 서로 다른 색으로 표시됩니다.</li>
+            </ul>
+          </article>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# 의존성
+node_modules/
+
+# 크롤링 캐시 (서버에서 자동 생성됨)
+data/courses_*.json
+
+# 개발 도구 & 분석 스크립트
+html_dump/
+*.py
+crawl_*.js
+extract_*.js
+*.txt
+out.txt
+
+# 개발 환경 설정
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

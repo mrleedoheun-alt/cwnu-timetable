@@ -1,0 +1,7197 @@
+{
+  "글로벌비즈니스학부": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 21,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 36,
+      "심화전공": 21,
+      "융합전공": 33
+    },
+    "required_courses": [
+      {
+        "name": "미시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "거시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "금융론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "국제무역학과": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 42,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "무역학원론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4"
+      }
+    ]
+  },
+  "경영학과": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 30,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "경영통계",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "인사관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "마케팅",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "생산관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "재무관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "회계학과": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "중급재무회계1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "원가회계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "중급재무회계2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "세무회계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "전산회계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "세무학과": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 12,
+      "전공선택": 30,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "조세법총론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "부가가치세",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "조세론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "법인세2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "산업시스템공학과": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 29,
+      "심화전공": 35,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "생산관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "응용통계학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "선형계획법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "제조공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "품질공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "SCM",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "캡스톤디자인",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "스마트오션모빌리티공학과": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 13
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 35,
+      "심화전공": 25,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "응용수학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "힘과운동의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "오션모빌리티복원성",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "스마트그린공학부": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 15,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 33,
+      "심화전공": 31,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "수질관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경GIS및원격탐사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대기오염개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "바이오에너지공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "환경화학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "폐기물에너지공학 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "수문학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본수리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본구조역학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "철근콘크리트공학2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "기초공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "도로공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "지진공학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문(종합설계)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "건축학부": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 57,
+      "전공선택": 12,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "1",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축환경공학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건물시스템공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축ICT기초",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학입문설계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축환경공학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축구조역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조해석",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건설사업관리1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학응용설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축철근콘크리트구조 공학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축철골구조설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건물에너지절약설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축시공2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축공학캡스톤디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "건축기본설계",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오1",
+        "credits": 6,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양건축사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "구조역학및시스템",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오2-Ad ventureDesign",
+        "credits": 6,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축환경공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "공동주택단지계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축재료와일반구조",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "생태건축",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "도시설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오3 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축법규",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건조환경과행태",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오4 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국건축",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공시스템",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오5 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "BIM(건축정보모델링)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "미래의도시디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오6 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "현대건축론",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오7 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축실무",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오8 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "2"
+      }
+    ]
+  },
+  "컴퓨터공학과": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 24,
+      "심화전공": 33,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "고급자료구조",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "컴퓨터구조",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "알고리즘",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "소프트웨어공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "데이타베이스개론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "운영체제",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "데이타통신",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "정보통신공학과": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 18,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 36,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "C프로그래밍",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "1",
+        "semester": "1,2"
+      },
+      {
+        "name": "유닉스",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "디지털설계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "선형대수학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전자기학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "ICT융합공학(어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "자바프로그래밍",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "데이터통신",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "통신공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "데이터분석과기계학습 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "디지털신호처리(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "딥러닝(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "빅데이터분석(캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "영상처리",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "멀티미디어방송및통신 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "전기공학과": {
+    "college": "공과대학",
+    "total": 133,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 24,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 42,
+      "심화전공": 25,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "회로이론1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "전자공학과": {
+    "college": "공과대학",
+    "total": 133,
+    "liberal": {
+      "기초교양": 3,
+      "균형교양": 2,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 4,
+      "전공선택": 41,
+      "심화전공": 40,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문 전자회로실험1 전자회로실험2 캡스톤디자인",
+        "grade": "4 2 3 3",
+        "semester": "2 2 1 2"
+      }
+    ]
+  },
+  "지능로봇융합공학과": {
+    "college": "공과대학",
+    "total": 133,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 25,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 60,
+      "심화전공": 24,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "캡스톤디자인",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "지능형캡스톤디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "신소재공학부": {
+    "college": "공과대학",
+    "total": 133,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 18,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 49,
+      "전공선택": 0,
+      "심화전공": 8,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "재료공학영어1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "재료공학개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "재료공학영어2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "재료열역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "물리금속학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "응용물리화학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "이동현상이론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "재료열역학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "고체물리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "세라믹개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "반도체공정",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "재료강도학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "결정구조학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "고체전기화학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "재료공정",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "상변태론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "신소재실험",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "메카융합공학과(야)": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 45,
+      "심화전공": 38,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "일상속의과학기술",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "국어국문학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 3,
+      "심화전공": 3,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "문학개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "국문학개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "국어학개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "현대소설론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "국어문법론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "국어음운론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "고소설론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "구비문학론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "한국어교수법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대시론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "향가여요론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "21세기언어문화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "지역과 언어",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "시조가사론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "국어의미론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한국한문학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "국어문장의 이해",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한국현대문학사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "훈민정음연구",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "현대작가론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "국어사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "국문학강독",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "국문학사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "문예비평론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "문헌자료강독",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국현대시읽기",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "문학과 지역",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "고전문학스토리텔링",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "문예창작론",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "고전문학과 동아시아",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "한국희곡론",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "국어어문규범의 이해",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "화법과 표현",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "영어영문학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 39,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "영어의사소통Ⅰ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "영어와사회",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "영어의사소통Ⅱ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "영어와문화",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "영문학배경",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "미국학개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "미디어영어Ⅰ",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "영국의경제와사회",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "영시의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "AI영어커뮤니케이션",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "영어음성음운론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "중급영어회화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "영국의문화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "미국의역사와사회",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "미디어영어Ⅱ",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "영어학개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "연극의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "실무영어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "중급영작문",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "고급영어회화",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "미국대중문화",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "영국문학사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "영문학과미디어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "번역학개론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "고급영어문법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "영어연습",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "영시감상",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "영문학과디지털리터러시",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "셰익스피어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "고급영작문",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "디지털영어영문학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "영어프리젠테이션",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "컴퓨터와영어학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "영어학특강",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "독어독문학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 27,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "초급독일어Ⅰ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "전공탐색Ⅰ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "초급독일어Ⅱ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "전공탐색Ⅱ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "독문법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일상생활독일어",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "단편으로읽는독일문학사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "독일어권문화콘텐츠의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "유럽지역사정",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "독작문",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "관광독일어",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "독일고전읽기",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "미디어와유럽대중문화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "유럽기업의문화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "중급독일어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "유럽문학과영상콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "이미지로독일문화읽기",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "북유럽신화와문화콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한독언어문화비교콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "실용독일어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "베스트셀러와문학시장",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "언어와광고",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "현대독일과유럽의이해",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "독일동화와문화콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "스토리텔링과문화콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "DaF독일어",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "유럽공연예술의이해",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "독일과유럽의도시와생활",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "미디어독일어",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "그리스신화와유럽의사고전통",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "유럽문화도시",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "문화콘텐츠로읽는유럽의다문화",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "불어불문학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 12,
+      "전공선택": 36,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "이야기프랑스어",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스어문법연습",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어쉽게말하기",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어문장의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "DELF A1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스문학사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "처음읽는프랑스문학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스박물관탐방",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스어문장과표현",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어작문",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "DELF A2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스문학과사회",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스문화경영과문화콘텐츠",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어말하기연습",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "여행프랑스어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "시청각프랑스어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스문화예술사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "유럽지역문화콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "이미지읽기",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "프랑스어의사소통과실용문법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "소셜미디어프랑스어",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어강독",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "현대프랑스소설",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스상송산책",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스희곡과공연",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스어권문화의이해",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스음식문화이야기",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "유럽미술산책",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "세계명작영화산책",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "비즈니스프랑스어",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스문학과예술",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스문학과영화",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "일어일문학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 27,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "일본어입문1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "일본어와문화1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "일본문학의이해",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "일본어입문2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "일본어와문화2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "문학으로본일본의이해",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "일현대문법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "문학입문1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일본어독해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일본사정1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일본어강독과작문1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일본어회화1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "일어학개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "문학입문2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "일본사정2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "일본어강독과작문2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "일본어회화2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "일근대소설강독1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "일문학사1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "시사일어1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "일본어실용작문",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "일본어회화3",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "일근대소설강독2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "일문학사2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "시사일어2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "일본어회화4",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "일본어표현연구",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "일문학연구1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "일문법연구1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "일문학연구2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "일문법연구2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "사학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 9,
+      "전공선택": 36,
+      "심화전공": 18,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "동아시아역사서술의전통",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "서양사서설",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "한자로보는동아시아사",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "서양도시의역사와문화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동양고대사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "한국사강독",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "한국사특강",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양고중세사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "한국고대사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동양중세사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "서양사문헌및시청각자료",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "도시로보는동아시아사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "동아시아인물과사상",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "르네상스문화사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "한국사상사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "한국사회경제사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "한국중세사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "동양고전의이해",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "서양근대사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "동양근대사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "조선시대의사회와문화",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "예술과역사콘텐츠",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "서양현대사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "동양현대사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "동아시아교류사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "식민주의와글로벌히스토리",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "고고학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국근대사",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "현대세계와한국",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "경남지역의역사와문화",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "한국의역사학과역사가",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "동아시아여성사",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "동아시아생활사",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "서양의인문과사상",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "박물관학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "철학과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 39,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "서양철학의흐름",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "영화와철학",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "철학원서강독",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동아시아정치철학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "인식론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양근세철학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "윤리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "논리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양고대철학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "과학기술의철학적이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "철학적인간학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "동아시아의유학과공동체",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "실용논리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스철학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "인도철학사와불교철학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "중국철학의세계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "한국철학사와유불사상",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "동아시아세계와노장철학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "미학과예술철학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "동아시아세계의윤리",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "영미철학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "형이상학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "동양고전과의대화",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "서양현대철학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "몸과여성주의철학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "인공지능과정보철학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "합리적문제해결과논리",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "환경철학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "동양의심리철학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "정치경제의도덕철학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "독일철학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "한국근현대철학사조",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "철학의제문제",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "특수교육과": {
+    "college": "인문대학",
+    "total": 142,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 22,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "특수교육세미나Ⅰ",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "특수아심리",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "특수교육교육과정론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "특수교육론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "청각장애학생교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "지체장애학생교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "특수교육세미나Ⅱ",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "특수아행동수정",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "발달지체아교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "초등미술교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "초등체육교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "기본교육과정국어",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "기본교육과정진로와직업",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "특수교육관찰방법및실습",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "지적장애학생교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "정서행동장애학생교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "시각장애학생교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "특수교육대상학생진단및평가",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "초등실과교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "초등음악교육",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본교육과정수학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "개별화교육방법론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "학습장애학생교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "중도중복장애학생교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "특수교육세미나Ⅲ",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "초등국어교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "초등수학교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "중등특수교육논리및논술",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "장애학생통합교육론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "의사소통장애학생교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "특수교육공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "자폐성장애학생교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "초등특수교육논리및논술",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "초등과학교육",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "특수교과교재연구및지도법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "특수교육취창업사전탐색",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "초등사회교육",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "초등도덕교육",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "건강장애학생교육",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "유아교육과": {
+    "college": "인문대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 46,
+      "전공선택": 15,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "유아교육론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "유아교육사상",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "유아동작교육(어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "에듀테크와유아문학 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "유아교육과에듀테크 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "유아과학교육(어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "유아언어교육(어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "영유아교수방법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "아동생활지도(어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "아동미술(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "지속가능발전과교육 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "부모교육(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "아동수학지도(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "아동권리와복지(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "유아교사를위한논술",
+        "credits": 1,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "아동상담(캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "법학과": {
+    "college": "사회과학대학",
+    "total": 135,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 48,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "민법총칙",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "헌법1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "물권법",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "형법총론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "헌법2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "행정법총론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "상법총칙",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "채권법총론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "형법각론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "행정구제법",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "행정법각론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "회사법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "형사소송법1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "민사소송법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "노동법1(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "국제법1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "행정학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "행정학원론2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "조직론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "공공정책론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "재무행정론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "인사행정론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "국제관계학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 3,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "글로벌이슈와국제협력",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "글로벌전쟁과평화",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "글로벌이슈와세계질서",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "글로벌도전과리더십전략",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "중국학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 6
+    },
+    "major": {
+      "전공필수": 12,
+      "전공선택": 33,
+      "심화전공": 27,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "중국어2(어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "중국과중국어",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대중국경제의이해 (어드벤쳐디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "중국문학사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "사회학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "사회학개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      }
+    ]
+  },
+  "미디어커뮤니케이션학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 9,
+      "전공선택": 36,
+      "심화전공": 27,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "커뮤니케이션연구방법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "커뮤니케이션이론",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "커뮤니케이션윤리법제",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문(작품)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "사회복지학과": {
+    "college": "사회과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 27,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "인간발달",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "가족학",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "상담이론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "가족복지론",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "사례관리론",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "통계학과": {
+    "college": "자연과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "표본론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "확률론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "회귀분석1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "수리통계학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "실험계획법",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "의류학과": {
+    "college": "자연과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 27,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "패션디자인기초",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "의류소재의이해",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "패션마케팅",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "디지털패션디자인 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "드레이핑1 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "식품영양학과": {
+    "college": "자연과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 27,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "생화학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "식품화학1 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "고급영양학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "식사요법(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "단체급식관리및실습 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "체육학과": {
+    "college": "자연과학대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 8,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 63,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "수영1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "테니스1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "배드민턴1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "골프1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "체육진로설계1 (어드벤처디자인)",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "스포츠사회학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "스포츠심리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "탁구1",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "웨이트트레이닝1",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "원영",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "운동생리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "운동역학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "등산",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "간호학과": {
+    "college": "자연과학대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "간호학개론",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "해부학(어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "생리학",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "인간성장과발달",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "병리학",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "인간관계와의사소통",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "간호와창업",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "임상약리학",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "인간심리의이해",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "생명윤리의이해",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "간호핵심역량",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "스마트헬스케어학과": {
+    "college": "자연과학대학",
+    "total": 120,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 6,
+      "심화전공": 3,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "운동과건강",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "스포츠손상과테이핑",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "운동처방론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "음악과": {
+    "college": "예술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 4,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "전공실기1(피아노)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기1(성악)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기1(작곡)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "시창청음1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "연주1",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "실내악1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "이태리딕션",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "합창1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "오케스트라1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기1(관타현악)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "음악개론",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기2(피아노)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기2(성악)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기2(작곡)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "시창청음2",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "연주2",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "실내악2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "합창2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "오케스트라2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "독일어딕션1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기2(관타현악)",
+        "credits": 1,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "음악큐레이션",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "연주3",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "실내악3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "음악사1",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "합창3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "오케스트라3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기3(피아노)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기3(성악)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기3(작곡)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "화성학1",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "피아노문헌1",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "독일어딕션2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기3(관타현악)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "연주4",
+        "credits": 1,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "실내악4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "음악사2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "합창4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "오케스트라4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기4(피아노)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기4(성악)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기4(작곡)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "화성학2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "피아노문헌2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "프랑스딕션",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기4(관타현악)",
+        "credits": 1,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "합창5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "오케스트라5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "반주및앙상블1",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기5(피아노)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기5(성악)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건반화성및실기1",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기5(작곡/지휘)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "오페라클래스1",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "실내악5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "실용화성학1",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기5(관타현악)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "연주5",
+        "credits": 1,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "대위법",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "오페라연기",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "합창6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "오케스트라6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "반주및앙상블2",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기6(피아노)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기6(성악)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건반화성및실기2",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기6(작곡/지휘)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "오페라클래스2",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "실내악6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "실용화성학2",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기6(관타현악)",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "연주6",
+        "credits": 1,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "음악커뮤니케이션",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "합창7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "오케스트라7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "지휘법1",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기7(피아노)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기7(성악)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기7(작곡/지휘)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "실내악7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "즉흥연주론1",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "전공실기7(관타현악)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "음악분석1",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업연주",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "합창8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "오케스트라8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "지휘법2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기8(피아노)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기8(성악)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기8(작곡/지휘)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "실내악8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "즉흥연주론2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "전공실기8(관타현악)",
+        "credits": 1,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "음악분석2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "미술학과": {
+    "college": "예술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 1,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 8,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "기초조형실습2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "회화실기1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "금속조형1",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동양미술사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "3D프로그램Cinema4D 실습1",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "인체소조3",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "기초한국화채색",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "인체드로잉연구",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "전통재료기법2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "회화실기2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "금속조형2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "현대채색화",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "서양미술사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "3D프로그램Cinema4D 실습2",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "인체소조4",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "디지털드로잉연구",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "조형론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "회화연구1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한국화실험조형1 (캡스톤디자인)",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "드로잉연구3(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "발상과표현2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한국화디지털채색",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "융복합매체연구2 (캡스톤디자인)",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "현대조각연구1",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국화실험조형2 (캡스톤디자인)",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "복합표현연구",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "드로잉연구4(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "융복합매체연구1 (캡스톤디자인)",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "디지털회화연구",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "현대한국화연구1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "회화연구3",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "현대조각연구2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "조형계획1",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "매체표현연구 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "조형연구1",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업작품(조소)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "한국화창작실기 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "조형계획2(캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "현대한국화연구2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업작품 (한국화만화콘텐츠)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "도자기법연구2 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "조형연구2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "회화프레젠테이션",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업작품(회화)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "산업디자인학과": {
+    "college": "예술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 22,
+      "전공선택": 15,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "금속공예디자인1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "에디토리얼디자인2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "인더스트리얼디자인 스튜디오1(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "생활공간디자인스튜디오1 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "비쥬얼커뮤니케이션디자인1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "모션그래픽디자인 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "금속공예디자인2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "인더스트리얼디자인 스튜디오2(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "생활공간디자인스튜디오2 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "무빙이미지디자인1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "광고디자인(캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "장신구디자인1 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "환경공예디자인1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "패키지디자인1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "스튜디오가구디자인1 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "실용공간디자인스튜디오1",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "제품플랫폼디자인스튜디오1 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "패키지디자인2",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "무빙이미지디자인2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "장신구디자인2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "환경공예디자인2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "제품플랫폼디자인스튜디오2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "스튜디오가구디자인2 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "광고디자인2(캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "실용공간디자인스튜디오2 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업작품(시각)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업작품(공예)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "졸업작품(제품)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      }
+    ]
+  },
+  "무용학과": {
+    "college": "예술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 40,
+      "전공선택": 40,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "한국무용1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "발레1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "현대무용1",
+        "credits": 2,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "한국무용2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "발레2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "현대무용2",
+        "credits": 2,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "한국무용3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "발레3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대무용3",
+        "credits": 2,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "한국무용4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "발레4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "현대무용4",
+        "credits": 2,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "한국무용5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "발레5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "현대무용5",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "문화예술마케팅",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "한국무용6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "발레6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "현대무용6",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국무용7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "발레7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "현대무용7",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "한국무용8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "발레8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "현대무용8",
+        "credits": 2,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "작품발표",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "기계공학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 8,
+      "균형교양": 26,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 45,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "유체역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "재료와가공",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "스마트계측공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "열역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      }
+    ]
+  },
+  "우주항공공학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 3,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 2,
+      "전공선택": 0,
+      "심화전공": 55,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "우주항공시스템개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "동역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "열역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "고체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "학생연구프로젝트Ⅰ",
+        "credits": 2,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "학생연구프로젝트Ⅱ",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "이학융합학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 0,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "선형대수1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "해석학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "위상수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "확률과통계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "전자기학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "양자역학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "무기화학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "유기화학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "분석화학2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "물리및생물리화학2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "화학기기분석2",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "식물생리학및실험",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "세포생물학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "분자생물학및실험",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "동물분류와생물다양성",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "진화학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "일반미생물학",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "생화학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "분자생물학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "환경미생물유전체학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "면역학개론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "인체생리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "산업위생학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "공중보건학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "생기기분석학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "수질보건학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      }
+    ]
+  },
+  "공학융합학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 3,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 2,
+      "전공선택": 0,
+      "심화전공": 31,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "동역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "열역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "고체역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "기구학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "유체역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "학생연구프로젝트(URP)Ⅰ",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "학생연구프로젝트(URP)Ⅱ",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      },
+      {
+        "name": "물리화학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "화공양론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "화공열역학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "반응공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "학생연구프로젝트 (URP)Ⅰ",
+        "credits": 2,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "학생연구프로젝트 (URP)Ⅱ",
+        "credits": 2,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업세미나",
+        "credits": 0,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "디지털시대의 엔터테인먼트산업과 콘텐츠의이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "문화산업마케팅",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "공간환경디자인",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "게임엔진기초",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "모바일게임스튜디오",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "머신러닝이해",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "머신러닝활용",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "딥러닝",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "영상처리프로그래밍",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      }
+    ]
+  },
+  "수학과": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "해석학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "위상수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "반도체물리학과": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "일반물리1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "일반물리2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "수리물리학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "생명보건학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "문화테크노학과": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "도시환경론(어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "아트매니지먼트",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "휴먼인터랙션프로그래밍 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "메타버스스튜디오(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "콘텐츠기획과스토리텔링 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업세미나",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "신산업융합경영학과(야)": {
+    "college": "본부학과",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 42,
+      "심화전공": 38,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "경쟁전략론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "자산경영빅데이터학과": {
+    "college": "본부학과",
+    "total": 120,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 3,
+      "전공선택": 78,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "자산시장론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "빅데이터창업비즈니스학과": {
+    "college": "본부학과",
+    "total": 120,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 26
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 39,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "빅데이터와창업생태계",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "디자인씽킹활용 아이디어개발",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "에너지융합공학과": {
+    "college": "본부학과",
+    "total": 120,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 42,
+      "심화전공": 36,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "건축학부 건축공학전공": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 57,
+      "전공선택": 12,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "1",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축환경공학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건물시스템공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축ICT기초",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학입문설계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축환경공학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축구조역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조해석",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건설사업관리1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학응용설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축철근콘크리트구조 공학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축철골구조설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건물에너지절약설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축시공2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축공학캡스톤디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "건축기본설계",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오1",
+        "credits": 6,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양건축사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "구조역학및시스템",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오2-Ad ventureDesign",
+        "credits": 6,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축환경공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "공동주택단지계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축재료와일반구조",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "생태건축",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "도시설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오3 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축법규",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건조환경과행태",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오4 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국건축",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공시스템",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오5 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "BIM(건축정보모델링)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "미래의도시디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오6 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "현대건축론",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오7 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축실무",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오8 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "2"
+      }
+    ]
+  },
+  "건축학부 건축학전공": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 12,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 57,
+      "전공선택": 12,
+      "심화전공": 21,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "1",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축환경공학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건물시스템공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축ICT기초",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학입문설계",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축환경공학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축구조역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축구조해석",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건설사업관리1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축공학응용설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축철근콘크리트구조 공학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축철골구조설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건물에너지절약설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축시공2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축공학캡스톤디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "건축개론",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "건축기본설계",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오1",
+        "credits": 6,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "서양건축사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "구조역학및시스템",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오2-Ad ventureDesign",
+        "credits": 6,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축환경공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "공동주택단지계획",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축재료와일반구조",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "건축설비",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "생태건축",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "도시설계",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오3 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "건축법규",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건조환경과행태",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오4 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "한국건축",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축시공시스템",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오5 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "BIM(건축정보모델링)",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "미래의도시디자인",
+        "credits": 3,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "건축설계스튜디오6 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "4",
+        "semester": "2"
+      },
+      {
+        "name": "현대건축론",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오7 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축실무",
+        "credits": 3,
+        "grade": "5",
+        "semester": "1"
+      },
+      {
+        "name": "건축설계스튜디오8 (캡스톤디자인)",
+        "credits": 6,
+        "grade": "5",
+        "semester": "2"
+      }
+    ]
+  },
+  "기계공학부 기계공학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 8,
+      "균형교양": 26,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 45,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "유체역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "재료와가공",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "스마트계측공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "열역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      }
+    ]
+  },
+  "기계공학부 스마트제조융합전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 140,
+    "liberal": {
+      "기초교양": 8,
+      "균형교양": 26,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 15,
+      "전공선택": 30,
+      "심화전공": 45,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "유체역학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "재료와가공",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "스마트계측공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "심층상담",
+        "credits": 0,
+        "grade": "전",
+        "semester": "1,2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "열역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "동역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      }
+    ]
+  },
+  "기초과학부 반도체물리학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "일반물리1",
+        "credits": 3,
+        "grade": "1",
+        "semester": "1"
+      },
+      {
+        "name": "일반물리2",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "수리물리학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "현대물리학2",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "기초과학부 수리과학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "해석학1",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "위상수학1",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "스마트그린공학부 건설시스템공학전공": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 15,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 33,
+      "심화전공": 31,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "수질관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경GIS및원격탐사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대기오염개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "바이오에너지공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "환경화학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "폐기물에너지공학 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "수문학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본수리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본구조역학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "철근콘크리트공학2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "기초공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "도로공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "지진공학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문(종합설계)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "스마트그린공학부 환경에너지공학전공": {
+    "college": "공과대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 15,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 21,
+      "전공선택": 33,
+      "심화전공": 31,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "수질관리",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경유체역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "환경GIS및원격탐사",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "대기오염개론",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "바이오에너지공학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "환경화학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "폐기물에너지공학 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "재료역학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "수문학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본수리학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "2"
+      },
+      {
+        "name": "기본구조역학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "철근콘크리트공학2",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "기초공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "도로공학",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1,2"
+      },
+      {
+        "name": "지진공학",
+        "credits": 3,
+        "grade": "4",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문(종합설계)",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "첨단바이오학부 미생물생명공학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "첨단바이오학부 생명과학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "첨단바이오학부 생명보건학전공": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "경제학트랙": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 21,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 36,
+      "심화전공": 21,
+      "융합전공": 33
+    },
+    "required_courses": [
+      {
+        "name": "미시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "거시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "금융론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "금융보험트랙": {
+    "college": "경영대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 9,
+      "균형교양": 21,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 6,
+      "전공선택": 36,
+      "심화전공": 21,
+      "융합전공": 33
+    },
+    "required_courses": [
+      {
+        "name": "미시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "거시경제학",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "졸업시험",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      },
+      {
+        "name": "금융론",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "메타융합콘텐츠학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "도시환경론(어드벤처디자인)",
+        "credits": 3,
+        "grade": "1",
+        "semester": "2"
+      },
+      {
+        "name": "아트매니지먼트",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "휴먼인터랙션프로그래밍 (어드벤처디자인)",
+        "credits": 3,
+        "grade": "2",
+        "semester": "1"
+      },
+      {
+        "name": "메타버스스튜디오(캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "1"
+      },
+      {
+        "name": "콘텐츠기획과스토리텔링 (캡스톤디자인)",
+        "credits": 3,
+        "grade": "3",
+        "semester": "2"
+      },
+      {
+        "name": "졸업세미나",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  },
+  "생물학화학융합학부": {
+    "college": "글로컬첨단과학기술대학",
+    "total": 130,
+    "liberal": {
+      "기초교양": 0,
+      "균형교양": 0,
+      "확대교양": 0
+    },
+    "major": {
+      "전공필수": 0,
+      "전공선택": 0,
+      "심화전공": 0,
+      "융합전공": 0
+    },
+    "required_courses": [
+      {
+        "name": "졸업논문",
+        "credits": 0,
+        "grade": "4",
+        "semester": "1,2"
+      }
+    ]
+  }
+}

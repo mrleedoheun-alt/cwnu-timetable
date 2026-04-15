@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>창원대 시간표 - 로그인</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login">
+  <div class="auth-bg">
+    <div class="auth-wrap">
+      <div class="auth-brand">
+        <div class="auth-logo">TT</div>
+        <h1>창원대 시간표</h1>
+        <p>졸업요건 기반 자동 시간표 생성 서비스</p>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login" type="button">로그인</button>
+          <button class="auth-tab" data-tab="signup" type="button">회원가입</button>
+        </div>
+
+        <!-- 로그인 폼 -->
+        <div class="auth-form" id="loginForm">
+          <div class="field">
+            <label for="loginStudentId">학번</label>
+            <input type="text" id="loginStudentId" maxlength="8" inputmode="numeric" placeholder="8자리 학번 입력" autocomplete="username" />
+          </div>
+          <div class="field">
+            <label for="loginPassword">비밀번호</label>
+            <input type="password" id="loginPassword" placeholder="비밀번호 입력" autocomplete="current-password" />
+          </div>
+          <div id="loginError" class="auth-error hidden"></div>
+          <button id="loginBtn" class="primary-btn full" type="button">로그인</button>
+        </div>
+
+        <!-- 회원가입 폼 -->
+        <div class="auth-form hidden" id="signupForm">
+          <div class="field">
+            <label for="signupStudentId">학번</label>
+            <input type="text" id="signupStudentId" maxlength="8" inputmode="numeric" placeholder="8자리 학번 입력" autocomplete="username" />
+            <small class="helper-text">앞 4자리는 입학년도입니다. 예: 20251234</small>
+          </div>
+          <div class="field">
+            <label for="signupDepartment">학과</label>
+            <select id="signupDepartment"></select>
+          </div>
+          <div class="field">
+            <label for="signupPassword">비밀번호</label>
+            <input type="password" id="signupPassword" placeholder="비밀번호 입력 (4자 이상)" autocomplete="new-password" />
+          </div>
+          <div class="field">
+            <label for="signupPasswordConfirm">비밀번호 확인</label>
+            <input type="password" id="signupPasswordConfirm" placeholder="비밀번호 다시 입력" autocomplete="new-password" />
+          </div>
+          <div id="signupError" class="auth-error hidden"></div>
+          <button id="signupBtn" class="primary-btn full" type="button">회원가입</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
