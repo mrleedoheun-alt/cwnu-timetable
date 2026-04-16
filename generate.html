@@ -132,35 +132,6 @@
         </div>
       </section>
 
-      <!-- ══ 수강 완료 과목 패널 ══ -->
-      <section class="auto-gen-wrap completed-wrap" id="completedSection">
-        <div class="auto-gen-header" id="completedToggle">
-          <div class="auto-gen-title-row">
-            <span class="auto-gen-icon">✅</span>
-            <div>
-              <h2>수강 완료 과목</h2>
-              <p>이미 들은 과목은 자동 추천에서 자동으로 제외됩니다</p>
-            </div>
-          </div>
-          <span style="display:flex;align-items:center;gap:10px">
-            <span class="completed-count-badge" id="completedCount"></span>
-            <span class="auto-gen-chevron" id="completedChevron">▶</span>
-          </span>
-        </div>
-        <div class="auto-gen-body hidden" id="completedBody">
-          <div class="completed-search-row">
-            <div class="completed-search-wrap">
-              <input type="text" id="completedSearch" class="completed-search-inp"
-                placeholder="과목명 검색 후 클릭하여 추가…" autocomplete="off">
-              <div class="completed-suggestions" id="completedSuggestions"></div>
-            </div>
-            <button id="completedClearAll" class="completed-clear-btn" type="button">전체 삭제</button>
-          </div>
-          <div class="completed-list" id="completedList">
-            <span class="completed-empty">아직 추가된 과목이 없습니다.</span>
-          </div>
-        </div>
-      </section>
 
       <!-- ══ 자동 시간표 생성 패널 ══ -->
       <section class="auto-gen-wrap" id="autoGenSection">
@@ -212,14 +183,6 @@
             </div>
           </div>
 
-          <!-- 고급 옵션 (작게 표시) -->
-          <details class="advanced-opts">
-            <summary>고급 옵션</summary>
-            <label class="ag-check" style="margin-top:8px">
-              <input type="checkbox" id="allowRetake">
-              재수강 허용 <small style="color:var(--muted);font-weight:400">(이미 들은 과목도 추천에 포함)</small>
-            </label>
-          </details>
 
           <!-- 생성 버튼 -->
           <div class="auto-gen-footer">

@@ -72,6 +72,7 @@ const DEFAULT_STATE = {
   completedCourses: [],  // array of course names already taken
   excludedCourses: [],   // array of course names to exclude from auto-gen
   pinnedCourses: [],     // array of course names to force-include in auto-gen
+  retakeCourses: [],     // array of course names marked as needing retake (not counted as completed)
   allowRetake: false     // if true, completed courses can appear in auto-gen
 };
 
@@ -248,6 +249,8 @@ function renderTimetable(container, courses, opts = {}) {
   layer.className = 'courses-layer';
   layer.style.left = `${timeColW}px`;
 
+  const retakeSet = new Set((opts.retakeCourses || []).map(n => n.trim().toLowerCase()));
+
   flat.forEach(slot => {
     const start = timeToMin(slot.start);
     const end   = timeToMin(slot.end);
@@ -260,8 +263,9 @@ function renderTimetable(container, courses, opts = {}) {
     const widthPx  = dayCol - 4;
 
     const color = colorMap[slot.name] || COLORS[0];
+    const isRetake = retakeSet.has(slot.name.trim().toLowerCase());
     const block = document.createElement('div');
-    block.className = 'course-block';
+    block.className = 'course-block' + (isRetake ? ' retake' : '');
     block.style.cssText = `
       left:${leftPx}px; top:${topPx + 1}px;
       width:${widthPx}px; height:${heightPx - 2}px;
@@ -270,6 +274,7 @@ function renderTimetable(container, courses, opts = {}) {
     block.dataset.name = slot.name;
     block.innerHTML = `
       <div class="course-title">${slot.name}</div>
+      ${isRetake && !mini ? `<div class="course-meta retake-label">🔄 재수강</div>` : ''}
       ${!mini ? `<div class="course-meta">${slot.start}–${slot.end}</div>` : ''}
       ${!mini && slot.room ? `<div class="course-meta">${slot.room}</div>` : ''}
     `;
@@ -408,7 +413,7 @@ function setupIndexPage(state) {
     state.courses = getTimetable(state, state.year, state.semester);
     saveState(state);
     updateSummary(state);
-    renderTimetable(container, state.courses);
+    renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
     setupBlockClicks(container, state);
   };
 
@@ -420,7 +425,7 @@ function setupIndexPage(state) {
   updateSummary(state);
 
   const container = document.getElementById('timetableContainer');
-  renderTimetable(container, state.courses);
+  renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
   setupBlockClicks(container, state);
 }
 
@@ -504,8 +509,10 @@ let _popup = null;
 function showCoursePopup(block, courseName, state, onDelete) {
   closePopup();
 
-  const course = state.courses.find(c => c.name === courseName);
-  const rect   = block.getBoundingClientRect();
+  if (!state.retakeCourses) state.retakeCourses = [];
+  const course    = state.courses.find(c => c.name === courseName);
+  const isRetake  = state.retakeCourses.includes(courseName);
+  const rect      = block.getBoundingClientRect();
 
   const popup = document.createElement('div');
   popup.className = 'course-popup';
@@ -514,6 +521,9 @@ function showCoursePopup(block, courseName, state, onDelete) {
     ${course?.professor ? `<div class="popup-meta">👤 ${course.professor}</div>` : ''}
     ${course?.category  ? `<div class="popup-meta">📚 ${course.category}${course.subtitle ? ' · '+course.subtitle : ''}</div>` : ''}
     ${course?.credits   ? `<div class="popup-meta">✏️ ${course.credits}학점</div>` : ''}
+    <button class="popup-retake-btn${isRetake ? ' active' : ''}" type="button">
+      🔄 ${isRetake ? '재수강 취소' : '재수강 필요'}
+    </button>
     <button class="popup-del-btn" type="button">시간표에서 삭제</button>
   `;
 
@@ -524,6 +534,19 @@ function showCoursePopup(block, courseName, state, onDelete) {
   popup.style.left = `${rect.left  + scrollX}px`;
   document.body.appendChild(popup);
   _popup = popup;
+
+  popup.querySelector('.popup-retake-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!state.retakeCourses) state.retakeCourses = [];
+    if (state.retakeCourses.includes(courseName)) {
+      state.retakeCourses = state.retakeCourses.filter(n => n !== courseName);
+    } else {
+      state.retakeCourses.push(courseName);
+    }
+    saveState(state);
+    closePopup();
+    onDelete?.();
+  });
 
   popup.querySelector('.popup-del-btn').addEventListener('click', () => {
     state.courses = state.courses.filter(c => c.name !== courseName);
@@ -1295,18 +1318,26 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   const maxCr     = state.maxCredits || 18;
   const completed = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
   const excluded  = new Set((state.excludedCourses  || []).map(n => n.trim().toLowerCase()));
+  const retake    = new Set((state.retakeCourses    || []).map(n => n.trim().toLowerCase()));
+  const pastNames = getPastTimetableCourseNames(state); // 지난 학기 시간표 과목
   const allowRtk  = state.allowRetake || false;
 
   let schedule = [];
   let usedFlat = [];
   let totalCr  = 0;
 
-  /* 수강완료 과목 제외 (재수강 허용 시 포함) */
-  const isCompleted = (course) => !allowRtk && (
-    completed.has(course.name.trim().toLowerCase()) ||
-    completed.has(normName(course.name)) ||
-    completed.has(baseName(course.name))
-  );
+  /* 수강완료 과목 제외 (재수강 허용 시 포함, 재수강 필요 표시 시 제외에서 제외) */
+  const isCompleted = (course) => {
+    if (allowRtk) return false;
+    const lower = course.name.trim().toLowerCase();
+    const norm  = normName(course.name);
+    const base  = baseName(course.name);
+    // 재수강 필요 과목은 이수완료로 처리하지 않음
+    if (retake.has(lower) || retake.has(norm) || retake.has(base)) return false;
+    // 수동 완료 또는 지난 학기 자동 완료 과목
+    return completed.has(lower) || completed.has(norm) || completed.has(base)
+        || pastNames.has(lower);
+  };
 
   /* 제외 과목 체크 */
   const isExcluded = (course) => (
@@ -1868,12 +1899,13 @@ function renderGradReq(state) {
   // 1) 수동 완료 표시  2) 지난 학기 timetable 과목 (자동)  3) 현재 담은 과목
   const completed    = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
   const pastCourses  = getPastTimetableCourseNames(state);
+  const retakeSet    = new Set((state.retakeCourses   || []).map(n => n.trim().toLowerCase()));
   const selected     = _selected || [];
 
-  // 모든 이수 과목 = 수동완료 + 지난학기 자동완료 + 현재 선택중
+  // 모든 이수 과목 = 수동완료 + 지난학기 자동완료 + 현재 선택중 (단, 재수강 과목 제외)
   const allTaken = new Set([
-    ...Array.from(completed),
-    ...Array.from(pastCourses),
+    ...Array.from(completed).filter(n => !retakeSet.has(n)),
+    ...Array.from(pastCourses).filter(n => !retakeSet.has(n)),
     ...selected.map(c => c.name.trim().toLowerCase())
   ]);
 
@@ -1980,9 +2012,10 @@ function renderGradReq(state) {
           const isReq = !!reqMap[lower];
           const cat = course?.category || (isReq ? '전공필수' : '전공선택');
           const credits = course?.credits ?? reqMap[lower]?.credits ?? 3;
-          const done = allTaken.has(lower);
-          const inProgress = !done && selected.some(c => c.name.trim().toLowerCase() === lower);
-          return { name, cat, credits, done, inProgress, isReq };
+          const isRetakeMarked = retakeSet.has(lower);
+          const done = !isRetakeMarked && allTaken.has(lower);
+          const inProgress = !done && !isRetakeMarked && selected.some(c => c.name.trim().toLowerCase() === lower);
+          return { name, cat, credits, done, inProgress, isReq, isRetakeMarked };
         });
       }
     }
@@ -2005,11 +2038,16 @@ function renderGradReq(state) {
         if (!items.length) return `<td class="rmap-cell rmap-empty">—</td>`;
         return `<td class="rmap-cell">
           ${items.map(item => {
-            const cls = item.done ? 'rmap-course done' : item.inProgress ? 'rmap-course in-progress' : 'rmap-course';
+            const cls = item.isRetakeMarked ? 'rmap-course retake'
+              : item.done ? 'rmap-course done'
+              : item.inProgress ? 'rmap-course in-progress'
+              : 'rmap-course';
             const badge = item.isReq
               ? `<span class="rmap-badge req">필수</span>`
               : `<span class="rmap-badge elec">선택</span>`;
-            const status = item.done
+            const status = item.isRetakeMarked
+              ? `<span class="rmap-status retake-icon">🔄재수강</span>`
+              : item.done
               ? `<span class="rmap-status done-icon">✓</span>`
               : item.inProgress
               ? `<span class="rmap-status prog-icon">담는중</span>`
@@ -2033,7 +2071,8 @@ function renderGradReq(state) {
             <span class="rmap-badge req">필수</span> 전공필수 &nbsp;
             <span class="rmap-badge elec">선택</span> 전공선택 &nbsp;
             <span class="rmap-status done-icon">✓</span> 이수완료 &nbsp;
-            <span class="rmap-status prog-icon">담는중</span> 현재 담음
+            <span class="rmap-status prog-icon">담는중</span> 현재 담음 &nbsp;
+            <span class="rmap-status retake-icon">🔄재수강</span> 재수강 필요
           </span>
         </div>
         <div class="rmap-scroll">
