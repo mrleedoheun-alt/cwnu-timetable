@@ -1441,7 +1441,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     addPoolByName(req);
   }
 
-  // ③ 우선순위에 따라 전공선택 ↔ 교양 순서 결정
+  // ③ 전공선택
   const fillElective = () => {
     if (!inclElective || totalCr >= maxCr) return;
     const elec = _allCourses.filter(c =>
