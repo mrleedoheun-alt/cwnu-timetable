@@ -2195,6 +2195,48 @@ body {
 
 .grad-bar-val.done { color: #2a7a2a; }
 
+/* 교양 이수조건 세부 */
+.liberal-req-section {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.liberal-req-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.liberal-req-sub {
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
+}
+.liberal-req-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.liberal-req-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0f4ff;
+  border: 1px solid #c8d8ff;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.liberal-req-item.done {
+  background: #f0fff4;
+  border-color: #b2e6b2;
+  color: #2a7a2a;
+}
+.liberal-req-check { font-weight: 700; }
+.liberal-req-name  { font-weight: 600; }
+.liberal-req-cr    { font-size: 10px; opacity: 0.7; }
+
 .grad-bar-wrap {
   height: 8px;
   background: #e4e8f4;
@@ -2339,6 +2381,69 @@ body {
   min-width: 480px;
   table-layout: fixed;
 }
+
+/* ── 교양 이수 현황 테이블 ── */
+.lib-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+  font-size: 12px;
+}
+.lib-table th, .lib-table td {
+  border: 1px solid var(--line);
+  padding: 7px 10px;
+  vertical-align: middle;
+}
+.lib-cat-th  { width: 80px;  background: #f0f4ff; font-weight: 700; text-align: center; }
+.lib-area-th { width: 130px; background: #f0f4ff; font-weight: 700; text-align: center; }
+.lib-courses-th { background: #f0f4ff; font-weight: 700; }
+.lib-status-th { width: 56px; background: #f0f4ff; font-weight: 700; text-align: center; }
+.lib-cat-cell {
+  background: #f8faff;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  color: #3b6bdc;
+  border-right: 2px solid #c8d8ff;
+}
+.lib-cat-cell small { font-weight: 400; color: var(--muted); }
+.lib-area-cell {
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  background: #fafbff;
+}
+.lib-area-cell .lib-cr-hint { color: var(--muted); font-weight: 400; }
+.lib-courses-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 10px;
+  border: none;
+}
+.lib-table td.lib-courses-cell { border: 1px solid var(--line); }
+.lib-status-cell { text-align: center; }
+.lib-row-done { background: #f8fff8; }
+.lib-row { background: #fff; }
+.lib-empty { color: var(--muted); font-size: 11px; }
+
+/* 교양 과목 태그 */
+.lib-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.lib-tag.done { background: #e8f8e8; color: #2a7a2a; border: 1px solid #b2e6b2; }
+.lib-tag.prog { background: #fdf3c0; color: #7a5800; border: 1px solid #f0d060; }
+.lib-tag.retake { background: #fff0e0; color: #c05000; border: 1px solid #ffc080; }
+.lib-tag-cr { font-size: 10px; opacity: 0.75; margin-left: 2px; }
+.lib-required { background: #fff0f0; color: #c03030; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+.lib-optional { background: #f0f4ff; color: #5060a0; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
 .rmap-header-row th {
   background: #f0f4ff;
   font-size: 12px;

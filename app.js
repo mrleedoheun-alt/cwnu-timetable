@@ -1291,10 +1291,27 @@ function baseName(name) {
 
 /* ── 기초교양 필수 이수 그룹 (전교 공통, subtitle 기준) ── */
 const REQUIRED_LIBERAL_GROUPS = [
-  { label: 'AI융합기초',     picks: 1, subtitle: 'AI융합기초' },
-  { label: '열린사고와표현', picks: 1, subtitle: '열린사고와표현' },
-  { label: '글로벌의사소통', picks: 1, subtitle: '글로벌의사소통' },
+  { label: '미래설계',       picks: 1, subtitle: '미래설계',       minCredits: 1 },
+  { label: 'AI융합기초',     picks: 1, subtitle: 'AI융합기초',     minCredits: 3 },
+  { label: '열린사고와표현', picks: 1, subtitle: '열린사고와표현', minCredits: 3 },
+  { label: '글로벌의사소통', picks: 1, subtitle: '글로벌의사소통', minCredits: 2 },
 ];
+
+/* ── 균형교양 필수 영역 (4개 영역 각 1과목 이상) ── */
+const REQUIRED_GYUNHYUNG_AREAS = [
+  '디지털커뮤니케이션',
+  '인문예술',
+  '사회와문화',
+  '자연과학기술의이해',
+];
+
+/* ── 교양 이수 기준 (전교 공통) ── */
+const LIBERAL_REQ = {
+  기초교양: 9,   // 미래설계1 + AI융합기초3 + 열린사고와표현3 + 글로벌의사소통2
+  균형교양: 12,  // 4개 영역 각 1과목 이상
+  확대교양: 0,   // 자율이수
+  total: 34,
+};
 
 /* ── 과목이 어느 필수 그룹에 속하는지 반환 ── */
 function getRequiredGroup(course) {
@@ -1514,18 +1531,34 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
   };
 
+  /* ── 균형교양 4개 영역 각 1과목 채우기 ── */
+  const fillRequiredGyunhyungAreas = () => {
+    if (!inclLiberal || totalCr >= maxCr) return;
+    const liberalPool = getLiberalPool(grade);
+    for (const area of REQUIRED_GYUNHYUNG_AREAS) {
+      if (totalCr >= maxCr) break;
+      const alreadyHas = schedule.some(s => s.type === 'liberal' && s.subtitle === area);
+      if (alreadyHas) continue;
+      const areaPool = liberalPool.filter(c => c.category === '균형교양' && c.subtitle === area);
+      if (!areaPool.length) continue;
+      const best = pickBest(areaPool);
+      if (best) addCourse(best);
+    }
+  };
+
   const fillLiberal = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
     addPoolGreedy(getLiberalPool(grade));
   };
 
-  // 기초교양 필수 그룹 먼저 (전공우선이 아닌 이상)
+  // 기초교양 필수 그룹 + 균형교양 4개 영역 먼저 (전공우선이 아닌 이상)
   if (!prefs.has('major_first')) {
     fillRequiredLiberalGroups();
+    fillRequiredGyunhyungAreas();
   }
 
   if (prefs.has('major_first')) {
-    fillElective(); fillPinned(); fillRequiredLiberalGroups(); fillLiberal();
+    fillElective(); fillPinned(); fillRequiredLiberalGroups(); fillRequiredGyunhyungAreas(); fillLiberal();
   } else if (prefs.has('liberal_first')) {
     fillElective(); fillPinned(); fillLiberal();
   } else {
@@ -1962,20 +1995,32 @@ function renderGradReq(state) {
   // 카테고리별 Progress bar 데이터
   const liberal = req.liberal || {};
   const major   = req.major   || {};
-  const libReq  = (liberal['기초교양'] || 0) + (liberal['균형교양'] || 0) + (liberal['확대교양'] || 0);
+  const libReq  = LIBERAL_REQ.기초교양 + LIBERAL_REQ.균형교양; // 34학점 기준 최소 필수
   const majReq  = (major['전공필수'] || 0) + (major['전공선택'] || 0);
 
-  const rows = [
-    { label: '교양', earned: earnedLiberal,   required: libReq,  color: '#3b6bdc' },
-    { label: '전공', earned: earnedMajor,      required: majReq,  color: '#2a7a1a' },
-  ];
+  // 교양 세부 earned
+  const earnedGichyo    = calcEarned(c => c.type === 'liberal' && c.category === '기초교양');
+  const earnedGyunhyung = calcEarned(c => c.type === 'liberal' && c.category === '균형교양');
+  const earnedHwakdae   = calcEarned(c => c.type === 'liberal' && c.category === '확대교양');
 
-  // 세부 교양
-  const subLib = [
-    { label: '기초교양', req: liberal['기초교양'] || 0 },
-    { label: '균형교양', req: liberal['균형교양'] || 0 },
-    { label: '확대교양', req: liberal['확대교양'] || 0 },
-  ].filter(x => x.req > 0);
+  // 기초교양 그룹별 이수 여부
+  const gichyoGroups = REQUIRED_LIBERAL_GROUPS.map(g => {
+    const done = Array.from(allTaken).some(name => {
+      const c = _allCourses.find(x => x.name.trim().toLowerCase() === name);
+      return c && c.type === 'liberal' && c.subtitle === g.subtitle;
+    }) || selected.some(c => c.type === 'liberal' && c.subtitle === g.subtitle);
+    return { label: g.label, minCr: g.minCredits, done };
+  });
+
+  // 균형교양 4개 영역 이수 여부
+  const gyunhyungAreas = REQUIRED_GYUNHYUNG_AREAS.map(area => {
+    const done = Array.from(allTaken).some(name => {
+      const c = _allCourses.find(x => x.name.trim().toLowerCase() === name);
+      return c && c.type === 'liberal' && c.subtitle === area;
+    }) || selected.some(c => c.type === 'liberal' && c.subtitle === area);
+    return { label: area, done };
+  });
+  const gyunhyungDoneCount = gyunhyungAreas.filter(a => a.done).length;
 
   const subMaj = [
     { label: '전공필수', earned: earnedMajorReq,  req: major['전공필수'] || 0 },
@@ -2087,6 +2132,95 @@ function renderGradReq(state) {
 
   const roadmapHtml = makeRoadmapTable();
 
+  /* ── 교양 이수 현황 테이블 ── */
+  const makeLiberalTable = () => {
+    const HWAKDAE_AREAS = ['언어의세계', '소양교육'];
+
+    // subtitle 기준으로 이수 과목 찾기
+    const findTakenBySubtitle = (subtitle) => {
+      const result = [];
+      const seen = new Set();
+      for (const name of allTaken) {
+        const c = _allCourses.find(x => x.name.trim().toLowerCase() === name && x.type === 'liberal' && x.subtitle === subtitle);
+        if (c && !seen.has(c.name)) { seen.add(c.name); result.push({ ...c, status: 'done' }); }
+      }
+      for (const c of selected) {
+        if (c.type === 'liberal' && c.subtitle === subtitle && !seen.has(c.name)) {
+          seen.add(c.name); result.push({ ...c, status: 'inProgress' });
+        }
+      }
+      return result;
+    };
+
+    const courseTag = (c) => {
+      const retake = retakeSet.has(c.name.trim().toLowerCase());
+      const cls = retake ? 'lib-tag retake' : c.status === 'inProgress' ? 'lib-tag prog' : 'lib-tag done';
+      const icon = retake ? '🔄' : c.status === 'inProgress' ? '' : '✓';
+      return `<span class="${cls}">${icon} ${c.name}<span class="lib-tag-cr">${c.credits}학점</span></span>`;
+    };
+
+    const statusCell = (taken, required) => {
+      if (required) {
+        return taken.length ? `<span class="rmap-status done-icon">✓</span>` : `<span class="lib-required">필수</span>`;
+      }
+      return taken.length ? `<span class="rmap-status done-icon">✓</span>` : `<span class="lib-optional">자율</span>`;
+    };
+
+    // 기초교양 rows
+    const gichyoRows = REQUIRED_LIBERAL_GROUPS.map(g => ({
+      area: g.label, minCr: g.minCredits, taken: findTakenBySubtitle(g.subtitle), required: true
+    }));
+
+    // 균형교양 rows
+    const gyunRows = REQUIRED_GYUNHYUNG_AREAS.map(area => ({
+      area, minCr: null, taken: findTakenBySubtitle(area), required: true
+    }));
+
+    // 확대교양 rows
+    const hwakRows = HWAKDAE_AREAS.map(area => ({
+      area, minCr: null, taken: findTakenBySubtitle(area), required: false
+    }));
+
+    const renderRows = (rows, catLabel, catNote, rowspan) => rows.map((row, i) => `
+      <tr class="${row.taken.length ? 'lib-row-done' : 'lib-row'}">
+        ${i === 0 ? `<td class="lib-cat-cell" rowspan="${rowspan}">${catLabel}${catNote ? `<br><small>${catNote}</small>` : ''}</td>` : ''}
+        <td class="lib-area-cell">${row.area}${row.minCr ? `<br><small class="lib-cr-hint">${row.minCr}학점</small>` : ''}</td>
+        <td class="lib-courses-cell">
+          ${row.taken.length ? row.taken.map(courseTag).join('') : '<span class="lib-empty">미이수</span>'}
+        </td>
+        <td class="lib-status-cell">${statusCell(row.taken, row.required)}</td>
+      </tr>`).join('');
+
+    return `
+      <div class="grad-section">
+        <div class="grad-section-title">교양 이수 현황
+          <span class="rmap-legend">
+            <span class="lib-tag done">✓ 이수완료</span> &nbsp;
+            <span class="lib-tag prog">담는중</span> &nbsp;
+            <span class="lib-tag retake">🔄 재수강</span>
+          </span>
+        </div>
+        <div class="rmap-scroll">
+          <table class="lib-table">
+            <thead>
+              <tr>
+                <th class="lib-cat-th">구분</th>
+                <th class="lib-area-th">영역</th>
+                <th class="lib-courses-th">이수 과목</th>
+                <th class="lib-status-th">상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${renderRows(gichyoRows, '기초교양', `${earnedGichyo}/${LIBERAL_REQ.기초교양}학점`, gichyoRows.length)}
+              ${renderRows(gyunRows,   '균형교양', `${earnedGyunhyung}학점`, gyunRows.length)}
+              ${renderRows(hwakRows,   '확대교양', '자율이수', hwakRows.length)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  };
+
   const makeBar = (label, earned, req, color, subRows) => {
     const pct   = req > 0 ? Math.min(100, Math.round(earned / req * 100)) : 0;
     const done  = earned >= req;
@@ -2132,11 +2266,12 @@ function renderGradReq(state) {
     </div>
 
     <div class="grad-bars-grid">
-      ${makeBar('교양', earnedLiberal, libReq, '#3b6bdc', null)}
+      ${makeBar('교양', earnedLiberal, LIBERAL_REQ.기초교양 + LIBERAL_REQ.균형교양, '#3b6bdc', null)}
       ${makeBar('전공', earnedMajor,   majReq, '#2a7a1a', subMaj)}
     </div>
 
     ${roadmapHtml}
+    ${makeLiberalTable()}
 
     <div class="grad-note">
       <small>* 수강완료 과목과 현재 담은 강의 기준으로 계산됩니다. 실제 이수 학점은 학교 학사시스템을 확인하세요.</small>

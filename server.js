@@ -90,11 +90,25 @@ function normCat(cat) {
 }
 function normLibCat(cat) {
   if(!cat) return'교양';
-  if(cat.includes('기초')) return'기초교양';
+  if(cat.includes('기초') || cat.includes('학부')) return'기초교양';
   if(cat.startsWith('균')) return'균형교양';
   if(cat.startsWith('확')) return'확대교양';
   return cat;
 }
+
+// ar_region 인덱스 → subtitle 매핑 (학교 사이트 기준)
+const LIBERAL_DETAIL_MAP = {
+  '0':'미래설계', '1':'AI융합기초', '2':'열린사고와표현', '3':'글로벌의사소통',
+  '4':'디지털커뮤니케이션', '5':'인문예술', '6':'사회와문화', '7':'자연과학기술의이해',
+  '8':'언어의세계', '9':'소양교육'
+};
+
+// subtitle 매핑 → 교양 대분류
+const LIBERAL_SUBTITLE_CAT = {
+  '미래설계':'기초교양', 'AI융합기초':'기초교양', '열린사고와표현':'기초교양', '글로벌의사소통':'기초교양',
+  '디지털커뮤니케이션':'균형교양', '인문예술':'균형교양', '사회와문화':'균형교양', '자연과학기술의이해':'균형교양',
+  '언어의세계':'확대교양', '소양교육':'확대교양'
+};
 
 /* ─────────────────────────────────────────────
    Fetch dept list from top page
@@ -167,9 +181,11 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     const eyears=[];
     for(const m of (row.eligible_grade_dept||'').matchAll(/([1-4])/g)){const y=Number(m[1]);if(!eyears.includes(y))eyears.push(y);}
     const sec=secNum(row.code);
-    const subtitle=extractSubtitle(row.query_title||'');
+    // forced_subtitle/category는 크롤링 시 detail 인덱스로 직접 매핑한 값 (우선 사용)
+    const subtitle=row.forced_subtitle||extractSubtitle(row.query_title||'');
+    const category=row.forced_category||normLibCat(clean(row.category));
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}`;
-    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category:normLibCat(clean(row.category)),subtitle,department:'',dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[]};
+    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category,subtitle,department:'',dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[]};
     map[key].slots.push(...slots);
   }
 
@@ -222,16 +238,13 @@ async function crawlCourses(year, term) {
   const majorRows=[];
   const extraRows=[];
 
-  // 교양 (h_gubun=0)
+  // 교양 (h_gubun=0) — detail 인덱스 0~9 순회
   for(const g of LIBERAL_GRADES) {
     try {
       const html=await fetchCategory(year,term,'0',g,g,g);
-      const parsed=parseRows(html,{query_title:''});
-      // query_title 추출
-      const $=cheerio.load(html);
-      const titleCell=$('td').filter((_,el)=>$(el).text().includes('학기')).first();
-      const qTitle=clean(titleCell.text());
-      parsed.forEach(r=>r.query_title=qTitle);
+      const subtitle=LIBERAL_DETAIL_MAP[g]||'';
+      const category=LIBERAL_SUBTITLE_CAT[subtitle]||'기초교양';
+      const parsed=parseRows(html,{query_title:'', forced_subtitle:subtitle, forced_category:category});
       liberalRows.push(...parsed);
       await sleep(300);
     } catch(e){console.warn(`교양 g=${g} 실패:`,e.message);}
