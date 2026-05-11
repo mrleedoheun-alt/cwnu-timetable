@@ -1,0 +1,828 @@
+[
+  {
+    "name": "시사영어연습",
+    "type": "liberal",
+    "category": "확대교양",
+    "subtitle": "소양교육",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "박준호",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      }
+    ]
+  },
+  {
+    "name": "시사영어연습",
+    "type": "major",
+    "category": "확대교양",
+    "subtitle": "",
+    "department": "영어영문학과",
+    "dept_code": "102",
+    "credits": 3,
+    "professor": "박준호",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "11406"
+      }
+    ]
+  },
+  {
+    "name": "성과사랑의철학",
+    "type": "major",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "철학과",
+    "dept_code": "108",
+    "credits": 3,
+    "professor": "정영준",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "11401"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "11401"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "11401"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "11401"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "11401"
+      }
+    ]
+  },
+  {
+    "name": "대학미적분학1",
+    "type": "major",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "수학과",
+    "dept_code": "380",
+    "credits": 3,
+    "professor": "권은옥",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      }
+    ]
+  },
+  {
+    "name": "대학미적분학2",
+    "type": "major",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "수학과",
+    "dept_code": "380",
+    "credits": 3,
+    "professor": "공수련",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32306"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32306"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32306"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32306"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32306"
+      }
+    ]
+  },
+  {
+    "name": "보건학실험",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "생명보건학부",
+    "dept_code": "315",
+    "credits": 3,
+    "professor": "하권철",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      }
+    ]
+  },
+  {
+    "name": "엔터프라이즈디자인",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "이재선",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "로봇캡스톤디자인(USG공유대학(공유대학2.0) 지능로봇전공만 수강 가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "권오설,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "스마트단지및경관설계(USG공유대학(공유대학2.0) 스마트도시건설전공만 수강 가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "박경훈,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "인권사회학",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "이정은",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "마을만들기리빙랩(USG공유대학(공유대학2.0) 공동체혁신전공만 수강 가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "황현일,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "14:30",
+        "end": "17:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "14:30",
+        "end": "17:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "14:30",
+        "end": "17:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "14:30",
+        "end": "17:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "14:30",
+        "end": "17:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "지방재정의이해와예산실습(USG공유대학(공유대학2.0) 공동체혁신전공만 수강 가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "김민혜,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "무역상무론",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "국제무역학과",
+    "dept_code": "212",
+    "credits": 3,
+    "professor": "양정미",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      }
+    ]
+  },
+  {
+    "name": "인간관계론(추가증원은 드림캐치로 교수님께 추가신청사유/학습계획을 신청하면 취합하여 증원예정입니다)",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "경영학과",
+    "dept_code": "205",
+    "credits": 3,
+    "professor": "차민석",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      }
+    ]
+  },
+  {
+    "name": "인간관계와의사소통",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "권희경",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부인터넷강좌",
+    "slots": []
+  },
+  {
+    "name": "입영훈련2",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "이경우",
+    "section": "00",
+    "eligible_years": [
+      3
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "입영훈련3",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "임승기",
+    "section": "00",
+    "eligible_years": [
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "해외어학연수II(해외자매대학교 연수프로그램 (국제교류교육원 선발자만 신청))",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김태식",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "전력산업실무(2025년 상반기 '전국 에너지 공동학점과정' 참여자 대상만 수강 가능(23명))",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "김점회",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "표준현장실습1",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "표준현장실습3",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 6,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "현장실습1(C-LeGo)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "현장실습3(C-LeGo)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 6,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  }
+]

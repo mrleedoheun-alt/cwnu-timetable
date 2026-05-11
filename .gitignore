@@ -1,9 +1,7 @@
 # 의존성
 node_modules/
 
-# 크롤링 캐시 (서버에서 자동 생성됨)
-data/courses_*.json
-data/courses.json
+# 크롤링 중간 원본 (불필요)
 data/major_raw.json
 data/extra_raw.json
 courses_all.json

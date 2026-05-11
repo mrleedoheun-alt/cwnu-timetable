@@ -1,0 +1,1016 @@
+[
+  {
+    "name": "국어어문규범의이해",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "국어국문학과",
+    "dept_code": "101",
+    "credits": 3,
+    "professor": "안정아",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "동백406"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "동백406"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "동백406"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "동백406"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "동백406"
+      }
+    ]
+  },
+  {
+    "name": "수학및연습1",
+    "type": "major",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "수학과",
+    "dept_code": "380",
+    "credits": 3,
+    "professor": "공수련",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      }
+    ]
+  },
+  {
+    "name": "프로젝트디자인AdvancedⅠ(USG공유대학 스마트기계설계해석전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "박용갑",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "프로젝트디자인AdvancedⅡ(USG공유대학 스마트기계설계해석전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "이재선",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "E-mobility프로젝트디자인(USG공유대학 E-Mobility 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "김재형,정은태",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "로봇프로젝트설계Ⅱ(USG공유대학 지능로봇 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "조철우,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "엔터프라이즈설계(USG공유대학 지능로봇 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "정원지,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "15:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "고급자바프로그래밍(스마트제조ICT전공만 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "이혁,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "99999"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "99999"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "99999"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "99999"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "99999"
+      }
+    ]
+  },
+  {
+    "name": "시스템프로그래밍(스마트제조ICT전공만 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "최도진,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      }
+    ]
+  },
+  {
+    "name": "IoT(스마트제조ICT전공만 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "안동혁,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "99999"
+      }
+    ]
+  },
+  {
+    "name": "스마트단지및경관설계(USG공유대학 스마트도시·건설 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "박경훈,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "14:00",
+        "end": "16:30",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "스마트도시재생과리빙랩(USG공유대학 스마트도시·건설 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "박종관,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "스마트도시·사업관리(USG공유대학 스마트도시·건설 전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "이흥규,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "지방재정의이해와예산실습(USG공유대학 공동체혁신전공 수강가능)",
+    "type": "major",
+    "category": "융합전공",
+    "subtitle": "",
+    "department": "RISE사업단",
+    "dept_code": "712",
+    "credits": 3,
+    "professor": "김민혜,강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "무역학원론",
+    "type": "major",
+    "category": "전공필수",
+    "subtitle": "",
+    "department": "국제무역학과",
+    "dept_code": "212",
+    "credits": 3,
+    "professor": "신성식",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21230"
+      }
+    ]
+  },
+  {
+    "name": "유통관리론",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "경영학과",
+    "dept_code": "205",
+    "credits": 3,
+    "professor": "박재진",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "B21220"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "B21220"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "B21220"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "B21220"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "B21220"
+      }
+    ]
+  },
+  {
+    "name": "원가회계(비전공자도 수강 가능)",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "경영학과",
+    "dept_code": "205",
+    "credits": 3,
+    "professor": "장지영",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21123"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21123"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21123"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21123"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "B21123"
+      }
+    ]
+  },
+  {
+    "name": "인간관계와의사소통",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "권희경",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부인터넷강좌",
+    "slots": []
+  },
+  {
+    "name": "전력산업실무(전국에너지공동학점과정 참여자 대상학생만 신청 가능)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부인터넷강좌",
+    "slots": []
+  },
+  {
+    "name": "해외어학연수II",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "밀라드 앤드류 스탠리",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "전력산업실무(전국에너지공동학점과정 참여자 대상학생만 신청 가능)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "강사",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "표준현장실습1",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "표준현장실습3",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 6,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인Ⅱ(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인기초2(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인심화(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인응용(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인기초1(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC캡스톤디자인Ⅰ(LINC 3.0 사업단 과제신청 필수)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "신용찬",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  }
+]
