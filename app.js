@@ -170,15 +170,10 @@ function fillDepartmentOptions(sel, selected = '') {
 async function loadDepartments() {
   if (DEPARTMENTS.length > 0) return; // 이미 로드됨
   try {
-    const res  = await fetch('data/courses.json');
+    const res  = await fetch('data/all_grad_reqs.json');
     const data = await res.json();
-    const depts = [...new Set(
-      data.filter(c => c.type === 'major' && c.department && !DEPTS_NO_GRAD_REQS.has(c.department))
-           .map(c => c.department)
-    )].sort((a, b) => a.localeCompare(b, 'ko'));
-    DEPARTMENTS = depts;
+    DEPARTMENTS = Object.keys(data).sort((a, b) => a.localeCompare(b, 'ko'));
   } catch {
-    // fallback: 빈 목록
     DEPARTMENTS = [];
   }
 }
