@@ -1,0 +1,29 @@
+# 의존성
+node_modules/
+
+# 크롤링 캐시 (서버에서 자동 생성됨)
+data/courses_*.json
+data/courses.json
+data/major_raw.json
+data/extra_raw.json
+courses_all.json
+courses_all.csv
+
+# 교육과정 편람 PDF (용량 초과)
+교양/
+
+# 개발 도구 & 분석 스크립트
+html_dump/
+*.py
+crawl_*.js
+extract_*.js
+*.txt
+out.txt
+
+# 개발 환경 설정
+.claude/
+.env
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>설정</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="settings">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">TIME TABLE</div>
+      <nav class="side-nav">
+        <a class="side-link" href="index.html">나의 시간표</a>
+        <a class="side-link" href="generate.html">시간표 생성</a>
+        <a class="side-link active" href="settings.html">설정</a>
+      </nav>
+      <div class="side-logout">
+        <button class="logout-btn" type="button">로그아웃</button>
+      </div>
+    </aside>
+
+    <main class="content narrow">
+      <header class="page-header">
+        <div>
+          <h1>설정</h1>
+          <p class="subtext">학번과 학과는 여기에서 수정할 수 있습니다.</p>
+        </div>
+      </header>
+
+      <section class="form-layout">
+        <article class="card">
+          <div class="card-head">
+            <h2>기본 정보 수정</h2>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="settingsStudentId">학번</label>
+              <input type="text" id="settingsStudentId" maxlength="8" placeholder="예: 20251234" />
+              <small class="helper-text">8자리 숫자, 앞 4자리는 입학년도</small>
+            </div>
+            <div class="field">
+              <label for="settingsDepartment">학과</label>
+              <select id="settingsDepartment"></select>
+            </div>
+          </div>
+          <div class="button-group">
+            <button id="saveSettingsBtn" class="primary-btn" type="button">저장하기</button>
+            <a class="secondary-btn" href="index.html">취소</a>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
