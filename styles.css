@@ -1593,16 +1593,46 @@ body {
 .auto-gen-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 12px;
   padding-top: 4px;
   border-top: 1px solid var(--line);
 }
 
-.auto-gen-credit-info {
-  font-size: 13px;
+.ag-credit-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ag-credit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 130px;
+}
+
+.ag-credit-label {
+  font-size: 12px;
+  font-weight: 700;
   color: var(--muted);
+}
+
+.ag-credit-input,
+.ag-credit-select {
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.ag-credit-input:focus,
+.ag-credit-select:focus {
+  border-color: var(--primary);
 }
 
 .text-link {

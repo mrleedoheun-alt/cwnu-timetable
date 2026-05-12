@@ -2858,13 +2858,7 @@ function setupAutoGen(state) {
     });
   }
 
-  // 최대학점 표시 동기화
-  const maxCrDisplay = document.getElementById('autoMaxCrDisplay');
-  const syncMaxCr = () => {
-    if (maxCrDisplay) maxCrDisplay.textContent = state.maxCredits || 18;
-  };
-  syncMaxCr();
-  document.getElementById('maxCredits')?.addEventListener('change', syncMaxCr);
+  document.getElementById('maxCredits')?.addEventListener('change', () => {});
 
   // 생성 버튼
   document.getElementById('autoGenBtn')?.addEventListener('click', () => {
