@@ -1421,6 +1421,17 @@ body {
   }
 }
 
+@media (max-width: 600px) {
+  /* 사이드바 슬라이드 상태에선 글자 복원 */
+  .sidebar .side-link,
+  .sidebar .logout-btn {
+    font-size: 14px;
+  }
+  .sidebar .brand {
+    font-size: 17px;
+  }
+}
+
 /* ==============================
    Auto-generation panel
    ============================== */
@@ -2864,9 +2875,19 @@ body {
   .mini-tt-container { overflow-x: auto; }
   .mini-tt-container .et-wrap { min-width: 340px; }
 
-  /* 나의 시간표 */
-  .timetable-container { overflow-x: auto; }
-  .et-wrap { min-width: 400px; }
+  /* 나의 시간표 - 화면에 꽉 차게 */
+  .timetable-container { overflow-x: visible; }
+  .et-wrap { min-width: 0; width: 100%; }
+  .et-top,
+  .et-grid {
+    grid-template-columns: 32px repeat(5, 1fr);
+  }
+  .time-label   { font-size: 9px; padding: 3px 2px 0; }
+  .day          { font-size: 12px; padding: 7px 2px; }
+  .corner       { font-size: 9px; padding: 7px 2px; }
+  .course-block { padding: 3px 4px; border-radius: 5px; }
+  .course-title { font-size: 9px; margin-bottom: 1px; }
+  .course-meta  { font-size: 8px; }
 
   /* 졸업요건 테이블 가로 스크롤 */
   .rmap-scroll  { overflow-x: auto; }
