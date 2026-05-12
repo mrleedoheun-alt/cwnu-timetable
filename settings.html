@@ -7,9 +7,13 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-page="settings">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand">TIME TABLE</div>
+      <div class="sidebar-top">
+        <div class="brand">TIME TABLE</div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button">✕</button>
+      </div>
       <nav class="side-nav">
         <a class="side-link" href="index.html">나의 시간표</a>
         <a class="side-link" href="generate.html">시간표 생성</a>
@@ -22,9 +26,12 @@
 
     <main class="content narrow">
       <header class="page-header">
-        <div>
-          <h1>설정</h1>
-          <p class="subtext">학번과 학과는 여기에서 수정할 수 있습니다.</p>
+        <div class="page-header-title">
+          <button class="hamburger-btn" id="hamburgerBtn" type="button">☰</button>
+          <div>
+            <h1>설정</h1>
+            <p class="subtext">학번과 학과는 여기에서 수정할 수 있습니다.</p>
+          </div>
         </div>
       </header>
 

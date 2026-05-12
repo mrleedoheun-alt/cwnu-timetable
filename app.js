@@ -1190,6 +1190,22 @@ function setupLogout() {
   });
 }
 
+function setupSidebarToggle() {
+  const sidebar  = document.querySelector('.sidebar');
+  const overlay  = document.getElementById('sidebarOverlay');
+  const openBtn  = document.getElementById('hamburgerBtn');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
+  if (!sidebar || !overlay || !openBtn) return;
+
+  const open  = () => { sidebar.classList.add('open');    overlay.classList.add('active'); };
+  const close = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+
+  openBtn.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
+  overlay.addEventListener('click', close);
+  document.querySelectorAll('.side-link').forEach(a => a.addEventListener('click', close));
+}
+
 /* ============================================================
    Helpers
    ============================================================ */
@@ -2923,6 +2939,7 @@ async function init() {
   if (!getSession()) { location.href = 'login.html'; return; }
 
   setupLogout();
+  setupSidebarToggle();
   const state = loadState();
 
   if (page === 'index')    setupIndexPage(state);

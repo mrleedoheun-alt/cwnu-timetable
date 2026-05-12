@@ -7,9 +7,13 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-page="index">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand">TIME TABLE</div>
+      <div class="sidebar-top">
+        <div class="brand">TIME TABLE</div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button">✕</button>
+      </div>
       <nav class="side-nav">
         <a class="side-link active" href="index.html">나의 시간표</a>
         <a class="side-link" href="generate.html">시간표 생성</a>
@@ -22,9 +26,12 @@
 
     <main class="content">
       <header class="page-header">
-        <div>
+        <div class="page-header-title">
+          <button class="hamburger-btn" id="hamburgerBtn" type="button">☰</button>
+          <div>
           <h1>나의 시간표</h1>
           <p class="subtext">과목 블록을 클릭하면 삭제할 수 있습니다.</p>
+          </div>
         </div>
         <div class="header-actions">
           <div class="field compact">
