@@ -2712,5 +2712,142 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ==============================
+   모바일 반응형 (≤600px)
+   ============================== */
+@media (max-width: 600px) {
 
+  /* 사이드바 → 하단 내비게이션 바 */
+  .sidebar {
+    width: 100%;
+    height: 56px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+    padding: 0;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    z-index: 200;
+  }
 
+  .brand { display: none; }
+
+  .side-nav {
+    flex-direction: row;
+    flex: 1;
+    padding: 0;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .side-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .side-link.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-top: 2px solid var(--primary);
+  }
+
+  .side-logout {
+    border-top: none;
+    border-left: 1px solid var(--line);
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .logout-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 0;
+    text-align: center;
+    color: #e05050;
+  }
+
+  /* 콘텐츠 영역 */
+  .content {
+    margin-left: 0;
+    padding: 20px 14px 72px;
+  }
+
+  /* 페이지 헤더 */
+  .page-header {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .page-header h1 { font-size: 20px; }
+
+  .header-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .info-chip-row { flex-wrap: wrap; }
+
+  .field.compact { flex-direction: row; align-items: center; gap: 6px; }
+  .field.compact label { white-space: nowrap; font-size: 12px; }
+  .field.compact select { flex: 1; font-size: 13px; }
+
+  /* 자동 생성 패널 */
+  .auto-gen-header { padding: 14px 16px; }
+  .auto-gen-body   { padding: 14px 16px; }
+
+  .ag-pills { flex-wrap: wrap; gap: 6px; }
+  .ag-pill  { font-size: 12px; padding: 6px 10px; }
+
+  /* 추천 결과 */
+  .auto-results-grid { grid-template-columns: 1fr; }
+  .auto-result-card  { padding: 16px; }
+
+  /* 강의 탐색 */
+  .gen-grid { grid-template-columns: 1fr; }
+  .course-list { max-height: 45vh; }
+
+  .filter-row { flex-wrap: wrap; gap: 4px; }
+
+  /* 미니 시간표 */
+  .mini-tt-container { overflow-x: auto; }
+  .mini-tt-container .et-wrap { min-width: 340px; }
+
+  /* 나의 시간표 */
+  .timetable-container { overflow-x: auto; }
+  .et-wrap { min-width: 400px; }
+
+  /* 졸업요건 테이블 가로 스크롤 */
+  .rmap-scroll  { overflow-x: auto; }
+  .rmap-table   { min-width: 420px; }
+  .lib-table    { min-width: 420px; }
+
+  /* 카드 패딩 축소 */
+  .card         { padding: 16px 14px; }
+  .card-head    { margin-bottom: 12px; }
+
+  /* 담은 강의 / 액션 버튼 */
+  .gen-actions  { flex-direction: column; gap: 8px; }
+  .primary-btn.full,
+  .secondary-btn.full { font-size: 14px; padding: 12px; }
+
+  /* 설정 페이지 */
+  .form-grid    { grid-template-columns: 1fr; }
+
+  /* 로그인 */
+  .auth-bg      { padding: 20px 16px; }
+  .auth-card    { padding: 20px 16px; }
+  .auth-wrap    { gap: 20px; }
+}
