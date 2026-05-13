@@ -1924,7 +1924,7 @@ function renderAutoResults(variants, state) {
       )?.name || '';
       const bg = color?.bg || '#dbe9ff';
       const bd = color?.border || '#8fb1f5';
-      blocks += `<div class="rt-block" data-name="${esc(courseName)}" style="left:${leftPx}px;top:${topPx}px;width:${widthPx}px;height:${heightPx - 1}px;background:${bg};border:1px solid ${bd};pointer-events:auto;cursor:context-menu;">
+      blocks += `<div class="rt-block" data-name="${esc(courseName)}" data-variant-idx="${i}" style="left:${leftPx}px;top:${topPx}px;width:${widthPx}px;height:${heightPx - 1}px;background:${bg};border:1px solid ${bd};pointer-events:auto;cursor:pointer;">
         <div class="rt-block-name">${courseName}</div>
       </div>`;
     });
@@ -1960,10 +1960,12 @@ function renderAutoResults(variants, state) {
         <!-- 과목 목록 -->
         <div class="result-course-list">
           ${v.schedule.map(c => `
-            <div class="result-course-item" data-name="${esc(c.name)}" style="cursor:pointer;">
+            <div class="result-course-item" data-name="${esc(c.name)}" data-variant-idx="${i}">
               <span class="result-course-name">${c.name}</span>
               <span class="cat-badge cat-${catClass(c.category)} small">${c.category}</span>
               <span class="result-course-credit">${c.credits}학점</span>
+              <button class="result-course-add-btn" data-name="${esc(c.name)}" data-variant-idx="${i}" type="button" title="담기">＋담기</button>
+              <button class="result-course-info-btn" data-name="${esc(c.name)}" type="button" title="상세 정보">ℹ</button>
             </div>
           `).join('')}
         </div>
@@ -1991,30 +1993,80 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // 과목 목록 아이템 클릭 → 상세 팝업
-  grid.querySelectorAll('.result-course-item').forEach(item => {
-    item.addEventListener('click', e => {
+  // 과목 목록 — ＋담기 버튼 클릭
+  grid.querySelectorAll('.result-course-add-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
-      showCourseInfoPopup(item.dataset.name);
+      const vIdx   = Number(btn.dataset.variantIdx);
+      const cName  = btn.dataset.name;
+      const course = variants[vIdx]?.schedule.find(c => c.name === cName);
+      if (course) addCourseToSelectedFromResult(course);
     });
   });
 
-  // rt-block 좌클릭 → 상세 팝업
+  // 과목 목록 — ℹ 버튼 클릭 → 상세 팝업
+  grid.querySelectorAll('.result-course-info-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      showCourseInfoPopup(btn.dataset.name);
+    });
+  });
+
+  // 과목 목록 — 행 클릭 (버튼 제외) → 담기
+  grid.querySelectorAll('.result-course-item').forEach(item => {
+    item.addEventListener('click', e => {
+      if (e.target.closest('button')) return;
+      e.stopPropagation();
+      const vIdx   = Number(item.dataset.variantIdx);
+      const cName  = item.dataset.name;
+      const course = variants[vIdx]?.schedule.find(c => c.name === cName);
+      if (course) addCourseToSelectedFromResult(course);
+    });
+  });
+
+  // rt-block 좌클릭 → 담기
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('click', e => {
       if (e.button !== 0) return;
       e.stopPropagation();
-      showCourseInfoPopup(block.dataset.name);
+      const vIdx   = Number(block.dataset.variantIdx);
+      const cName  = block.dataset.name;
+      const course = variants[vIdx]?.schedule.find(c => c.name === cName);
+      if (course) addCourseToSelectedFromResult(course);
     });
   });
 
-  // 우클릭 컨텍스트 메뉴 (rt-block)
+  // rt-block 우클릭 → 컨텍스트 메뉴 (담기 + 제외 + 수강완료 + 상세정보)
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('contextmenu', e => {
       e.preventDefault();
-      showResultContextMenu(e.clientX, e.clientY, block.dataset.name);
+      const vIdx   = Number(block.dataset.variantIdx);
+      const cName  = block.dataset.name;
+      const course = variants[vIdx]?.schedule.find(c => c.name === cName);
+      showResultContextMenu(e.clientX, e.clientY, cName, course);
     });
   });
+}
+
+/* ── 추천 시간표에서 개별 과목 담기 ── */
+function addCourseToSelectedFromResult(course) {
+  if (!course) return;
+  const already = _selected.findIndex(s => s.name === course.name && s.section === course.section);
+  if (already >= 0) {
+    showToast(`"${course.name}" 이미 담겨 있습니다.`);
+    return;
+  }
+  const conflict = checkConflict(course, _selected);
+  if (conflict) {
+    showToast(`⚠ 시간 충돌: "${conflict}"와 겹쳐 담을 수 없습니다.`);
+    return;
+  }
+  _selected.push(course);
+  renderCourseList();
+  renderSelectedList();
+  renderMiniTimetable();
+  if (_gradReqs && _currentState) renderGradReq(_currentState);
+  showToast(`"${course.name}" 담았습니다 ✓`);
 }
 
 /* ── 자동생성 결과 과목 클릭 → 상세 정보 팝업 ── */
@@ -2070,7 +2122,7 @@ function showCourseInfoPopup(courseName) {
 
 /* ── 자동생성 결과 과목 우클릭 메뉴 ── */
 let _ctxMenu = null;
-function showResultContextMenu(x, y, courseName) {
+function showResultContextMenu(x, y, courseName, courseObj) {
   closeCtxMenu();
   if (!courseName) return;
 
@@ -2078,8 +2130,11 @@ function showResultContextMenu(x, y, courseName) {
   menu.className = 'result-ctx-menu';
   menu.innerHTML = `
     <div class="ctx-course-name">${courseName}</div>
+    <button class="ctx-item ctx-add" data-action="add" type="button">📥 담기</button>
+    <div class="ctx-divider"></div>
     <button class="ctx-item" data-action="exclude" type="button">🚫 추천 제외 과목으로 설정</button>
     <button class="ctx-item" data-action="completed" type="button">✅ 수강 완료로 표시</button>
+    <button class="ctx-item" data-action="info" type="button">ℹ 상세 정보</button>
     <div class="ctx-divider"></div>
     <button class="ctx-item ctx-cancel" data-action="close" type="button">닫기</button>
   `;
@@ -2142,6 +2197,11 @@ function showResultContextMenu(x, y, courseName) {
         } else {
           showToast(`이미 수강 완료 목록에 있는 과목입니다.`);
         }
+      } else if (action === 'add') {
+        if (courseObj) addCourseToSelectedFromResult(courseObj);
+        else showToast('과목 정보를 찾을 수 없습니다.');
+      } else if (action === 'info') {
+        showCourseInfoPopup(courseName);
       }
       closeCtxMenu();
     });
