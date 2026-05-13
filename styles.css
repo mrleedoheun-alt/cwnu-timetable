@@ -2427,7 +2427,7 @@ body {
 .lib-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 520px;
+  min-width: 400px;
   font-size: 12px;
 }
 .lib-table th, .lib-table td {
@@ -2856,7 +2856,9 @@ body {
 
   /* 자동 생성 패널 */
   .auto-gen-header { padding: 14px 16px; }
-  .auto-gen-body   { padding: 14px 16px; }
+  .auto-gen-body   { padding: 14px 16px; overflow-x: hidden; }
+  .ag-credit-row   { flex-direction: column; gap: 10px; }
+  .ag-credit-field { min-width: 0; width: 100%; }
 
   .ag-pills { flex-wrap: wrap; gap: 6px; }
   .ag-pill  { font-size: 12px; padding: 6px 10px; }
@@ -2885,10 +2887,27 @@ body {
   .course-title { font-size: 9px; margin-bottom: 1px; }
   .course-meta  { font-size: 8px; }
 
-  /* 졸업요건 테이블 가로 스크롤 */
-  .rmap-scroll  { overflow-x: auto; }
-  .rmap-table   { min-width: 420px; }
-  .lib-table    { min-width: 420px; }
+  /* 전체 가로 스크롤 방지 */
+  html, body    { overflow-x: hidden; max-width: 100vw; }
+
+  /* 졸업요건 패널 - overflow 허용 (내부 스크롤 가능하도록) */
+  .auto-gen-wrap          { overflow: visible; }
+  .grad-req-wrap          { overflow: visible; }
+
+  /* 로드맵/교양 테이블: 패널 내부에서만 가로 스크롤 */
+  .rmap-scroll  {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  .rmap-table   { min-width: 420px; font-size: 11px; }
+  .lib-table    { min-width: 0; width: 100%; font-size: 11px; }
+  .lib-table th,
+  .lib-table td { padding: 5px 6px; }
+  .lib-cat-th   { width: 52px; }
+  .lib-area-th  { width: 90px; }
+  .lib-status-th{ width: 44px; }
 
   /* 카드 패딩 축소 */
   .card         { padding: 16px 14px; }
