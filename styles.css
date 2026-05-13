@@ -2875,13 +2875,9 @@ body {
   .mini-tt-container { overflow-x: auto; }
   .mini-tt-container .et-wrap { min-width: 340px; }
 
-  /* 나의 시간표 - 화면에 꽉 차게 */
+  /* 나의 시간표 - 화면에 꽉 차게 (JS에서 dayCol 자동 계산) */
   .timetable-container { overflow-x: visible; }
   .et-wrap { min-width: 0; width: 100%; }
-  .et-top,
-  .et-grid {
-    grid-template-columns: 32px repeat(5, 1fr);
-  }
   .time-label   { font-size: 9px; padding: 3px 2px 0; }
   .day          { font-size: 12px; padding: 7px 2px; }
   .corner       { font-size: 9px; padding: 7px 2px; }

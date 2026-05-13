@@ -217,9 +217,22 @@ function renderTimetable(container, courses, opts = {}) {
   const colorMap = buildColorMap(courses);
 
   const mini      = opts.mini || false;
-  const dayCol    = opts.dayCol   || (mini ? 62 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--day-col')) || 108);
-  const hourH     = opts.hourH    || (mini ? 44 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hour-h'))  || 60);
   const timeColW  = opts.timeColW || (mini ? 32 : 48);
+  const hourH     = opts.hourH    || (mini ? 44 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hour-h'))  || 60);
+
+  // 모바일에서 컨테이너 너비에 맞게 dayCol 자동 계산
+  let dayCol;
+  if (opts.dayCol) {
+    dayCol = opts.dayCol;
+  } else if (mini) {
+    dayCol = 62;
+  } else {
+    const containerW = container.clientWidth || container.offsetWidth || 0;
+    dayCol = containerW > 0
+      ? Math.floor((containerW - timeColW) / 5)
+      : (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--day-col')) || 108);
+  }
+
   const baseMin   = timeToMin('09:00');
   const lastMin   = timeToMin(HOUR_ROWS_END);
   const hours     = HOUR_ROWS;
