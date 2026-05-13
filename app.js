@@ -1965,6 +1965,7 @@ function renderAutoResults(variants, state) {
               <span class="cat-badge cat-${catClass(c.category)} small">${c.category}</span>
               <span class="result-course-credit">${c.credits}학점</span>
               <button class="result-course-add-btn" data-name="${esc(c.name)}" data-variant-idx="${i}" type="button" title="담기">＋담기</button>
+              <button class="result-course-exc-btn" data-name="${esc(c.name)}" type="button" title="추천 제외">🚫</button>
               <button class="result-course-info-btn" data-name="${esc(c.name)}" type="button" title="상세 정보">ℹ</button>
             </div>
           `).join('')}
@@ -2001,6 +2002,14 @@ function renderAutoResults(variants, state) {
       const cName  = btn.dataset.name;
       const course = variants[vIdx]?.schedule.find(c => c.name === cName);
       if (course) addCourseToSelectedFromResult(course);
+    });
+  });
+
+  // 과목 목록 — 🚫 제외 버튼 클릭
+  grid.querySelectorAll('.result-course-exc-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      excludeCourseFromResult(btn.dataset.name);
     });
   });
 
@@ -2067,6 +2076,27 @@ function addCourseToSelectedFromResult(course) {
   renderMiniTimetable();
   if (_gradReqs && _currentState) renderGradReq(_currentState);
   showToast(`"${course.name}" 담았습니다 ✓`);
+}
+
+/* ── 추천 시간표에서 과목 제외 처리 (공통) ── */
+function excludeCourseFromResult(courseName) {
+  if (!courseName || !_currentState) return;
+  if (_currentState.excludedCourses.includes(courseName)) {
+    showToast(`이미 제외 목록에 있는 과목입니다.`);
+    return;
+  }
+  _currentState.excludedCourses.push(courseName);
+  saveState(_currentState);
+  // 제외 목록 UI 갱신
+  setupExcludedCourses(_currentState);
+  // 제외 패널 펼치기
+  const body    = document.getElementById('excludedBody');
+  const chevron = document.getElementById('excludedChevron');
+  if (body?.classList.contains('hidden')) {
+    body.classList.remove('hidden');
+    if (chevron) chevron.textContent = '▼';
+  }
+  showToast(`"${courseName}" 추천 제외 목록에 추가했습니다.`);
 }
 
 /* ── 자동생성 결과 과목 클릭 → 상세 정보 팝업 ── */
@@ -2155,39 +2185,7 @@ function showResultContextMenu(x, y, courseName, courseObj) {
     item.addEventListener('click', () => {
       const action = item.dataset.action;
       if (action === 'exclude') {
-        if (_currentState && !_currentState.excludedCourses.includes(courseName)) {
-          _currentState.excludedCourses.push(courseName);
-          saveState(_currentState);
-          // 제외 목록 UI 갱신
-          const listEl = document.getElementById('excludedList');
-          const countEl = document.getElementById('excludedCount');
-          if (countEl) countEl.textContent = `${_currentState.excludedCourses.length}과목`;
-          if (listEl) {
-            listEl.innerHTML = _currentState.excludedCourses.map((name, i) => `
-              <span class="completed-tag excluded-tag">
-                ${name}
-                <button class="completed-tag-del" data-idx="${i}" type="button" title="삭제">×</button>
-              </span>
-            `).join('');
-            listEl.querySelectorAll('.completed-tag-del').forEach(btn => {
-              btn.addEventListener('click', () => {
-                _currentState.excludedCourses.splice(Number(btn.dataset.idx), 1);
-                saveState(_currentState);
-                setupExcludedCourses(_currentState);
-              });
-            });
-          }
-          // 제외 패널 펼치기
-          const body = document.getElementById('excludedBody');
-          const chevron = document.getElementById('excludedChevron');
-          if (body?.classList.contains('hidden')) {
-            body.classList.remove('hidden');
-            if (chevron) chevron.textContent = '▼';
-          }
-          showToast(`"${courseName}"을(를) 추천 제외 목록에 추가했습니다.`);
-        } else {
-          showToast(`이미 제외 목록에 있는 과목입니다.`);
-        }
+        excludeCourseFromResult(courseName);
       } else if (action === 'completed') {
         if (_currentState && !_currentState.completedCourses.includes(courseName)) {
           _currentState.completedCourses.push(courseName);

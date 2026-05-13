@@ -1916,6 +1916,7 @@ body {
   background: var(--primary-hover, #4f46e5);
 }
 
+.result-course-exc-btn,
 .result-course-info-btn {
   flex-shrink: 0;
   width: 22px;
@@ -1923,18 +1924,22 @@ body {
   font-size: 13px;
   color: var(--muted);
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity .15s, color .15s;
+  transition: opacity .15s, color .15s, border-color .15s;
   line-height: 1;
 }
+.result-course-item:hover .result-course-exc-btn,
 .result-course-item:hover .result-course-info-btn {
   opacity: 1;
+}
+.result-course-exc-btn:hover {
+  border-color: #e05555;
 }
 .result-course-info-btn:hover {
   color: var(--primary);
