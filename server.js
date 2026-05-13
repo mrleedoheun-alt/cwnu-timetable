@@ -229,8 +229,9 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     const type=liberalCatsSet.has(cat)?'liberal':cat==='자유선택'?'자유선택':'major';
     const openedDept=clean(row.opened_department||'');
     const realDept=(openedDept&&openedDept!=='교양')?openedDept:'';
+    const extraOnline = type === 'liberal' && !slots.length;
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}||${row.gubun_code||''}`;
-    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:realDept,dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],gubun_label:row.gubun_label||'',slots:[]};
+    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:realDept,dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],gubun_label:row.gubun_label||'',slots:[],...(extraOnline?{online:true}:{})};
     map[key].slots.push(...slots);
   }
 
