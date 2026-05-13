@@ -1470,14 +1470,21 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   const NOSTYLE = new Set();
 
   /* 풀에서 베스트 섹션 선택 — sp(stylePrefs) 기본값 = prefs(스타일 적용) */
+  /* 상위 N개 후보 중 랜덤 선택 (seed=0이면 항상 1등 확정) */
+  const pickRandom = (scored) => {
+    if (!shuffleSeed || scored.length <= 1) return scored[0].c;
+    // 상위 min(6, 전체의 40%) 개 중 균등 랜덤
+    const topN = Math.max(2, Math.min(6, Math.ceil(scored.length * 0.4)));
+    return scored[Math.floor(rng() * topN)].c;
+  };
+
   const pickBest = (pool, sp = prefs) => {
     const valid = pool.filter(canAdd);
     if (!valid.length) return null;
-    const noise = shuffleSeed ? 18 : 0;
-    const scored = valid.map(c => ({
-      c, s: scoreCourse(c, usedFlat, sp) + (noise ? (rng() - 0.5) * noise : 0)
-    })).sort((a, b) => b.s - a.s);
-    return scored[0].c;
+    const scored = valid
+      .map(c => ({ c, s: scoreCourse(c, usedFlat, sp) }))
+      .sort((a, b) => b.s - a.s);
+    return pickRandom(scored);
   };
 
   /* 과목명으로 묶어서 베스트 섹션만 추가 — sp 기본값 = prefs */
@@ -1488,6 +1495,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (!nameMap.has(key)) nameMap.set(key, []);
       nameMap.get(key).push(c);
     }
+    // 과목명 순서도 seed 있으면 셔플
     const keys = [...nameMap.keys()];
     if (shuffleSeed) keys.sort(() => rng() - 0.5);
     for (const key of keys) {
@@ -1500,13 +1508,22 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   /* 과목 전체를 스코어순으로 추가 — sp 기본값 = prefs */
   const addPoolGreedy = (pool, sp = prefs) => {
     const usedBaseNames = new Set(schedule.map(c => baseName(c.name)));
-    const candidates = pool
-      .filter(c => !usedBaseNames.has(baseName(c.name)) && canAdd(c))
-      .map(c => ({
-        c,
-        s: scoreCourse(c, usedFlat, sp) + (shuffleSeed ? (rng() - 0.5) * 18 : 0)
-      }))
-      .sort((a, b) => b.s - a.s);
+    // 과목명별로 최고 섹션만 남기고 스코어 정렬
+    const nameMap = new Map();
+    for (const c of pool.filter(c => !usedBaseNames.has(baseName(c.name)) && canAdd(c))) {
+      const key = baseName(c.name);
+      const s = scoreCourse(c, usedFlat, sp);
+      if (!nameMap.has(key) || s > nameMap.get(key).s) nameMap.set(key, { c, s });
+    }
+    let candidates = [...nameMap.values()].sort((a, b) => b.s - a.s);
+
+    // seed 있으면 상위 40% 이내 과목들을 셔플해서 다양성 확보
+    if (shuffleSeed && candidates.length > 1) {
+      const cutIdx = Math.max(2, Math.ceil(candidates.length * 0.4));
+      const top    = candidates.slice(0, cutIdx).sort(() => rng() - 0.5);
+      const rest   = candidates.slice(cutIdx);
+      candidates   = [...top, ...rest];
+    }
 
     const seenInRound = new Set();
     for (const { c } of candidates) {
