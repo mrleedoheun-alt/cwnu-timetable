@@ -1680,6 +1680,27 @@ body {
 }
 
 /* ==============================
+   Urgency warning banner
+   ============================== */
+.urgency-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border-left: 4px solid;
+}
+.urgency-info   { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+.urgency-warn   { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+.urgency-danger { background: #fff1f2; border-color: #e11d48; color: #9f1239; }
+
+.ub-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.ub-body { flex: 1; }
+.ub-body p  { margin: 0 0 4px; font-size: 14px; line-height: 1.5; }
+.ub-hint    { font-size: 12px; opacity: 0.85; }
+
+/* ==============================
    Auto-generation results
    ============================== */
 .auto-results {

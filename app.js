@@ -1250,8 +1250,9 @@ const STYLE_META = {
   avoid_gap:      { label: '우주공강 회피',   desc: '같은 날 긴 공강(1시간 이상)이 생기지 않도록 합니다.' },
   cluster:        { label: '몰아듣기형',     desc: '수업이 적은 날 수를 만들어 공강일을 확보합니다.' },
   spread:         { label: '널널한 분산형',   desc: '요일별로 고르게 분산하여 과부하 없이 구성합니다.' },
-  major_first:    { label: '전공 우선',       desc: '전공 과목을 최대한 채운 뒤 교양으로 나머지를 채웁니다.' },
-  liberal_first:  { label: '교양 우선',       desc: '교양 과목을 먼저 채운 뒤 전공 선택으로 마무리합니다.' }
+  major_first:       { label: '전공 우선',          desc: '전공 과목을 최대한 채운 뒤 교양으로 나머지를 채웁니다.' },
+  liberal_first:     { label: '교양 우선',          desc: '교양 과목을 먼저 채운 뒤 전공 선택으로 마무리합니다.' },
+  liberal_req_first: { label: '교양 졸업요건 우선', desc: '필수 교양(기초·균형) 영역을 랜덤 없이 반드시 먼저 채웁니다. 졸업이 촉박할 때 권장합니다.' }
 };
 
 /* ── 과목 슬롯 → 분 단위 변환 ── */
@@ -1636,6 +1637,89 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     addPoolGreedy(getLiberalPool(grade));
   };
 
+  /* ── 4순위 교양: 가중치 랜덤 (매 실행마다 다른 과목 조합) ── */
+  const fillLiberalRandom = () => {
+    if (!inclLiberal || totalCr >= maxCr) return;
+
+    // ① 이미 이수 완료된 기초교양 필수 그룹 파악 (completed + pastNames + 현 schedule)
+    const doneGichyoGroups = new Set();
+    for (const g of REQUIRED_LIBERAL_GROUPS) {
+      const inCompleted = _allCourses.some(c =>
+        getRequiredGroup(c) === g.label &&
+        (completed.has(c.name.trim().toLowerCase()) || pastNames.has(c.name.trim().toLowerCase()))
+      );
+      const inSchedule = schedule.some(c => getRequiredGroup(c) === g.label);
+      if (inCompleted || inSchedule) doneGichyoGroups.add(g.label);
+    }
+
+    // ② 이미 이수 완료된 균형교양 영역 파악
+    const doneGyunhyungAreas = new Set();
+    for (const area of REQUIRED_GYUNHYUNG_AREAS) {
+      const inCompleted = _allCourses.some(c =>
+        c.category === '균형교양' && c.subtitle === area &&
+        (completed.has(c.name.trim().toLowerCase()) || pastNames.has(c.name.trim().toLowerCase()))
+      );
+      const inSchedule = schedule.some(c => c.category === '균형교양' && c.subtitle === area);
+      if (inCompleted || inSchedule) doneGyunhyungAreas.add(area);
+    }
+
+    // ③ 긴박도 계산: 남은 학기 대비 미이수 필수 영역 수
+    const semOrd = ((grade || 1) - 1) * 2 + (['2학기','겨울학기'].includes(state.semester) ? 2 : 1);
+    const remainingAfter = Math.max(1, 8 - semOrd);
+    const unfulfilledRequired =
+      REQUIRED_LIBERAL_GROUPS.filter(g => !doneGichyoGroups.has(g.label)).length +
+      REQUIRED_GYUNHYUNG_AREAS.filter(a => !doneGyunhyungAreas.has(a)).length;
+    // urgency 0~4: 남은 학기보다 미이수가 많을수록 올라감
+    const urgency = Math.min(4, unfulfilledRequired / remainingAfter);
+
+    // ④ 가중치: 긴박도에 비례해서 필수 영역 가중치 스케일업
+    //    urgency=0 → 기초교양×3, 균형교양×2 (기본)
+    //    urgency=4 → 기초교양×15, 균형교양×10 (거의 강제)
+    const getWeight = (c) => {
+      const grp = getRequiredGroup(c);
+      if (grp) return doneGichyoGroups.has(grp) ? 0.5 : 3 * (1 + urgency);
+      if (c.category === '균형교양' && c.subtitle)
+        return doneGyunhyungAreas.has(c.subtitle) ? 0.5 : 2 * (1 + urgency);
+      return 1;
+    };
+
+    // ⑤ 과목명 기준 dedup — 같은 이름 중 가중치 높은 섹션(동률이면 스코어 높은 것) 선택
+    const pool = getLiberalPool(grade);
+    const nameMap = new Map();
+    for (const c of pool) {
+      if (!canAdd(c)) continue;
+      const key = baseName(c.name);
+      const w   = getWeight(c);
+      const s   = scoreCourse(c, usedFlat, prefs);
+      const cur = nameMap.get(key);
+      if (!cur || w > cur.w || (w === cur.w && s > cur.s)) nameMap.set(key, { c, w, s });
+    }
+
+    // ⑥ 가중치 기반 랜덤 선택 — 한 과목씩 뽑아서 추가
+    const candidates = [...nameMap.values()];
+    while (totalCr < maxCr && candidates.length > 0) {
+      const available = candidates.filter(({ c }) => canAdd(c));
+      if (!available.length) break;
+
+      const totalW = available.reduce((sum, { w }) => sum + w, 0);
+      if (totalW <= 0) break;
+
+      let rand = rng() * totalW;
+      let pickedIdx = available.length - 1;
+      for (let i = 0; i < available.length; i++) {
+        rand -= available[i].w;
+        if (rand <= 0) { pickedIdx = i; break; }
+      }
+
+      const picked = available[pickedIdx];
+      if (canAdd(picked.c)) addCourse(picked.c);
+
+      // candidates에서 제거
+      const idx = candidates.indexOf(picked);
+      if (idx !== -1) candidates.splice(idx, 1);
+    }
+  };
+
   /* ── 학과 권장 균형교양 과목 우선 채우기 — 스타일 없이 ── */
   const recLibNames = new Set(
     (_gradReqs?.[dept]?.recommended_liberal || []).map(r => baseName(r.name))
@@ -1667,12 +1751,15 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   fillRequiredGyunhyungAreas();   // 균형교양 4개 영역
 
   // 나머지 학점: 전공우선 스타일이면 전공선택 먼저, 아니면 교양 먼저
+  // liberal_req_first 스타일: 랜덤 없이 필수 영역 강제 채우기 (졸업 촉박 시)
+  // shuffleSeed=0(추천 A): 결정론적 최적
+  // 그 외: 긴박도 반영 가중치 랜덤
+  const _fillLib = (prefs.has('liberal_req_first') || !shuffleSeed) ? fillLiberal : fillLiberalRandom;
   if (prefs.has('major_first')) {
-    fillElective();   // 전공선택 채우고
-    fillLiberal();    // 남은 자리에 교양
+    fillElective();
+    _fillLib();
   } else {
-    // 기본 / 교양우선: 교양 먼저, 전공선택으로 마무리
-    fillLiberal();
+    _fillLib();
     fillElective();
   }
 
@@ -1700,6 +1787,45 @@ function summarizeSchedule(schedule) {
   }
 
   return { totalCr, daysUsed, earliestStr, maxGap };
+}
+
+/* ── 긴박도 경고 배너 렌더링 ── */
+function renderUrgencyWarning(urgency, unfull, remain, isReqFirstOn) {
+  const wrap = document.getElementById('autoResults');
+  const existing = document.getElementById('urgencyBanner');
+  if (existing) existing.remove();
+  if (!wrap) return;
+
+  // urgency < 0.8 이면 경고 없음
+  if (urgency < 0.8 || unfull === 0) return;
+
+  let level, icon, msg;
+  if (urgency >= 2) {
+    // 매우 위험: 남은 학기보다 미이수가 2배 이상
+    level = 'danger';
+    icon  = '🚨';
+    msg   = `졸업까지 <strong>${remain}학기</strong> 남았는데 필수 교양이 <strong>${unfull}개 영역</strong> 미이수입니다. 지금 바로 채우지 않으면 위험합니다!`;
+  } else if (urgency >= 1) {
+    // 경고: 남은 학기와 미이수가 비슷
+    level = 'warn';
+    icon  = '⚠️';
+    msg   = `졸업까지 <strong>${remain}학기</strong> 남았고 필수 교양이 <strong>${unfull}개 영역</strong> 미이수입니다. 매 학기 1~2개씩 채워야 합니다.`;
+  } else {
+    // 주의
+    level = 'info';
+    icon  = '📋';
+    msg   = `필수 교양 <strong>${unfull}개 영역</strong>이 아직 미이수입니다. 꾸준히 채워가세요.`;
+  }
+
+  const hint = isReqFirstOn
+    ? `<span class="ub-hint">✅ '교양 졸업요건 우선' 옵션이 켜져 있습니다.</span>`
+    : `<span class="ub-hint">💡 스타일에서 <strong>교양 졸업요건 우선</strong>을 선택하면 필수 영역을 강제 배정합니다.</span>`;
+
+  const banner = document.createElement('div');
+  banner.id = 'urgencyBanner';
+  banner.className = `urgency-banner urgency-${level}`;
+  banner.innerHTML = `<span class="ub-icon">${icon}</span><div class="ub-body"><p>${msg}</p>${hint}</div>`;
+  wrap.before(banner);
 }
 
 /* ── 자동 생성 결과 렌더링 ── */
@@ -2859,8 +2985,11 @@ function setupAutoGen(state) {
       if (s === 'cluster' && _autoPrefs.has('spread'))   _autoPrefs.delete('spread');
       if (s === 'spread'  && _autoPrefs.has('cluster'))  _autoPrefs.delete('cluster');
       // major_first ↔ liberal_first 상호 배제
-      if (s === 'major_first'   && _autoPrefs.has('liberal_first')) _autoPrefs.delete('liberal_first');
-      if (s === 'liberal_first' && _autoPrefs.has('major_first'))   _autoPrefs.delete('major_first');
+      if (s === 'major_first'   && _autoPrefs.has('liberal_first'))     _autoPrefs.delete('liberal_first');
+      if (s === 'liberal_first' && _autoPrefs.has('major_first'))       _autoPrefs.delete('major_first');
+      // liberal_req_first ↔ liberal_first 상호 배제
+      if (s === 'liberal_req_first' && _autoPrefs.has('liberal_first')) _autoPrefs.delete('liberal_first');
+      if (s === 'liberal_first' && _autoPrefs.has('liberal_req_first')) _autoPrefs.delete('liberal_req_first');
 
       if (_autoPrefs.has(s)) _autoPrefs.delete(s);
       else                   _autoPrefs.add(s);
@@ -2916,10 +3045,13 @@ function setupAutoGen(state) {
       };
 
       try {
-        // 각 변형이 다른 과목을 선택하도록 excluded 집합 다르게 설정
+        // A: 결정론적 최적 / B·C: 매 실행마다 다른 seed → 다른 교양 조합
+        const now = Date.now();
+        const seedB = (now % 65521) + 1;          // 1~65521
+        const seedC = ((now >> 5) % 65521) + 101; // 101~65621 (B와 구분)
         const v0 = generateVariant(state, { ...options, shuffleSeed: 0 });
-        const v1 = generateVariant(state, { ...options, shuffleSeed: 31 });
-        const v2 = generateVariant(state, { ...options, shuffleSeed: 97 });
+        const v1 = generateVariant(state, { ...options, shuffleSeed: seedB });
+        const v2 = generateVariant(state, { ...options, shuffleSeed: seedC });
 
         // 중복 체크: A=B면 B에서 A 과목 일부 강제 제외 후 재생성
         const scheduleKey = s => s.map(c => c.name + (c.section||'')).sort().join('|');
@@ -2936,9 +3068,22 @@ function setupAutoGen(state) {
 
         const variants = [
           { schedule: v0 },
-          { schedule: k1 === k0 ? forceExclude(v0, 53) : v1 },
-          { schedule: k2 === k0 || k2 === k1 ? forceExclude(v0, 79) : v2 }
+          { schedule: k1 === k0 ? forceExclude(v0, seedB + 17) : v1 },
+          { schedule: k2 === k0 || k2 === k1 ? forceExclude(v0, seedC + 37) : v2 }
         ];
+
+        // 긴박도 경고 계산
+        const _comp    = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
+        const _past    = getPastTimetableCourseNames(state);
+        const _isDone  = c => _comp.has(c.name.trim().toLowerCase()) || _past.has(c.name.trim().toLowerCase());
+        const _doneG   = REQUIRED_LIBERAL_GROUPS.filter(g => _allCourses.some(c => getRequiredGroup(c) === g.label && _isDone(c))).length;
+        const _doneA   = REQUIRED_GYUNHYUNG_AREAS.filter(a => _allCourses.some(c => c.category === '균형교양' && c.subtitle === a && _isDone(c))).length;
+        const _unfull  = (REQUIRED_LIBERAL_GROUPS.length - _doneG) + (REQUIRED_GYUNHYUNG_AREAS.length - _doneA);
+        const _semOrd  = ((_autoGrade || 1) - 1) * 2 + (['2학기','겨울학기'].includes(state.semester) ? 2 : 1);
+        const _remain  = Math.max(1, 8 - _semOrd);
+        const _urgency = _unfull / _remain;
+        renderUrgencyWarning(_urgency, _unfull, _remain, _autoPrefs.has('liberal_req_first'));
+
         renderAutoResults(variants, state);
       } finally {
         btn.textContent = '✨ 시간표 자동 생성';
