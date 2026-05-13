@@ -1066,6 +1066,7 @@ function toggleCourse(course) {
   renderSelectedList();
   renderMiniTimetable();
   if (_gradReqs && _currentState) renderGradReq(_currentState);
+  syncResultAddButtons();
 }
 
 function checkConflict(newCourse, selected) {
@@ -1990,18 +1991,19 @@ function renderAutoResults(variants, state) {
       renderSelectedList();
       renderMiniTimetable();
       renderCourseList();
+      syncResultAddButtons();
       document.getElementById('miniTimetable')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  // 과목 목록 — ＋담기 버튼 클릭
+  // 과목 목록 — ＋담기 버튼 토글 (담기 ↔ 해제)
   grid.querySelectorAll('.result-course-add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const vIdx   = Number(btn.dataset.variantIdx);
       const cName  = btn.dataset.name;
       const course = variants[vIdx]?.schedule.find(c => c.name === cName);
-      if (course) addCourseToSelectedFromResult(course);
+      if (course) toggleCourseFromResult(course, btn);
     });
   });
 
@@ -2021,19 +2023,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // 과목 목록 — 행 클릭 (버튼 제외) → 담기
-  grid.querySelectorAll('.result-course-item').forEach(item => {
-    item.addEventListener('click', e => {
-      if (e.target.closest('button')) return;
-      e.stopPropagation();
-      const vIdx   = Number(item.dataset.variantIdx);
-      const cName  = item.dataset.name;
-      const course = variants[vIdx]?.schedule.find(c => c.name === cName);
-      if (course) addCourseToSelectedFromResult(course);
-    });
-  });
-
-  // rt-block 좌클릭 → 담기
+  // rt-block 좌클릭 → 담기 토글
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('click', e => {
       if (e.button !== 0) return;
@@ -2041,7 +2031,7 @@ function renderAutoResults(variants, state) {
       const vIdx   = Number(block.dataset.variantIdx);
       const cName  = block.dataset.name;
       const course = variants[vIdx]?.schedule.find(c => c.name === cName);
-      if (course) addCourseToSelectedFromResult(course);
+      if (course) toggleCourseFromResult(course, null);
     });
   });
 
@@ -2057,25 +2047,50 @@ function renderAutoResults(variants, state) {
   });
 }
 
-/* ── 추천 시간표에서 개별 과목 담기 ── */
-function addCourseToSelectedFromResult(course) {
+/* ── 추천 시간표 담기 버튼 토글 (담기 ↔ 해제) ── */
+function toggleCourseFromResult(course, btnEl) {
   if (!course) return;
-  const already = _selected.findIndex(s => s.name === course.name && s.section === course.section);
-  if (already >= 0) {
-    showToast(`"${course.name}" 이미 담겨 있습니다.`);
-    return;
+  const idx = _selected.findIndex(s => s.name === course.name && s.section === course.section);
+
+  if (idx >= 0) {
+    // 이미 담겨있으면 → 해제
+    _selected.splice(idx, 1);
+    renderCourseList();
+    renderSelectedList();
+    renderMiniTimetable();
+    if (_gradReqs && _currentState) renderGradReq(_currentState);
+    syncResultAddButtons();
+    showToast(`"${course.name}" 담기 해제`);
+  } else {
+    // 없으면 → 담기
+    const conflict = checkConflict(course, _selected);
+    if (conflict) {
+      showToast(`⚠ 시간 충돌: "${conflict}"와 겹쳐 담을 수 없습니다.`);
+      return;
+    }
+    _selected.push(course);
+    renderCourseList();
+    renderSelectedList();
+    renderMiniTimetable();
+    if (_gradReqs && _currentState) renderGradReq(_currentState);
+    syncResultAddButtons();
+    showToast(`"${course.name}" 담았습니다 ✓`);
   }
-  const conflict = checkConflict(course, _selected);
-  if (conflict) {
-    showToast(`⚠ 시간 충돌: "${conflict}"와 겹쳐 담을 수 없습니다.`);
-    return;
-  }
-  _selected.push(course);
-  renderCourseList();
-  renderSelectedList();
-  renderMiniTimetable();
-  if (_gradReqs && _currentState) renderGradReq(_currentState);
-  showToast(`"${course.name}" 담았습니다 ✓`);
+}
+
+/* ── 추천 카드의 담기 버튼 상태를 _selected 기준으로 동기화 ── */
+function syncResultAddButtons() {
+  document.querySelectorAll('.result-course-add-btn').forEach(btn => {
+    const cName = btn.dataset.name;
+    const isIn  = _selected.some(s => s.name === cName);
+    btn.classList.toggle('active', isIn);
+    btn.textContent = isIn ? '✓담김' : '＋담기';
+  });
+  // rt-block에도 담긴 상태 표시
+  document.querySelectorAll('.rt-block').forEach(block => {
+    const isIn = _selected.some(s => s.name === block.dataset.name);
+    block.classList.toggle('rt-block--added', isIn);
+  });
 }
 
 /* ── 추천 시간표에서 과목 제외 처리 (공통) ── */

@@ -1843,6 +1843,12 @@ body {
   padding: 2px 4px;
   overflow: hidden;
   box-sizing: border-box;
+  transition: box-shadow .15s, filter .15s;
+}
+/* 시간표 블록 — 담긴 상태 */
+.rt-block.rt-block--added {
+  box-shadow: 0 0 0 2px #22c55e;
+  filter: brightness(1.05);
 }
 
 .rt-block-name {
@@ -1906,14 +1912,23 @@ body {
   border-radius: 5px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity .15s, background .15s;
+  transition: opacity .15s, background .15s, transform .1s;
   white-space: nowrap;
 }
 .result-course-item:hover .result-course-add-btn {
   opacity: 1;
 }
 .result-course-add-btn:hover {
-  background: var(--primary-hover, #4f46e5);
+  background: #c0392b;
+}
+/* 담긴 상태 — 항상 표시, 녹색 */
+.result-course-add-btn.active {
+  opacity: 1;
+  background: #22c55e;
+  color: #fff;
+}
+.result-course-add-btn.active:hover {
+  background: #16a34a;
 }
 
 .result-course-exc-btn,
