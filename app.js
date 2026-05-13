@@ -1278,44 +1278,44 @@ function scoreCourse(course, usedFlat, prefs) {
   const allFlat = [...usedFlat, ...cFlat];
   let score = 0;
 
-  // 아침 회피형
+  // 아침 회피형 — 09:00 이전 강하게, 10:00 이전도 패널티
   if (prefs.has('avoid_morning')) {
     cFlat.forEach(s => {
-      if (s.start_min < 9 * 60)        score -= 40;  // 09:00 이전
-      else if (s.start_min < 9.5 * 60) score -= 20;  // 09:00~09:30
-      else if (s.start_min < 10 * 60)  score -= 8;   // 09:30~10:00
+      if (s.start_min < 9 * 60)        score -= 80;  // 09:00 이전
+      else if (s.start_min < 9.5 * 60) score -= 50;  // 09:00~09:30
+      else if (s.start_min < 10 * 60)  score -= 20;  // 09:30~10:00
     });
   }
 
-  // 우주공강 회피형: 추가 후 당일 공강 계산
+  // 우주공강 회피형: 긴 공강일수록 강한 패널티
   if (prefs.has('avoid_gap')) {
     for (let day = 0; day < 5; day++) {
       const daySlots = allFlat.filter(s => s.day === day)
         .sort((a, b) => a.start_min - b.start_min);
       for (let i = 1; i < daySlots.length; i++) {
         const gap = daySlots[i].start_min - daySlots[i - 1].end_min;
-        if (gap > 120) score -= 30;
-        else if (gap > 60)  score -= 15;
-        else if (gap > 0)   score -= 3;
+        if (gap > 120) score -= 60;
+        else if (gap > 60)  score -= 30;
+        else if (gap > 0)   score -= 5;
       }
     }
   }
 
-  // 몰아듣기형: 이미 수업 있는 날 추가 선호
+  // 몰아듣기형: 이미 수업 있는 날 강하게 선호, 새 날은 패널티
   if (prefs.has('cluster')) {
     const usedDays = new Set(usedFlat.map(s => s.day));
     cFlat.forEach(s => {
-      if (usedDays.has(s.day)) score += 25;
-      else                     score -= 10;
+      if (usedDays.has(s.day)) score += 50;
+      else                     score -= 30;
     });
   }
 
-  // 널널한 분산형: 새로운 요일 선호
+  // 널널한 분산형: 새로운 요일 강하게 선호
   if (prefs.has('spread')) {
     const usedDays = new Set(usedFlat.map(s => s.day));
     cFlat.forEach(s => {
-      if (!usedDays.has(s.day)) score += 20;
-      else                      score -= 5;
+      if (!usedDays.has(s.day)) score += 40;
+      else                      score -= 15;
     });
   }
 
@@ -1488,12 +1488,21 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     return pickRandom(scored);
   };
 
-  /* 전체 pool에서 완전 균등 랜덤 (기초교양·균형교양 그룹 선택에 사용) */
+  /* 전체 pool에서 스타일 가중 랜덤 (기초교양·균형교양 그룹 선택에 사용)
+     스타일이 없으면 순수 균등 랜덤, 있으면 스타일 점수 비례 가중 */
   const pickBestFull = (pool) => {
     const valid = pool.filter(canAdd);
     if (!valid.length) return null;
     if (valid.length === 1) return valid[0];
-    return valid[Math.floor(rng() * valid.length)];
+    if (!prefs.size) return valid[Math.floor(rng() * valid.length)];
+    // 스타일 점수 → 가중치 (음수여도 최소 0.05 보장)
+    const scored = valid.map(c => ({
+      c, w: Math.max(0.05, 1 + scoreCourse(c, usedFlat, prefs) * 0.025)
+    }));
+    const totalW = scored.reduce((s, x) => s + x.w, 0);
+    let rand = rng() * totalW;
+    for (const item of scored) { rand -= item.w; if (rand <= 0) return item.c; }
+    return scored[scored.length - 1].c;
   };
 
   /* 과목명으로 묶어서 베스트 섹션만 추가 — sp 기본값 = prefs */
@@ -1695,39 +1704,48 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       return 1;
     };
 
-    // ⑤ 과목명 기준 dedup — 같은 이름 중 가중치 높은 섹션(동률이면 스코어 높은 것) 선택
+    // ⑤ 유효 가중치 계산: 졸업 가중치 × 스타일 배율
+    //    스타일 점수 범위 대략 -100~+100 → 배율 0.05~3.5
+    //    스타일 없으면 배율 1.0 (졸업 가중치 그대로)
+    const effectiveW = (c) => {
+      const gw = getWeight(c);                              // 졸업 가중치
+      if (!prefs.size) return gw;
+      const ss = scoreCourse(c, usedFlat, prefs);           // 스타일 점수
+      const multiplier = Math.max(0.05, 1 + ss * 0.025);   // 스타일 배율
+      return gw * multiplier;
+    };
+
+    // ⑥ 과목명 기준 dedup — 같은 이름 중 유효가중치 높은 섹션 선택
     const pool = getLiberalPool(grade);
     const nameMap = new Map();
     for (const c of pool) {
       if (!canAdd(c)) continue;
       const key = baseName(c.name);
-      const w   = getWeight(c);
-      const s   = scoreCourse(c, usedFlat, prefs);
+      const ew  = effectiveW(c);
       const cur = nameMap.get(key);
-      if (!cur || w > cur.w || (w === cur.w && s > cur.s)) nameMap.set(key, { c, w, s });
+      if (!cur || ew > cur.ew) nameMap.set(key, { c, ew });
     }
 
-    // ⑥ 가중치 기반 랜덤 선택 — 한 과목씩 뽑아서 추가
+    // ⑦ 유효가중치 기반 랜덤 선택 — 한 과목씩 뽑아서 추가
     const candidates = [...nameMap.values()];
     while (totalCr < maxCr && candidates.length > 0) {
       const available = candidates.filter(({ c }) => canAdd(c));
       if (!available.length) break;
 
-      const totalW = available.reduce((sum, { w }) => sum + w, 0);
+      // canAdd 재확인 후 유효가중치 재계산 (시간표 변화 반영)
+      const weighted = available.map(({ c }) => ({ c, ew: effectiveW(c) }));
+      const totalW = weighted.reduce((sum, x) => sum + x.ew, 0);
       if (totalW <= 0) break;
 
       let rand = rng() * totalW;
-      let pickedIdx = available.length - 1;
-      for (let i = 0; i < available.length; i++) {
-        rand -= available[i].w;
-        if (rand <= 0) { pickedIdx = i; break; }
-      }
+      let picked = weighted[weighted.length - 1];
+      for (const item of weighted) { rand -= item.ew; if (rand <= 0) { picked = item; break; } }
 
-      const picked = available[pickedIdx];
       if (canAdd(picked.c)) addCourse(picked.c);
 
-      // candidates에서 제거
-      const idx = candidates.indexOf(picked);
+      // candidates에서 동일 과목(baseName 기준) 제거
+      const pickedKey = baseName(picked.c.name);
+      const idx = candidates.findIndex(x => baseName(x.c.name) === pickedKey);
       if (idx !== -1) candidates.splice(idx, 1);
     }
   };
