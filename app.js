@@ -1488,6 +1488,14 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     return pickRandom(scored);
   };
 
+  /* 전체 pool에서 완전 균등 랜덤 (기초교양·균형교양 그룹 선택에 사용) */
+  const pickBestFull = (pool) => {
+    const valid = pool.filter(canAdd);
+    if (!valid.length) return null;
+    if (valid.length === 1) return valid[0];
+    return valid[Math.floor(rng() * valid.length)];
+  };
+
   /* 과목명으로 묶어서 베스트 섹션만 추가 — sp 기본값 = prefs */
   const addPoolByName = (pool, sp = prefs) => {
     const nameMap = new Map();
@@ -1606,13 +1614,16 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   const fillRequiredLiberalGroups = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
     const liberalPool = getLiberalPool(grade);
-    for (const group of REQUIRED_LIBERAL_GROUPS) {
+    // shuffleSeed가 있으면 그룹 순서도 셔플해서 다양성 확보
+    const groups = shuffleSeed ? [...REQUIRED_LIBERAL_GROUPS].sort(() => rng() - 0.5) : REQUIRED_LIBERAL_GROUPS;
+    for (const group of groups) {
       if (totalCr >= maxCr) break;
       const alreadyHas = schedule.some(s => getRequiredGroup(s) === group.label);
       if (alreadyHas) continue;
       const groupPool = liberalPool.filter(c => getRequiredGroup(c) === group.label);
       if (!groupPool.length) continue;
-      const best = pickBest(groupPool);
+      // shuffleSeed 있으면 전체 pool에서 균등 랜덤 (top 제한 없음)
+      const best = shuffleSeed ? pickBestFull(groupPool) : pickBest(groupPool, NOSTYLE);
       if (best) addCourse(best);
     }
   };
@@ -1621,13 +1632,14 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   const fillRequiredGyunhyungAreas = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
     const liberalPool = getLiberalPool(grade);
-    for (const area of REQUIRED_GYUNHYUNG_AREAS) {
+    const areas = shuffleSeed ? [...REQUIRED_GYUNHYUNG_AREAS].sort(() => rng() - 0.5) : REQUIRED_GYUNHYUNG_AREAS;
+    for (const area of areas) {
       if (totalCr >= maxCr) break;
       const alreadyHas = schedule.some(s => s.type === 'liberal' && s.subtitle === area);
       if (alreadyHas) continue;
       const areaPool = liberalPool.filter(c => c.category === '균형교양' && c.subtitle === area);
       if (!areaPool.length) continue;
-      const best = pickBest(areaPool);
+      const best = shuffleSeed ? pickBestFull(areaPool) : pickBest(areaPool, NOSTYLE);
       if (best) addCourse(best);
     }
   };
@@ -1761,6 +1773,19 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   } else {
     _fillLib();
     fillElective();
+  }
+
+  // ★ 최종 학점 채우기 fallback
+  // 위 단계에서 시간 충돌 등으로 학점이 덜 채워진 경우,
+  // 스타일/가중치 없이 남은 자리를 최대한 채움
+  if (totalCr < maxCr) {
+    addPoolGreedy(getLiberalPool(grade), NOSTYLE);  // 남은 교양 greedy
+    if (totalCr < maxCr) {
+      const elecPool = _allCourses.filter(c =>
+        c.type === 'major' && c.department === dept && gradeOk(c, grade)
+      );
+      addPoolGreedy(elecPool, NOSTYLE);             // 남은 전공 greedy
+    }
   }
 
   return schedule;
