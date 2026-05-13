@@ -999,9 +999,9 @@ function renderCourseList() {
 
   listEl.innerHTML = filtered.map(course => {
     const isAdded = _selected.some(s => s.name === course.name && s.section === course.section);
-    const slotText = course.slots.map(s =>
-      `${DAY_NAMES[s.day] || '?'} ${s.start}–${s.end}`
-    ).join(' / ');
+    const slotText = course.online
+      ? '📱 비대면 (시간표 없음)'
+      : course.slots.map(s => `${DAY_NAMES[s.day] || '?'} ${s.start}–${s.end}`).join(' / ');
 
     // 학년 뱃지
     const yearBadge = course.eligible_years?.length
@@ -1436,8 +1436,9 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     if (isExcluded(course)) return false;
     if (totalCr + cr > maxCr) return false;
     const cFlat = courseToFlat(course);
-    if (!cFlat.length) return false;
-    if (flatConflict(cFlat, usedFlat)) return false;
+    // 온라인(비대면) 과목은 슬롯이 없어도 추가 가능 (시간 충돌 없음)
+    if (!cFlat.length && !course.online) return false;
+    if (cFlat.length && flatConflict(cFlat, usedFlat)) return false;
     // ★ 정규화 + 괄호 설명 제거: 같은 과목명 중복 방지
     if (schedule.some(s =>
       normName(s.name) === normName(course.name) ||

@@ -37296,7 +37296,7 @@
     "name": "대학생활의설계(CDP-C)(교과목관련문의: 인재개발원 박성용(213-2618))",
     "type": "liberal",
     "category": "기초교양",
-    "subtitle": "",
+    "subtitle": "미래설계",
     "department": "",
     "dept_code": "",
     "credits": 1,
@@ -37309,7 +37309,8 @@
       4
     ],
     "gubun_label": "학부인터넷강좌",
-    "slots": []
+    "slots": [],
+    "online": true
   },
   {
     "name": "인간관계와의사소통",

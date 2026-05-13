@@ -184,12 +184,11 @@ function extractSubtitle(queryTitle) {
 function buildCourses(liberalRows, majorRows, extraRows) {
   const map={};
 
-  // 교양
+  // 교양 (온라인 강의 포함 — slots=[] 이어도 저장, online:true 마킹)
   for(const row of liberalRows) {
     const raw=clean(row.schedule_room);
-    if(!raw) continue;
-    const slots=mergeSlots(parseSched(raw));
-    if(!slots.length) continue;
+    const slots=raw?mergeSlots(parseSched(raw)):[];
+    const online=!slots.length; // 시간표 없으면 온라인 강의로 취급
     const eyears=[];
     for(const m of (row.eligible_grade_dept||'').matchAll(/([1-4])/g)){const y=Number(m[1]);if(!eyears.includes(y))eyears.push(y);}
     const sec=secNum(row.code);
@@ -197,7 +196,7 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     const subtitle=row.forced_subtitle||extractSubtitle(row.query_title||'');
     const category=row.forced_category||normLibCat(clean(row.category));
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}`;
-    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category,subtitle,department:'',dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[]};
+    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category,subtitle,department:'',dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[],online};
     map[key].slots.push(...slots);
   }
 
@@ -399,6 +398,13 @@ const server = http.createServer(async (req, res) => {
 
     const published = isSemesterPublished(year, term);
     const frozen    = isPastSemester(year, term); // 종강된 학기 → 데이터 불변, 영구 캐시
+    const force     = urlObj.searchParams.get('force') === 'true'; // 강제 재크롤
+
+    // force=true 이면 캐시 삭제 후 재크롤
+    if (force && fs.existsSync(cachePath) && !crawlingInProgress.has(cacheKey)) {
+      fs.unlinkSync(cachePath);
+      console.log(`[server] ${year}-${sem} 강제 재크롤 요청 — 캐시 삭제`);
+    }
 
     // ── 케이스 A-0: 이미 끝난 학기 — 캐시가 있으면 영구 사용, 없으면 1회만 크롤
     if (frozen) {

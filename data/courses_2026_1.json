@@ -40195,7 +40195,8 @@
       4
     ],
     "gubun_label": "학부자유선택",
-    "slots": []
+    "slots": [],
+    "online": true
   },
   {
     "name": "효성중공업InsightAcademy(선발된 학생만 수강신청 가능)",
@@ -40267,6 +40268,26 @@
       4
     ],
     "gubun_label": "학부자유선택",
-    "slots": []
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "대학생활의설계(CDP-C)",
+    "type": "liberal",
+    "category": "기초교양",
+    "subtitle": "미래설계",
+    "credits": 1,
+    "professor": "",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true,
+    "department": "",
+    "dept_code": ""
   }
 ]

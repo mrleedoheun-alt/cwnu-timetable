@@ -35287,7 +35287,7 @@
     "name": "대학생활의설계(CDP-C)",
     "type": "liberal",
     "category": "기초교양",
-    "subtitle": "",
+    "subtitle": "미래설계",
     "department": "",
     "dept_code": "",
     "credits": 1,
@@ -35300,7 +35300,8 @@
       4
     ],
     "gubun_label": "학부인터넷강좌",
-    "slots": []
+    "slots": [],
+    "online": true
   },
   {
     "name": "세계영화기행(GeLC 컨소시엄 교과목 ※ 수강료(24,000원) 미납 시 수강 불가)(유료강좌)",
