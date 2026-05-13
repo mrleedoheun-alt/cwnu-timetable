@@ -1,1 +1,509 @@
-[{"name":"수학및연습1","type":"major","category":"균형교양","subtitle":"","department":"수학과","dept_code":"380","credits":3,"professor":"이수철,강수인","section":"00","eligible_years":[2,3,4],"slots":[{"day":0,"start":"09:00","end":"12:00","room":"32306"},{"day":1,"start":"09:00","end":"12:00","room":"32306"},{"day":2,"start":"09:00","end":"12:00","room":"32306"},{"day":3,"start":"09:00","end":"12:00","room":"32306"},{"day":4,"start":"09:00","end":"12:00","room":"32306"}]},{"name":"분자세포생물학실험","type":"major","category":"전공선택","subtitle":"","department":"생명보건학부","dept_code":"315","credits":3,"professor":"문자영,강수인","section":"00","eligible_years":[3,4],"slots":[{"day":0,"start":"09:00","end":"15:00","room":"35213"},{"day":1,"start":"09:00","end":"15:00","room":"35213"},{"day":2,"start":"09:00","end":"15:00","room":"35213"},{"day":3,"start":"09:00","end":"15:00","room":"35213"},{"day":4,"start":"09:00","end":"15:00","room":"35213"}]},{"name":"인간관계와의사소통","type":"liberal","category":"균형교양","subtitle":"","department":"","dept_code":"","credits":2,"professor":"권희경","section":"00","eligible_years":[1,2,3,4],"gubun_label":"학부인터넷강좌","slots":[],"online":true},{"name":"입영훈련1(학군단 입단예정자에 한함)","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":1,"professor":"박성욱","section":"00","eligible_years":[2],"gubun_label":"학부자유선택","slots":[]},{"name":"해외어학연수II(국제교육원 연수프로그램 선발자만 수강신청가능)","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":3,"professor":"배경진","section":"00","eligible_years":[1,2,3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"전력산업실무(빛가람 에너지밸리 공동캠퍼스(KPX) 교육 참여자 대상)","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":2,"professor":"강사","section":"00","eligible_years":[2,3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"LINC+캡스톤디자인Ⅱ","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":3,"professor":"이상필","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[{"day":0,"start":"09:30","end":"12:00","room":""},{"day":1,"start":"09:30","end":"12:00","room":""},{"day":2,"start":"09:30","end":"12:00","room":""},{"day":3,"start":"09:30","end":"12:00","room":""},{"day":4,"start":"09:30","end":"12:00","room":""}]},{"name":"LINC+캡스톤디자인기초2","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":0,"professor":"이상필","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"LINC+캡스톤디자인기초1","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":0,"professor":"문미경","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"현장실습1(C-LeGo)","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":3,"professor":"김미연","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"현장실습3(C-LeGo)","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":6,"professor":"김미연","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[]},{"name":"LINC+캡스톤디자인Ⅰ","type":"자유선택","category":"자유선택","subtitle":"","department":"","dept_code":"","credits":3,"professor":"문미경","section":"00","eligible_years":[3,4],"gubun_label":"학부자유선택","slots":[{"day":0,"start":"09:30","end":"12:00","room":""},{"day":1,"start":"09:30","end":"12:00","room":""},{"day":2,"start":"09:30","end":"12:00","room":""},{"day":3,"start":"09:30","end":"12:00","room":""},{"day":4,"start":"09:30","end":"12:00","room":""}]}]
+[
+  {
+    "name": "대학영어Ⅰ",
+    "type": "liberal",
+    "category": "기초교양",
+    "subtitle": "글로벌의사소통",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "이지연",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "11:00",
+        "room": "동백406"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "11:00",
+        "room": "동백406"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "11:00",
+        "room": "동백406"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "11:00",
+        "room": "동백406"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "11:00",
+        "room": "동백406"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "유럽문화이야기",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "인문예술",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "홍성군",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "한국의역사와기억",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "인문예술",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "도진순",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "현대생활과보험",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "사회와문화",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김흥기",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "인체와질병",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "조용권",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "수학및연습1",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "이수철,강수인",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "수학및연습1",
+    "type": "major",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "수학과",
+    "dept_code": "380",
+    "credits": 3,
+    "professor": "이수철,강수인",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32306"
+      }
+    ]
+  },
+  {
+    "name": "분자세포생물학실험",
+    "type": "major",
+    "category": "전공선택",
+    "subtitle": "",
+    "department": "생명보건학부",
+    "dept_code": "315",
+    "credits": 3,
+    "professor": "문자영,강수인",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "15:00",
+        "room": "35213"
+      }
+    ]
+  },
+  {
+    "name": "인간관계와의사소통",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "권희경",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부인터넷강좌",
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "입영훈련1(학군단 입단예정자에 한함)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 1,
+    "professor": "박성욱",
+    "section": "00",
+    "eligible_years": [
+      2
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "해외어학연수II(국제교육원 연수프로그램 선발자만 수강신청가능)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "배경진",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "전력산업실무(빛가람 에너지밸리 공동캠퍼스(KPX) 교육 참여자 대상)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "강사",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC+캡스톤디자인Ⅱ",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "이상필",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  },
+  {
+    "name": "LINC+캡스톤디자인기초2",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 0,
+    "professor": "이상필",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC+캡스톤디자인기초1",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 0,
+    "professor": "문미경",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "현장실습1(C-LeGo)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "현장실습3(C-LeGo)",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 6,
+    "professor": "김미연",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": []
+  },
+  {
+    "name": "LINC+캡스톤디자인Ⅰ",
+    "type": "자유선택",
+    "category": "자유선택",
+    "subtitle": "",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "문미경",
+    "section": "00",
+    "eligible_years": [
+      3,
+      4
+    ],
+    "gubun_label": "학부자유선택",
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 1,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 2,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 3,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      },
+      {
+        "day": 4,
+        "start": "09:30",
+        "end": "12:00",
+        "room": ""
+      }
+    ]
+  }
+]

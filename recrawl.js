@@ -214,7 +214,7 @@ async function crawlCourses(year, term) {
 
   for(const g of LIBERAL_GRADES) {
     try {
-      const html=await fetchCategory(year,term,'0',g,g,g);
+      const html=await fetchCategory(year,term,'0',g,'0',g);
       const subtitle=LIBERAL_DETAIL_MAP[g]||'';
       const category=LIBERAL_SUBTITLE_CAT[subtitle]||'기초교양';
       liberalRows.push(...parseRows(html,{forced_subtitle:subtitle,forced_category:category}));

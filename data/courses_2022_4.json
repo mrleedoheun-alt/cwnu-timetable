@@ -1,5 +1,366 @@
 [
   {
+    "name": "대학영어Ⅰ",
+    "type": "liberal",
+    "category": "기초교양",
+    "subtitle": "글로벌의사소통",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "안지현",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "B21225"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "B21225"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "B21225"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "B21225"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "B21225"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "한국의역사와기억",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "인문예술",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "도진순",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "패션과영상문화",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "인문예술",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "박혜원",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "통합창원시도시인문학의이해",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "인문예술",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "조형규",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "창업아이디어발굴",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "사회와문화",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "김종욱",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "동백406"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "동백406"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "동백406"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "동백406"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "동백406"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "민주시민과헌법",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "사회와문화",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "이장희",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "물리학2",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 2,
+    "professor": "백승호",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "31119"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "31119"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "31119"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "31119"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "15:30",
+        "room": "31119"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "인체와질병",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "조용권",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
+    "name": "수학및연습1",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "고선평",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 1,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 2,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 3,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      },
+      {
+        "day": 4,
+        "start": "09:00",
+        "end": "12:00",
+        "room": "32401"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "수학및연습2",
+    "type": "liberal",
+    "category": "균형교양",
+    "subtitle": "자연과학기술의이해",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "박찬호",
+    "section": "00",
+    "eligible_years": [
+      2,
+      3,
+      4
+    ],
+    "slots": [
+      {
+        "day": 0,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32401"
+      },
+      {
+        "day": 1,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32401"
+      },
+      {
+        "day": 2,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32401"
+      },
+      {
+        "day": 3,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32401"
+      },
+      {
+        "day": 4,
+        "start": "13:30",
+        "end": "16:30",
+        "room": "32401"
+      }
+    ],
+    "online": false
+  },
+  {
+    "name": "한국어문법1(초급)(해외자매대학교 학생 초청 프로그갬)",
+    "type": "liberal",
+    "category": "확대교양",
+    "subtitle": "언어의세계",
+    "department": "",
+    "dept_code": "",
+    "credits": 3,
+    "professor": "정은경",
+    "section": "00",
+    "eligible_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "slots": [],
+    "online": true
+  },
+  {
     "name": "국문학사",
     "type": "major",
     "category": "전공선택",
