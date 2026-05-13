@@ -1934,20 +1934,22 @@ body {
 .result-course-exc-btn,
 .result-course-info-btn {
   flex-shrink: 0;
-  width: 22px;
+  min-width: 22px;
   height: 22px;
-  font-size: 13px;
+  padding: 0 4px;
+  font-size: 11px;
   color: var(--muted);
   background: none;
   border: 1px solid var(--line);
-  border-radius: 50%;
+  border-radius: 11px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity .15s, color .15s, border-color .15s;
+  transition: opacity .15s, color .15s, border-color .15s, background .15s;
   line-height: 1;
+  white-space: nowrap;
 }
 .result-course-item:hover .result-course-exc-btn,
 .result-course-item:hover .result-course-info-btn {
@@ -1955,6 +1957,19 @@ body {
 }
 .result-course-exc-btn:hover {
   border-color: #e05555;
+  color: #e05555;
+}
+/* 제외 중인 상태 — 항상 표시, 주황색 */
+.result-course-exc-btn.active {
+  opacity: 1;
+  background: #fff7ed;
+  border-color: #f97316;
+  color: #ea580c;
+  font-weight: 700;
+  font-size: 10px;
+}
+.result-course-exc-btn.active:hover {
+  background: #ffedd5;
 }
 .result-course-info-btn:hover {
   color: var(--primary);

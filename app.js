@@ -2096,22 +2096,40 @@ function syncResultAddButtons() {
 /* ── 추천 시간표에서 과목 제외 처리 (공통) ── */
 function excludeCourseFromResult(courseName) {
   if (!courseName || !_currentState) return;
-  if (_currentState.excludedCourses.includes(courseName)) {
-    showToast(`이미 제외 목록에 있는 과목입니다.`);
-    return;
+  const idx = _currentState.excludedCourses.indexOf(courseName);
+  if (idx >= 0) {
+    // 이미 제외 중 → 해제
+    _currentState.excludedCourses.splice(idx, 1);
+    saveState(_currentState);
+    setupExcludedCourses(_currentState);
+    syncResultExcButtons();
+    showToast(`"${courseName}" 제외 해제됐습니다.`);
+  } else {
+    // 없으면 → 제외 추가
+    _currentState.excludedCourses.push(courseName);
+    saveState(_currentState);
+    setupExcludedCourses(_currentState);
+    // 제외 패널 펼치기
+    const body    = document.getElementById('excludedBody');
+    const chevron = document.getElementById('excludedChevron');
+    if (body?.classList.contains('hidden')) {
+      body.classList.remove('hidden');
+      if (chevron) chevron.textContent = '▼';
+    }
+    syncResultExcButtons();
+    showToast(`"${courseName}" 추천 제외 목록에 추가했습니다.`);
   }
-  _currentState.excludedCourses.push(courseName);
-  saveState(_currentState);
-  // 제외 목록 UI 갱신
-  setupExcludedCourses(_currentState);
-  // 제외 패널 펼치기
-  const body    = document.getElementById('excludedBody');
-  const chevron = document.getElementById('excludedChevron');
-  if (body?.classList.contains('hidden')) {
-    body.classList.remove('hidden');
-    if (chevron) chevron.textContent = '▼';
-  }
-  showToast(`"${courseName}" 추천 제외 목록에 추가했습니다.`);
+}
+
+/* ── 추천 카드의 제외 버튼 상태를 excludedCourses 기준으로 동기화 ── */
+function syncResultExcButtons() {
+  const excluded = _currentState?.excludedCourses || [];
+  document.querySelectorAll('.result-course-exc-btn').forEach(btn => {
+    const isExc = excluded.includes(btn.dataset.name);
+    btn.classList.toggle('active', isExc);
+    btn.textContent = isExc ? '✓제외중' : '🚫';
+    btn.title = isExc ? '제외 해제' : '추천 제외';
+  });
 }
 
 /* ── 자동생성 결과 과목 클릭 → 상세 정보 팝업 ── */
