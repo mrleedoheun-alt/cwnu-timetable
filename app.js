@@ -1932,15 +1932,6 @@ function renderAutoResults(variants, state) {
 
     const gapText = maxGap > 90 ? `최대 공강 ${Math.round(maxGap/60*10)/10}h` : '공강 적음';
 
-    // 연강 이동 거리 요약
-    const pairs     = getConsecutivePairs(v.schedule);
-    const maxWalk   = pairs.length ? Math.max(...pairs.map(p => p.walkMin ?? 0)) : 0;
-    const moveTag   = pairs.length === 0 ? ''
-      : maxWalk === 0 ? `<span class="result-tag move-tag move-ok">🚶 이동 없음</span>`
-      : maxWalk <= 3   ? `<span class="result-tag move-tag move-ok">🚶 최대 ${maxWalk}분</span>`
-      : maxWalk <= 6   ? `<span class="result-tag move-tag move-tight">🚶 최대 ${maxWalk}분</span>`
-      :                  `<span class="result-tag move-tag move-urgent">🚶 최대 ${maxWalk}분</span>`;
-
     return `
       <div class="result-card" data-variant="${i}">
         <div class="result-card-head">
@@ -1950,9 +1941,7 @@ function renderAutoResults(variants, state) {
             <span class="result-tag">${daysUsed}일 수업</span>
             <span class="result-tag">${earliestStr} 시작</span>
             <span class="result-tag">${gapText}</span>
-            ${moveTag}
           </div>
-          ${pairs.length ? `<button class="result-location-btn" data-variant="${i}" type="button">🗺 이동 지도 보기</button>` : ''}
         </div>
 
         <!-- 인라인 미니 시간표 -->
@@ -1993,14 +1982,6 @@ function renderAutoResults(variants, state) {
   desc.textContent = `${_autoGrade}학년 기준 · 최대 ${state.maxCredits}학점`;
   wrap.classList.remove('hidden');
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // 이동 지도 버튼
-  grid.querySelectorAll('.result-location-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = Number(btn.dataset.variant);
-      showLocationModal(variants[idx].schedule, labels[idx]);
-    });
-  });
 
   // 적용 버튼 이벤트
   grid.querySelectorAll('.result-apply-btn').forEach(btn => {
@@ -3457,161 +3438,7 @@ function getConsecutivePairs(schedule) {
   return pairs;
 }
 
-/* ══════════════════════════════════════════
-   지도 모듈 (Leaflet + OpenStreetMap)
-   eval 없음 → CSP 문제 없음
-   ══════════════════════════════════════════ */
 
-const DAY_COLORS   = ['#e53e3e','#dd6b20','#38a169','#3182ce','#805ad5'];
-const DAY_NAMES_KR = ['월','화','수','목','금'];
-const OSM_TILE     = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const OSM_ATTR     = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-
-/* ── 이동 지도 모달 ── */
-let _locModal    = null;
-let _leafletMap  = null;
-let _leafletPoly = [];   // Leaflet Polyline 객체 배열
-
-function showLocationModal(schedule, label) {
-  closeLocationModal();
-  const pairs = getConsecutivePairs(schedule);
-  const usedBlds = new Set();
-  schedule.forEach(c => (c.slots||[]).forEach(s => {
-    const b = getRoomBuilding(s.room);
-    if (b && BUILDING_COORDS[b]) usedBlds.add(b);
-  }));
-
-  const pairsHtml = pairs.length ? pairs.map((p, idx) => {
-    const nA = p.bldA ? (BUILDING_COORDS[p.bldA]?.name || p.bldA) : p.roomA;
-    const nB = p.bldB ? (BUILDING_COORDS[p.bldB]?.name || p.bldB) : p.roomB;
-    const distText = p.distM !== null
-      ? (p.distM < 1000 ? Math.round(p.distM)+'m' : (p.distM/1000).toFixed(1)+'km') : '거리 미확인';
-    const urgCls = p.walkMin === null ? '' : p.walkMin > p.gapMin ? 'move-urgent' : p.walkMin > p.gapMin*0.7 ? 'move-tight' : 'move-ok';
-    const warn = p.walkMin !== null && p.walkMin > p.gapMin ? ' ⚠' : '';
-    return `
-      <div class="move-pair" data-pair-idx="${idx}" style="border-left:3px solid ${DAY_COLORS[p.day]}">
-        <div class="move-pair-top">
-          <span class="move-day-badge" style="background:${DAY_COLORS[p.day]}">${DAY_NAMES_KR[p.day]}요일</span>
-          <span class="move-courses">${p.courseA.name} → ${p.courseB.name}</span>
-        </div>
-        <div class="move-route">
-          <span class="move-bld">${nA}</span>
-          <span class="move-arrow">→</span>
-          <span class="move-bld">${nB}</span>
-        </div>
-        <div class="move-meta">
-          <span class="move-gap">이동 가능 시간 <b>${p.gapMin}분</b></span>
-          <span class="move-dist ${urgCls}">${distText} · 약 ${p.walkMin ?? '?'}분${warn}</span>
-        </div>
-      </div>`;
-  }).join('') : '<div class="move-none">연강 이동 구간이 없습니다 👍</div>';
-
-  const backdrop = document.createElement('div');
-  backdrop.className = 'loc-backdrop';
-  const modal = document.createElement('div');
-  modal.className = 'loc-modal';
-  modal.innerHTML = `
-    <div class="loc-header">
-      <h3>🗺 이동 지도 — ${label}</h3>
-      <button class="loc-close" type="button">✕</button>
-    </div>
-    <div class="loc-body">
-      <div class="kakao-map-wrap">
-        <div id="locMapEl" class="kakao-map-el"></div>
-      </div>
-      <div class="move-list">
-        <p class="move-list-hint">구간을 클릭하면 지도에서 강조됩니다</p>
-        ${pairsHtml}
-      </div>
-    </div>`;
-
-  document.body.appendChild(backdrop);
-  document.body.appendChild(modal);
-  _locModal = modal;
-
-  modal.querySelector('.loc-close').addEventListener('click', closeLocationModal);
-  backdrop.addEventListener('click', closeLocationModal);
-
-  modal.querySelectorAll('.move-pair').forEach(row => {
-    row.addEventListener('click', () => {
-      const idx = Number(row.dataset.pairIdx);
-      highlightPair(idx, pairs);
-      modal.querySelectorAll('.move-pair').forEach(r => r.classList.remove('active'));
-      row.classList.add('active');
-    });
-  });
-
-  // Leaflet 초기화 — 다음 프레임에 컨테이너 크기 확정 후 실행
-  // 모달 애니메이션이 끝난 뒤 초기화해야 컨테이너 크기가 잡힘
-  setTimeout(() => initLeafletMap('locMapEl', usedBlds, pairs, true), 120);
-}
-
-function closeLocationModal() {
-  if (_leafletMap) { _leafletMap.remove(); _leafletMap = null; }
-  _leafletPoly = [];
-  _locModal?.remove(); _locModal = null;
-  document.querySelector('.loc-backdrop')?.remove();
-}
-
-/* ── Leaflet 지도 초기화 (공통) ── */
-function initLeafletMap(elId, usedBlds, pairs, storePoly) {
-  const el = document.getElementById(elId);
-  if (!el || typeof L === 'undefined') return null;
-
-  // 기본 센터 (창원대 캠퍼스 중심)
-  const map = L.map(el, { zoomControl: true }).setView([35.2440, 128.6958], 16);
-  L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
-
-  // 컨테이너 크기 재계산 (모달 안 렌더링 시 필수)
-  map.invalidateSize();
-
-  const allLatLngs = [];
-
-  // 건물 마커
-  usedBlds.forEach(bld => {
-    const c = BUILDING_COORDS[bld]; if (!c) return;
-    const ll = [c.lat, c.lng];
-    allLatLngs.push(ll);
-    L.marker(ll)
-      .bindPopup(`<b>${c.name}</b>`, { closeButton: false, autoClose: false, closeOnClick: false })
-      .addTo(map)
-      .openPopup();
-  });
-
-  // 경로 폴리라인
-  const polylines = [];
-  pairs.forEach(p => {
-    const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
-    const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
-    if (!cA || !cB) { polylines.push(null); return; }
-    const pl = L.polyline(
-      [[cA.lat, cA.lng], [cB.lat, cB.lng]],
-      { color: DAY_COLORS[p.day], weight: 5, opacity: 0.85, dashArray: '10 6' }
-    ).addTo(map);
-    polylines.push(pl);
-    allLatLngs.push([cA.lat, cA.lng], [cB.lat, cB.lng]);
-  });
-
-  // 모든 마커/경로가 보이도록 자동 줌
-  if (allLatLngs.length > 0) {
-    map.fitBounds(allLatLngs, { padding: [40, 40], maxZoom: 17 });
-  }
-
-  if (storePoly) { _leafletMap = map; _leafletPoly = polylines; }
-  return { map, polylines };
-}
-
-/* ── 구간 강조 ── */
-function highlightPair(pairIdx, pairs) {
-  _leafletPoly.forEach((pl, i) => {
-    if (!pl) return;
-    pl.setStyle({ weight: i === pairIdx ? 7 : 3, opacity: i === pairIdx ? 1 : 0.25 });
-  });
-  const p = pairs[pairIdx];
-  if (!p || !_leafletMap) return;
-  const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
-  const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
-  if (cA && cB) {
-    _leafletMap.panTo([(cA.lat+cB.lat)/2, (cA.lng+cB.lng)/2]);
-  }
-}
+/* ── 지도 상수 (OSM / Leaflet, showBlockInfoModal 에서 사용) ── */
+const OSM_TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTR = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
