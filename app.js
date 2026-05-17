@@ -1932,6 +1932,15 @@ function renderAutoResults(variants, state) {
 
     const gapText = maxGap > 90 ? `최대 공강 ${Math.round(maxGap/60*10)/10}h` : '공강 적음';
 
+    // 연강 이동 거리 요약
+    const pairs     = getConsecutivePairs(v.schedule);
+    const maxWalk   = pairs.length ? Math.max(...pairs.map(p => p.walkMin ?? 0)) : 0;
+    const moveTag   = pairs.length === 0 ? ''
+      : maxWalk === 0 ? `<span class="result-tag move-tag move-ok">🚶 이동 없음</span>`
+      : maxWalk <= 3   ? `<span class="result-tag move-tag move-ok">🚶 최대 ${maxWalk}분</span>`
+      : maxWalk <= 6   ? `<span class="result-tag move-tag move-tight">🚶 최대 ${maxWalk}분</span>`
+      :                  `<span class="result-tag move-tag move-urgent">🚶 최대 ${maxWalk}분</span>`;
+
     return `
       <div class="result-card" data-variant="${i}">
         <div class="result-card-head">
@@ -1941,7 +1950,9 @@ function renderAutoResults(variants, state) {
             <span class="result-tag">${daysUsed}일 수업</span>
             <span class="result-tag">${earliestStr} 시작</span>
             <span class="result-tag">${gapText}</span>
+            ${moveTag}
           </div>
+          ${pairs.length ? `<button class="result-location-btn" data-variant="${i}" type="button">🗺 이동 지도 보기</button>` : ''}
         </div>
 
         <!-- 인라인 미니 시간표 -->
@@ -1982,6 +1993,14 @@ function renderAutoResults(variants, state) {
   desc.textContent = `${_autoGrade}학년 기준 · 최대 ${state.maxCredits}학점`;
   wrap.classList.remove('hidden');
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // 이동 지도 버튼
+  grid.querySelectorAll('.result-location-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.variant);
+      showLocationModal(variants[idx].schedule, labels[idx]);
+    });
+  });
 
   // 적용 버튼 이벤트
   grid.querySelectorAll('.result-apply-btn').forEach(btn => {
@@ -3253,3 +3272,250 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+/* ============================================================
+   위치 기반 이동 정보 모듈
+   ============================================================ */
+
+/* ── 창원대 건물 좌표 테이블 ── */
+const BUILDING_COORDS = {
+  '11':  { lat: 35.2463093, lng: 128.6921212, name: '11호관' },
+  '22':  { lat: 35.2474355, lng: 128.6921226, name: '22호관' },
+  '32':  { lat: 35.2454557, lng: 128.6950178, name: '32호관' },
+  '33':  { lat: 35.2443687, lng: 128.6932992, name: '33호관' },
+  '34':  { lat: 35.2459461, lng: 128.6948307, name: '34호관' },
+  '35':  { lat: 35.2448000, lng: 128.6943000, name: '35호관' },
+  '41':  { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
+  '4동': { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
+  '50':  { lat: 35.2419925, lng: 128.6982163, name: '50호관' },
+  '52':  { lat: 35.2416249, lng: 128.6993138, name: '52호관' },
+  '53':  { lat: 35.2413921, lng: 128.6977360, name: '53호관' },
+  '54':  { lat: 35.2411474, lng: 128.6987354, name: '54호관' },
+  '55':  { lat: 35.2413997, lng: 128.6958770, name: '55호관' },
+  '61':  { lat: 35.2451384, lng: 128.6962653, name: '61호관' },
+  '62':  { lat: 35.2446674, lng: 128.6966943, name: '62호관' },
+  '63':  { lat: 35.2441996, lng: 128.6962994, name: '63호관' },
+  '64':  { lat: 35.2456716, lng: 128.6958435, name: '64호관' },
+  '81':  { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
+  '8동': { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
+  '85':  { lat: 35.2408562, lng: 128.6973639, name: '85호관' },
+  '86':  { lat: 35.2477478, lng: 128.6947957, name: '86호관' },
+  '98':  { lat: 35.2419937, lng: 128.6942744, name: '98호관' },
+  'B21': { lat: 35.2447500, lng: 128.6941000, name: 'B21호관' },
+  'N98': { lat: 35.2418000, lng: 128.6940000, name: 'N98호관' },
+  'T98': { lat: 35.2421000, lng: 128.6944000, name: 'T98호관' },
+};
+
+/* ── 강의실 코드 → 건물 번호 추출 ── */
+function getRoomBuilding(room) {
+  if (!room || room === '99999') return null;
+  const m5   = room.match(/^(\d{2})\d{3}(-\d)?$/);   if (m5)   return m5[1];
+  const mPfx = room.match(/^([A-Z]+\d+)\d{3}(-\d)?$/); if (mPfx) return mPfx[1];
+  const m4   = room.match(/^(\d)\d{3}(-\d)?$/);       if (m4)   return m4[1] + '동';
+  return null;
+}
+
+/* ── Haversine 직선거리 (m) ── */
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000, toR = x => x * Math.PI / 180;
+  const dLat = toR(lat2 - lat1), dLng = toR(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toR(lat1))*Math.cos(toR(lat2))*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+/* ── 직선거리 → 도보 분 (4.5km/h, 우회계수 1.3) ── */
+function walkingMinutes(distM) {
+  return Math.ceil(distM * 1.3 / (4500 / 60));
+}
+
+/* ── 연강 이동 쌍 탐지 ── */
+function getConsecutivePairs(schedule) {
+  const pairs = [];
+  for (let day = 0; day < 5; day++) {
+    const slots = [];
+    schedule.forEach(course => {
+      (course.slots || []).forEach(s => {
+        if (s.day !== day) return;
+        const bld = getRoomBuilding(s.room);
+        slots.push({ course, start: timeToMin(s.start), end: timeToMin(s.end), room: s.room, bld });
+      });
+    });
+    if (slots.length < 2) continue;
+    slots.sort((a, b) => a.start - b.start);
+    for (let i = 0; i < slots.length - 1; i++) {
+      const a = slots[i], b = slots[i+1];
+      const gap = b.start - a.end;
+      if (gap < 0 || gap > 60) continue;
+      if (a.bld && b.bld && a.bld === b.bld) continue; // 같은 건물이면 패스
+      let distM = null, walkMin = null;
+      const cA = a.bld ? BUILDING_COORDS[a.bld] : null;
+      const cB = b.bld ? BUILDING_COORDS[b.bld] : null;
+      if (cA && cB) { distM = haversineDistance(cA.lat, cA.lng, cB.lat, cB.lng); walkMin = walkingMinutes(distM); }
+      pairs.push({ day, courseA: a.course, courseB: b.course, roomA: a.room, roomB: b.room,
+                   bldA: a.bld, bldB: b.bld, endA: a.end, startB: b.start, gapMin: gap, distM, walkMin });
+    }
+  }
+  return pairs;
+}
+
+/* ── 이동 정보 모달 ── */
+let _locModal = null;
+let _kakaoMap = null;
+let _mapPolylines = [];
+let _mapMarkers  = [];
+
+const DAY_COLORS = ['#e53e3e','#dd6b20','#38a169','#3182ce','#805ad5'];
+const DAY_NAMES_KR = ['월','화','수','목','금'];
+
+function showLocationModal(schedule, label) {
+  closeLocationModal();
+  const pairs = getConsecutivePairs(schedule);
+  const usedBlds = new Set();
+  schedule.forEach(c => (c.slots||[]).forEach(s => {
+    const b = getRoomBuilding(s.room);
+    if (b && BUILDING_COORDS[b]) usedBlds.add(b);
+  }));
+
+  const pairsHtml = pairs.length ? pairs.map((p, idx) => {
+    const nA = p.bldA ? (BUILDING_COORDS[p.bldA]?.name || p.bldA) : p.roomA;
+    const nB = p.bldB ? (BUILDING_COORDS[p.bldB]?.name || p.bldB) : p.roomB;
+    const distText = p.distM !== null
+      ? (p.distM < 1000 ? Math.round(p.distM)+'m' : (p.distM/1000).toFixed(1)+'km') : '거리 미확인';
+    const urgCls = p.walkMin === null ? '' : p.walkMin > p.gapMin ? 'move-urgent' : p.walkMin > p.gapMin*0.7 ? 'move-tight' : 'move-ok';
+    const warn = p.walkMin !== null && p.walkMin > p.gapMin ? ' ⚠' : '';
+    return `
+      <div class="move-pair" data-pair-idx="${idx}" style="border-left:3px solid ${DAY_COLORS[p.day]}">
+        <div class="move-pair-top">
+          <span class="move-day-badge" style="background:${DAY_COLORS[p.day]}">${DAY_NAMES_KR[p.day]}요일</span>
+          <span class="move-courses">${p.courseA.name} → ${p.courseB.name}</span>
+        </div>
+        <div class="move-route">
+          <span class="move-bld">${nA}</span>
+          <span class="move-arrow">→</span>
+          <span class="move-bld">${nB}</span>
+        </div>
+        <div class="move-meta">
+          <span class="move-gap">이동 가능 시간 <b>${p.gapMin}분</b></span>
+          <span class="move-dist ${urgCls}">${distText} · 약 ${p.walkMin ?? '?'}분${warn}</span>
+        </div>
+      </div>`;
+  }).join('') : '<div class="move-none">연강 이동 구간이 없습니다 👍</div>';
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'loc-backdrop';
+  const modal = document.createElement('div');
+  modal.className = 'loc-modal';
+  modal.innerHTML = `
+    <div class="loc-header">
+      <h3>🗺 이동 지도 — ${label}</h3>
+      <button class="loc-close" type="button">✕</button>
+    </div>
+    <div class="loc-body">
+      <div id="kakaoMapWrap" class="kakao-map-wrap">
+        <div id="kakaoMapEl" class="kakao-map-el"></div>
+      </div>
+      <div class="move-list">
+        <p class="move-list-hint">구간을 클릭하면 지도에서 강조됩니다</p>
+        ${pairsHtml}
+      </div>
+    </div>`;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+  _locModal = modal;
+
+  modal.querySelector('.loc-close').addEventListener('click', closeLocationModal);
+  backdrop.addEventListener('click', closeLocationModal);
+
+  // 구간 클릭 → 지도 강조
+  modal.querySelectorAll('.move-pair').forEach(row => {
+    row.addEventListener('click', () => {
+      const idx = Number(row.dataset.pairIdx);
+      highlightPair(idx, pairs);
+      modal.querySelectorAll('.move-pair').forEach(r => r.classList.remove('active'));
+      row.classList.add('active');
+    });
+  });
+
+  // Kakao Maps 초기화
+  loadKakaoMap(() => initKakaoMap(usedBlds, pairs));
+}
+
+function closeLocationModal() {
+  _locModal?.remove(); _locModal = null;
+  document.querySelector('.loc-backdrop')?.remove();
+  _kakaoMap = null; _mapPolylines = []; _mapMarkers = [];
+}
+
+/* ── Kakao Maps SDK 동적 로드 후 콜백 ── */
+function loadKakaoMap(cb) {
+  if (typeof kakao !== 'undefined' && kakao.maps) { cb(); return; }
+  if (typeof kakao !== 'undefined' && kakao.maps === undefined) {
+    kakao.maps.load(cb); return;
+  }
+  // SDK가 autoload=false로 로드된 경우
+  const check = setInterval(() => {
+    if (typeof kakao !== 'undefined') {
+      clearInterval(check);
+      kakao.maps.load(cb);
+    }
+  }, 100);
+}
+
+/* ── Kakao 지도 초기화 ── */
+function initKakaoMap(usedBlds, pairs) {
+  const el = document.getElementById('kakaoMapEl');
+  if (!el) return;
+  try {
+    _kakaoMap = new kakao.maps.Map(el, {
+      center: new kakao.maps.LatLng(35.2440, 128.6958),
+      level: 4,
+    });
+
+    // 건물 마커
+    usedBlds.forEach(bld => {
+      const c = BUILDING_COORDS[bld]; if (!c) return;
+      const pos = new kakao.maps.LatLng(c.lat, c.lng);
+      const marker = new kakao.maps.Marker({ position: pos, map: _kakaoMap });
+      const iw = new kakao.maps.InfoWindow({
+        content: `<div style="padding:3px 8px;font-size:12px;font-weight:700;white-space:nowrap">${c.name}</div>`
+      });
+      kakao.maps.event.addListener(marker, 'click',     () => iw.open(_kakaoMap, marker));
+      kakao.maps.event.addListener(marker, 'mouseover', () => iw.open(_kakaoMap, marker));
+      kakao.maps.event.addListener(marker, 'mouseout',  () => iw.close());
+      _mapMarkers.push({ bld, marker, iw });
+    });
+
+    // 경로 폴리라인
+    pairs.forEach((p, idx) => {
+      const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
+      const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
+      if (!cA || !cB) { _mapPolylines.push(null); return; }
+      const pl = new kakao.maps.Polyline({
+        path: [new kakao.maps.LatLng(cA.lat, cA.lng), new kakao.maps.LatLng(cB.lat, cB.lng)],
+        strokeWeight: 4, strokeColor: DAY_COLORS[p.day],
+        strokeOpacity: 0.75, strokeStyle: 'shortdash', map: _kakaoMap,
+      });
+      _mapPolylines.push(pl);
+    });
+  } catch(e) {
+    console.warn('Kakao Map 초기화 실패:', e);
+    if (el) el.innerHTML = '<div class="map-error">지도를 불러오지 못했습니다.<br><small>카카오 개발자 콘솔에서 도메인을 등록해 주세요.</small></div>';
+  }
+}
+
+/* ── 특정 구간 강조 ── */
+function highlightPair(pairIdx, pairs) {
+  _mapPolylines.forEach((pl, i) => {
+    if (!pl) return;
+    pl.setOptions({ strokeWeight: i === pairIdx ? 7 : 3, strokeOpacity: i === pairIdx ? 1 : 0.25 });
+  });
+  const p = pairs[pairIdx];
+  if (!p || !_kakaoMap) return;
+  const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
+  const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
+  if (cA && cB) {
+    const midLat = (cA.lat + cB.lat) / 2, midLng = (cA.lng + cB.lng) / 2;
+    _kakaoMap.panTo(new kakao.maps.LatLng(midLat, midLng));
+  }
+}
