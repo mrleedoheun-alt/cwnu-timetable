@@ -2222,35 +2222,24 @@ function showBlockInfoModal(courseName, courseObj) {
     btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
   });
 
-  // 카카오맵 (건물 위치) — DOM 레이아웃 확정 후 초기화
+  // Leaflet 지도 (건물 위치)
   if (hasMap) {
-    loadKakaoMap(() => {
-      // 모달이 실제로 렌더링된 뒤 초기화해야 지도 크기가 잡힘
-      requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       const el = document.getElementById('cipMapEl');
-      if (!el) return;
-      try {
-        const firstCoord = BUILDING_COORDS[blds[0]];
-        const map = new kakao.maps.Map(el, {
-          center: new kakao.maps.LatLng(firstCoord.lat, firstCoord.lng),
-          level: 3,
-        });
-        blds.forEach(bld => {
-          const c = BUILDING_COORDS[bld];
-          const pos = new kakao.maps.LatLng(c.lat, c.lng);
-          const marker = new kakao.maps.Marker({ position: pos, map });
-          const iw = new kakao.maps.InfoWindow({
-            content: `<div style="padding:3px 8px;font-size:12px;font-weight:700;white-space:nowrap">${c.name}</div>`
-          });
-          iw.open(map, marker);
-          kakao.maps.event.addListener(marker, 'click', () => iw.open(map, marker));
-        });
-      } catch(e) {
-        console.warn('강의 위치 지도 초기화 실패:', e);
-        const el2 = document.getElementById('cipMapEl');
-        if (el2) el2.innerHTML = '<div class="map-error">지도 로드 실패<br><small>카카오 도메인 등록을 확인하세요</small></div>';
-      }
-      }); // requestAnimationFrame
+      if (!el || typeof L === 'undefined') return;
+      const firstCoord = BUILDING_COORDS[blds[0]];
+      const map = L.map(el).setView([firstCoord.lat, firstCoord.lng], 17);
+      L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
+      blds.forEach(bld => {
+        const c = BUILDING_COORDS[bld];
+        L.marker([c.lat, c.lng])
+          .bindPopup(`<b>${c.name}</b>`, { closeButton: false })
+          .addTo(map)
+          .openPopup();
+      });
+      // 모달 닫힐 때 Leaflet 정리
+      backdrop.addEventListener('click', () => map.remove(), { once: true });
+      modal.querySelector('.cip-close').addEventListener('click', () => map.remove(), { once: true });
     });
   }
 }
@@ -3464,14 +3453,20 @@ function getConsecutivePairs(schedule) {
   return pairs;
 }
 
-/* ── 이동 정보 모달 ── */
-let _locModal = null;
-let _kakaoMap = null;
-let _mapPolylines = [];
-let _mapMarkers  = [];
+/* ══════════════════════════════════════════
+   지도 모듈 (Leaflet + OpenStreetMap)
+   eval 없음 → CSP 문제 없음
+   ══════════════════════════════════════════ */
 
-const DAY_COLORS = ['#e53e3e','#dd6b20','#38a169','#3182ce','#805ad5'];
+const DAY_COLORS   = ['#e53e3e','#dd6b20','#38a169','#3182ce','#805ad5'];
 const DAY_NAMES_KR = ['월','화','수','목','금'];
+const OSM_TILE     = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTR     = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+/* ── 이동 지도 모달 ── */
+let _locModal    = null;
+let _leafletMap  = null;
+let _leafletPoly = [];   // Leaflet Polyline 객체 배열
 
 function showLocationModal(schedule, label) {
   closeLocationModal();
@@ -3517,8 +3512,8 @@ function showLocationModal(schedule, label) {
       <button class="loc-close" type="button">✕</button>
     </div>
     <div class="loc-body">
-      <div id="kakaoMapWrap" class="kakao-map-wrap">
-        <div id="kakaoMapEl" class="kakao-map-el"></div>
+      <div class="kakao-map-wrap">
+        <div id="locMapEl" class="kakao-map-el"></div>
       </div>
       <div class="move-list">
         <p class="move-list-hint">구간을 클릭하면 지도에서 강조됩니다</p>
@@ -3533,7 +3528,6 @@ function showLocationModal(schedule, label) {
   modal.querySelector('.loc-close').addEventListener('click', closeLocationModal);
   backdrop.addEventListener('click', closeLocationModal);
 
-  // 구간 클릭 → 지도 강조
   modal.querySelectorAll('.move-pair').forEach(row => {
     row.addEventListener('click', () => {
       const idx = Number(row.dataset.pairIdx);
@@ -3543,86 +3537,62 @@ function showLocationModal(schedule, label) {
     });
   });
 
-  // Kakao Maps 초기화 — 모달 DOM 렌더 후 실행
-  loadKakaoMap(() => requestAnimationFrame(() => initKakaoMap(usedBlds, pairs)));
+  // Leaflet 초기화 — 다음 프레임에 컨테이너 크기 확정 후 실행
+  requestAnimationFrame(() => initLeafletMap('locMapEl', usedBlds, pairs, true));
 }
 
 function closeLocationModal() {
+  if (_leafletMap) { _leafletMap.remove(); _leafletMap = null; }
+  _leafletPoly = [];
   _locModal?.remove(); _locModal = null;
   document.querySelector('.loc-backdrop')?.remove();
-  _kakaoMap = null; _mapPolylines = []; _mapMarkers = [];
 }
 
-/* ── Kakao Maps SDK 준비 대기 후 콜백 ── */
-// autoload 방식(기본값): SDK 로드 완료 시 kakao.maps.Map 바로 사용 가능
-// 스크립트 로드가 늦을 수 있으므로 폴링으로 대기
-function loadKakaoMap(cb) {
-  if (typeof kakao !== 'undefined' && typeof kakao.maps?.Map === 'function') {
-    cb();
-    return;
-  }
-  const check = setInterval(() => {
-    if (typeof kakao !== 'undefined' && typeof kakao.maps?.Map === 'function') {
-      clearInterval(check);
-      cb();
-    }
-  }, 100);
+/* ── Leaflet 지도 초기화 (공통) ── */
+function initLeafletMap(elId, usedBlds, pairs, storePoly) {
+  const el = document.getElementById(elId);
+  if (!el || typeof L === 'undefined') return null;
+
+  const map = L.map(el, { zoomControl: true }).setView([35.2440, 128.6958], 16);
+  L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
+
+  // 건물 마커
+  usedBlds.forEach(bld => {
+    const c = BUILDING_COORDS[bld]; if (!c) return;
+    L.marker([c.lat, c.lng])
+      .bindPopup(`<b>${c.name}</b>`, { closeButton: false })
+      .addTo(map)
+      .openPopup();
+  });
+
+  // 경로 폴리라인
+  const polylines = [];
+  pairs.forEach(p => {
+    const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
+    const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
+    if (!cA || !cB) { polylines.push(null); return; }
+    const pl = L.polyline(
+      [[cA.lat, cA.lng], [cB.lat, cB.lng]],
+      { color: DAY_COLORS[p.day], weight: 4, opacity: 0.75, dashArray: '8 6' }
+    ).addTo(map);
+    polylines.push(pl);
+  });
+
+  if (storePoly) { _leafletMap = map; _leafletPoly = polylines; }
+  return { map, polylines };
 }
 
-/* ── Kakao 지도 초기화 ── */
-function initKakaoMap(usedBlds, pairs) {
-  const el = document.getElementById('kakaoMapEl');
-  if (!el) return;
-  try {
-    _kakaoMap = new kakao.maps.Map(el, {
-      center: new kakao.maps.LatLng(35.2440, 128.6958),
-      level: 4,
-    });
-
-    // 건물 마커
-    usedBlds.forEach(bld => {
-      const c = BUILDING_COORDS[bld]; if (!c) return;
-      const pos = new kakao.maps.LatLng(c.lat, c.lng);
-      const marker = new kakao.maps.Marker({ position: pos, map: _kakaoMap });
-      const iw = new kakao.maps.InfoWindow({
-        content: `<div style="padding:3px 8px;font-size:12px;font-weight:700;white-space:nowrap">${c.name}</div>`
-      });
-      kakao.maps.event.addListener(marker, 'click',     () => iw.open(_kakaoMap, marker));
-      kakao.maps.event.addListener(marker, 'mouseover', () => iw.open(_kakaoMap, marker));
-      kakao.maps.event.addListener(marker, 'mouseout',  () => iw.close());
-      _mapMarkers.push({ bld, marker, iw });
-    });
-
-    // 경로 폴리라인
-    pairs.forEach((p, idx) => {
-      const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
-      const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
-      if (!cA || !cB) { _mapPolylines.push(null); return; }
-      const pl = new kakao.maps.Polyline({
-        path: [new kakao.maps.LatLng(cA.lat, cA.lng), new kakao.maps.LatLng(cB.lat, cB.lng)],
-        strokeWeight: 4, strokeColor: DAY_COLORS[p.day],
-        strokeOpacity: 0.75, strokeStyle: 'shortdash', map: _kakaoMap,
-      });
-      _mapPolylines.push(pl);
-    });
-  } catch(e) {
-    console.warn('Kakao Map 초기화 실패:', e);
-    if (el) el.innerHTML = '<div class="map-error">지도를 불러오지 못했습니다.<br><small>카카오 개발자 콘솔에서 도메인을 등록해 주세요.</small></div>';
-  }
-}
-
-/* ── 특정 구간 강조 ── */
+/* ── 구간 강조 ── */
 function highlightPair(pairIdx, pairs) {
-  _mapPolylines.forEach((pl, i) => {
+  _leafletPoly.forEach((pl, i) => {
     if (!pl) return;
-    pl.setOptions({ strokeWeight: i === pairIdx ? 7 : 3, strokeOpacity: i === pairIdx ? 1 : 0.25 });
+    pl.setStyle({ weight: i === pairIdx ? 7 : 3, opacity: i === pairIdx ? 1 : 0.25 });
   });
   const p = pairs[pairIdx];
-  if (!p || !_kakaoMap) return;
+  if (!p || !_leafletMap) return;
   const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
   const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
   if (cA && cB) {
-    const midLat = (cA.lat + cB.lat) / 2, midLng = (cA.lng + cB.lng) / 2;
-    _kakaoMap.panTo(new kakao.maps.LatLng(midLat, midLng));
+    _leafletMap.panTo([(cA.lat+cB.lat)/2, (cA.lng+cB.lng)/2]);
   }
 }

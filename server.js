@@ -493,22 +493,10 @@ const server = http.createServer(async (req, res) => {
   }
 
   const ext = path.extname(fp).slice(1);
-  const headers = {
+  res.writeHead(200, {
     'Content-Type':  MIME[ext] || 'text/plain',
     'Cache-Control': 'no-cache',
-  };
-  // HTML 페이지에만 CSP 적용 (카카오맵 SDK eval 허용)
-  if (ext === 'html') {
-    headers['Content-Security-Policy'] = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://dapi.kakao.com https://*.kakaocdn.net https://*.kakao.com",
-      "style-src 'self' 'unsafe-inline' https://*.kakaocdn.net https://*.kakao.com",
-      "img-src 'self' data: blob: https://*.kakao.com https://*.kakaocdn.net",
-      "connect-src 'self' https://*.kakao.com https://*.kakaocdn.net",
-      "font-src 'self' https://*.kakaocdn.net",
-    ].join('; ');
-  }
-  res.writeHead(200, headers);
+  });
   fs.createReadStream(fp).pipe(res);
 });
 
