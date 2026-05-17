@@ -2222,9 +2222,11 @@ function showBlockInfoModal(courseName, courseObj) {
     btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
   });
 
-  // 카카오맵 (건물 위치)
+  // 카카오맵 (건물 위치) — DOM 레이아웃 확정 후 초기화
   if (hasMap) {
     loadKakaoMap(() => {
+      // 모달이 실제로 렌더링된 뒤 초기화해야 지도 크기가 잡힘
+      requestAnimationFrame(() => {
       const el = document.getElementById('cipMapEl');
       if (!el) return;
       try {
@@ -2248,6 +2250,7 @@ function showBlockInfoModal(courseName, courseObj) {
         const el2 = document.getElementById('cipMapEl');
         if (el2) el2.innerHTML = '<div class="map-error">지도 로드 실패<br><small>카카오 도메인 등록을 확인하세요</small></div>';
       }
+      }); // requestAnimationFrame
     });
   }
 }
@@ -3540,8 +3543,8 @@ function showLocationModal(schedule, label) {
     });
   });
 
-  // Kakao Maps 초기화
-  loadKakaoMap(() => initKakaoMap(usedBlds, pairs));
+  // Kakao Maps 초기화 — 모달 DOM 렌더 후 실행
+  loadKakaoMap(() => requestAnimationFrame(() => initKakaoMap(usedBlds, pairs)));
 }
 
 function closeLocationModal() {
@@ -3551,14 +3554,22 @@ function closeLocationModal() {
 }
 
 /* ── Kakao Maps SDK 동적 로드 후 콜백 ── */
+// autoload=false 이므로 kakao.maps 객체는 있어도 Map 생성자가 없을 수 있음
+// → kakao.maps.Map이 실제로 존재할 때만 cb() 직접 호출
 function loadKakaoMap(cb) {
-  if (typeof kakao !== 'undefined' && kakao.maps) { cb(); return; }
-  if (typeof kakao !== 'undefined' && kakao.maps === undefined) {
-    kakao.maps.load(cb); return;
+  if (typeof kakao !== 'undefined' && typeof kakao.maps?.Map === 'function') {
+    // 이미 완전히 초기화됨
+    cb();
+    return;
   }
-  // SDK가 autoload=false로 로드된 경우
+  if (typeof kakao !== 'undefined' && typeof kakao.maps?.load === 'function') {
+    // SDK 로드됐지만 maps 아직 초기화 전 → load() 호출
+    kakao.maps.load(cb);
+    return;
+  }
+  // SDK 자체가 아직 로드 안 됨 → 폴링
   const check = setInterval(() => {
-    if (typeof kakao !== 'undefined') {
+    if (typeof kakao !== 'undefined' && typeof kakao.maps?.load === 'function') {
       clearInterval(check);
       kakao.maps.load(cb);
     }
