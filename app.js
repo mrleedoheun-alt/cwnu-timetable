@@ -1,35 +1,36 @@
-﻿/* ============================================================
+/* ============================================================
    Constants & Storage Keys
    ============================================================ */
 const USERS_KEY    = 'tt_users_v1';
 const SESSION_KEY  = 'tt_session_v1';
 const STATE_PREFIX = 'tt_state_v1_';
 
-// ?숆낵 紐⑸줉? courses.json?먯꽌 ?숈쟻?쇰줈 濡쒕뱶 (?꾨옒 loadDepartments 李몄“)
+// 학과 목록은 courses.json에서 동적으로 로드 (아래 loadDepartments 참조)
 let DEPARTMENTS = [];
 
-// 議몄뾽?붽굔 ?곗씠?곌? ?놁뼱 ?좏깮 遺덇????숆낵
+// 졸업요건 데이터가 없어 선택 불가한 학과
 const DEPTS_NO_GRAD_REQS = new Set([
-  'RISE?ъ뾽??,
-  '寃쎌쁺怨꾩뿴 ?먯쑉?꾧났?숇?',
-  '怨듯븰怨꾩뿴 ?먯쑉?꾧났?숇?',
-  '湲濡쒕쾶?먯쑉?꾧났?숇?',
-  '湲곗닠寃쎌쁺怨듯븰怨?,
-  '湲곗큹怨쇳븰遺 ?먮꼫吏?뷀븰?꾧났',
-  '?щ┝?꾨꼫?ㅽ븰遺',
-  '?ы쉶怨꾩뿴 ?먯쑉?꾧났?숇?',
-  '?먮꼫吏?뷀븰怨듯븰怨?,
-  '?멸났吏?μ쑖?⑷났?숆낵',
-  '?몃Ц怨꾩뿴 ?먯쑉?꾧났?숇?',
-  '?щ즺湲덉냽怨듯븰怨?,
-  '泥⑤떒?뚯옱?듯빀怨듯븰怨?,
+  'RISE사업단',
+  '경영계열 자율전공학부',
+  '공학계열 자율전공학부',
+  '글로벌자율전공학부',
+  '기술경영공학과',
+  '기초과학부 에너지화학전공',
+  '사림아너스학부',
+  '사회계열 자율전공학부',
+  '에너지화학공학과',
+  '인공지능융합공학과',
+  '인문계열 자율전공학부',
+  '재료금속공학과',
+  '첨단소재융합공학과',
 ]);
 
-const DAY_NAMES   = ['??, '??, '??, '紐?, '湲?];
+const DAY_NAMES   = ['월', '화', '수', '목', '금'];
 const HOUR_ROWS   = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
 const HOUR_ROWS_END = '18:00';
 
-// ?먮툕由ы????ㅽ????뚯뒪???붾젅??const COLORS = [
+// 에브리타임 스타일 파스텔 팔레트
+const COLORS = [
   { bg: '#ffd6d6', border: '#e05555', text: '#8b0000' },
   { bg: '#ffdfc8', border: '#e07040', text: '#7a3000' },
   { bg: '#fff3c8', border: '#d4a017', text: '#6b4c00' },
@@ -42,16 +43,16 @@ const HOUR_ROWS_END = '18:00';
   { bg: '#fff8d6', border: '#c8a000', text: '#5a4000' }
 ];
 
-// 移댄뀒怨좊━蹂?怨좎젙 ?됱긽
+// 카테고리별 고정 색상
 const CAT_COLORS = {
-  '?꾧났?꾩닔': { bg: '#ffd6d6', border: '#e05555', text: '#8b0000' },
-  '?꾧났?좏깮': { bg: '#ffdfc8', border: '#e07040', text: '#7a3000' },
-  '?듯빀?꾧났?꾩닔': { bg: '#ffe8e8', border: '#c0392b', text: '#7b0000' },
-  '?듯빀?꾧났': { bg: '#ffd6f0', border: '#d4509a', text: '#7a0050' },
-  '湲곗큹援먯뼇': { bg: '#d6f5d6', border: '#4caf50', text: '#1b5e20' },
-  '洹좏삎援먯뼇': { bg: '#c8e8ff', border: '#3a8fd4', text: '#0d3c6e' },
-  '?뺣?援먯뼇': { bg: '#e8d6ff', border: '#8b5cf6', text: '#4c1d95' },
-  '?먯쑀?좏깮':  { bg: '#d6fff5', border: '#0ea87a', text: '#004d38' },
+  '전공필수': { bg: '#ffd6d6', border: '#e05555', text: '#8b0000' },
+  '전공선택': { bg: '#ffdfc8', border: '#e07040', text: '#7a3000' },
+  '융합전공필수': { bg: '#ffe8e8', border: '#c0392b', text: '#7b0000' },
+  '융합전공': { bg: '#ffd6f0', border: '#d4509a', text: '#7a0050' },
+  '기초교양': { bg: '#d6f5d6', border: '#4caf50', text: '#1b5e20' },
+  '균형교양': { bg: '#c8e8ff', border: '#3a8fd4', text: '#0d3c6e' },
+  '확대교양': { bg: '#e8d6ff', border: '#8b5cf6', text: '#4c1d95' },
+  '자유선택':  { bg: '#d6fff5', border: '#0ea87a', text: '#004d38' },
 };
 
 /* ============================================================
@@ -81,10 +82,10 @@ function findUser(sid) {
    Per-user state
    ============================================================ */
 const DEFAULT_STATE = {
-  studentId: '', department: '', year: '', semester: '1?숆린',
+  studentId: '', department: '', year: '', semester: '1학기',
   totalCredits: 0, prevGpa: 3.6, appliedCredits: 0, maxCredits: 20,
-  timetables: {},        // { "2026_1?숆린": [...courses], "2025_2?숆린": [...] }
-  courses: [],           // ?섏쐞?명솚: index ?섏씠吏?먯꽌 ?꾩옱 ?숆린 courses 李몄“
+  timetables: {},        // { "2026_1학기": [...courses], "2025_2학기": [...] }
+  courses: [],           // 하위호환: index 페이지에서 현재 학기 courses 참조
   completedCourses: [],  // array of course names already taken
   excludedCourses: [],   // array of course names to exclude from auto-gen
   pinnedCourses: [],     // array of course names to force-include in auto-gen
@@ -102,7 +103,7 @@ function loadState() {
   try {
     const parsed = JSON.parse(raw);
     const state = { ...base, ...parsed };
-    migrateLegacyCourses(state); // 湲곗〈 ?⑥씪 courses 諛곗뿴 ??timetables 留덉씠洹몃젅?댁뀡
+    migrateLegacyCourses(state); // 기존 단일 courses 배열 → timetables 마이그레이션
     return state;
   } catch { return base; }
 }
@@ -115,7 +116,7 @@ function saveState(s) {
    Timetable-per-semester helpers
    ============================================================ */
 function ttKey(year, semester) {
-  return `${year}_${semester || '1?숆린'}`;
+  return `${year}_${semester || '1학기'}`;
 }
 function getTimetable(state, year, semester) {
   if (!state.timetables) state.timetables = {};
@@ -126,14 +127,14 @@ function setTimetable(state, year, semester, courses) {
   if (!state.timetables) state.timetables = {};
   const k = ttKey(year || state.year, semester || state.semester);
   state.timetables[k] = courses;
-  // state.courses???꾩옱 ?좏깮 ?숆린瑜?mirror (index ?섏씠吏 ?명솚??
+  // state.courses는 현재 선택 학기를 mirror (index 페이지 호환용)
   if (k === ttKey(state.year, state.semester)) state.courses = courses;
 }
-// 湲곗〈 state.courses(?⑥씪 諛곗뿴)瑜?timetables濡?留덉씠洹몃젅?댁뀡
+// 기존 state.courses(단일 배열)를 timetables로 마이그레이션
 function migrateLegacyCourses(state) {
   if (!state.timetables) state.timetables = {};
   if (state.courses?.length) {
-    const k = ttKey(state.year || new Date().getFullYear(), state.semester || '1?숆린');
+    const k = ttKey(state.year || new Date().getFullYear(), state.semester || '1학기');
     if (!state.timetables[k]) {
       state.timetables[k] = state.courses;
     }
@@ -161,13 +162,14 @@ function fillYearOptions(sel, selected, admYear) {
 }
 function fillDepartmentOptions(sel, selected = '') {
   if (!sel) return;
-  sel.innerHTML = `<option value="">?숆낵 ?좏깮</option>` + DEPARTMENTS.map(d =>
+  sel.innerHTML = `<option value="">학과 선택</option>` + DEPARTMENTS.map(d =>
     `<option value="${d}" ${d === selected ? 'selected' : ''}>${d}</option>`
   ).join('');
 }
 
 async function loadDepartments() {
-  if (DEPARTMENTS.length > 0) return; // ?대? 濡쒕뱶??  try {
+  if (DEPARTMENTS.length > 0) return; // 이미 로드됨
+  try {
     const res  = await fetch('data/all_grad_reqs.json');
     const data = await res.json();
     DEPARTMENTS = Object.keys(data).sort((a, b) => a.localeCompare(b, 'ko'));
@@ -188,7 +190,7 @@ function buildColorMap(courses) {
   let i = 0;
   courses.forEach(c => {
     if (!(c.name in map)) {
-      // 移댄뀒怨좊━ 怨좎젙???곗꽑, ?놁쑝硫??붾젅???쒗솚
+      // 카테고리 고정색 우선, 없으면 팔레트 순환
       map[c.name] = CAT_COLORS[c.category] || COLORS[i++ % COLORS.length];
     }
   });
@@ -218,7 +220,7 @@ function renderTimetable(container, courses, opts = {}) {
   const timeColW  = opts.timeColW || (mini ? 32 : 48);
   const hourH     = opts.hourH    || (mini ? 44 : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hour-h'))  || 60);
 
-  // 紐⑤컮?쇱뿉??而⑦뀒?대꼫 ?덈퉬??留욊쾶 dayCol ?먮룞 怨꾩궛
+  // 모바일에서 컨테이너 너비에 맞게 dayCol 자동 계산
   let dayCol;
   if (opts.dayCol) {
     dayCol = opts.dayCol;
@@ -243,7 +245,7 @@ function renderTimetable(container, courses, opts = {}) {
   const top = document.createElement('div');
   top.className = 'et-top';
   top.style.gridTemplateColumns = `${timeColW}px repeat(5, ${dayCol}px)`;
-  top.innerHTML = `<div class="corner">?쒓컙</div>` +
+  top.innerHTML = `<div class="corner">시간</div>` +
     DAY_NAMES.map(d => `<div class="day">${d}</div>`).join('');
   wrap.appendChild(top);
 
@@ -298,8 +300,8 @@ function renderTimetable(container, courses, opts = {}) {
     block.dataset.name = slot.name;
     block.innerHTML = `
       <div class="course-title">${slot.name}</div>
-      ${isRetake && !mini ? `<div class="course-meta retake-label">?봽 ?ъ닔媛?/div>` : ''}
-      ${!mini ? `<div class="course-meta">${slot.start}??{slot.end}</div>` : ''}
+      ${isRetake && !mini ? `<div class="course-meta retake-label">🔄 재수강</div>` : ''}
+      ${!mini ? `<div class="course-meta">${slot.start}–${slot.end}</div>` : ''}
       ${!mini && slot.room ? `<div class="course-meta">${slot.room}</div>` : ''}
     `;
     layer.appendChild(block);
@@ -328,11 +330,11 @@ function setupCreditOptions(state) {
     const safe  = Math.min(Number(maxSel.value || state.maxCredits || 20), upper);
     maxSel.innerHTML = Array.from({ length: upper - 11 }, (_, i) => {
       const v = i + 12;
-      return `<option value="${v}" ${v === safe ? 'selected' : ''}>${v}?숈젏</option>`;
+      return `<option value="${v}" ${v === safe ? 'selected' : ''}>${v}학점</option>`;
     }).join('');
     if (helpEl) helpEl.textContent = gpa >= 3.8
-      ? '吏곸쟾?숆린 ?깆쟻 3.8 ?댁긽 ??理쒕? 23?숈젏'
-      : '湲곕낯 理쒕? ?좎껌?숈젏? 20?숈젏?낅땲??';
+      ? '직전학기 성적 3.8 이상 → 최대 23학점'
+      : '기본 최대 신청학점은 20학점입니다.';
     state.prevGpa  = gpa;
     state.maxCredits = safe;
     saveState(state);
@@ -352,7 +354,8 @@ async function setupLoginPage() {
   const loginErr   = document.getElementById('loginError');
   const signupErr  = document.getElementById('signupError');
 
-  // ?숆낵 紐⑸줉 濡쒕뱶 ??select 梨꾩슦湲?  await loadDepartments();
+  // 학과 목록 로드 후 select 채우기
+  await loadDepartments();
   fillDepartmentOptions(document.getElementById('signupDepartment'));
 
   // Tab switching
@@ -377,11 +380,11 @@ async function setupLoginPage() {
   document.getElementById('loginBtn')?.addEventListener('click', () => {
     const sid  = document.getElementById('loginStudentId').value.trim();
     const pass = document.getElementById('loginPassword').value;
-    if (!/^\d{8}$/.test(sid)) return showErr(loginErr, '?숇쾲? 8?먮━ ?レ옄濡??낅젰??二쇱꽭??');
-    if (!pass)                 return showErr(loginErr, '鍮꾨?踰덊샇瑜??낅젰??二쇱꽭??');
+    if (!/^\d{8}$/.test(sid)) return showErr(loginErr, '학번은 8자리 숫자로 입력해 주세요.');
+    if (!pass)                 return showErr(loginErr, '비밀번호를 입력해 주세요.');
     const user = findUser(sid);
-    if (!user)              return showErr(loginErr, '?깅줉?섏? ?딆? ?숇쾲?낅땲?? ?뚯썝媛?낆쓣 ?댁＜?몄슂.');
-    if (user.password !== pass) return showErr(loginErr, '鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.');
+    if (!user)              return showErr(loginErr, '등록되지 않은 학번입니다. 회원가입을 해주세요.');
+    if (user.password !== pass) return showErr(loginErr, '비밀번호가 일치하지 않습니다.');
     setSession(sid);
     location.href = 'index.html';
   });
@@ -392,11 +395,11 @@ async function setupLoginPage() {
     const dept  = document.getElementById('signupDepartment')?.value || '';
     const pass  = document.getElementById('signupPassword').value;
     const pass2 = document.getElementById('signupPasswordConfirm').value;
-    if (!/^\d{8}$/.test(sid)) return showErr(signupErr, '?숇쾲? 8?먮━ ?レ옄濡??낅젰??二쇱꽭??');
-    if (!dept)                 return showErr(signupErr, '?숆낵瑜??좏깮??二쇱꽭??');
-    if (pass.length < 4)       return showErr(signupErr, '鍮꾨?踰덊샇??4???댁긽 ?낅젰??二쇱꽭??');
-    if (pass !== pass2)        return showErr(signupErr, '鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.');
-    if (findUser(sid))         return showErr(signupErr, '?대? ?깅줉???숇쾲?낅땲?? 濡쒓렇?명빐 二쇱꽭??');
+    if (!/^\d{8}$/.test(sid)) return showErr(signupErr, '학번은 8자리 숫자로 입력해 주세요.');
+    if (!dept)                 return showErr(signupErr, '학과를 선택해 주세요.');
+    if (pass.length < 4)       return showErr(signupErr, '비밀번호는 4자 이상 입력해 주세요.');
+    if (pass !== pass2)        return showErr(signupErr, '비밀번호가 일치하지 않습니다.');
+    if (findUser(sid))         return showErr(signupErr, '이미 등록된 학번입니다. 로그인해 주세요.');
     const users = getUsers();
     users.push({ studentId: sid, department: dept, password: pass });
     saveUsers(users);
@@ -427,12 +430,12 @@ function setupIndexPage(state) {
   const defaultYear = state.year || new Date().getFullYear();
   fillYearOptions(yearSel, defaultYear, admYear);
   if (!state.year && yearSel?.value) { state.year = yearSel.value; saveState(state); }
-  if (semSel) semSel.value = state.semester || '1?숆린';
+  if (semSel) semSel.value = state.semester || '1학기';
 
   const refreshIndex = () => {
     state.year     = yearSel?.value || state.year;
     state.semester = semSel?.value  || state.semester;
-    // ?꾩옱 ?좏깮 ?숆린 ?쒓컙??諛섏쁺
+    // 현재 선택 학기 시간표 반영
     state.courses = getTimetable(state, state.year, state.semester);
     saveState(state);
     updateSummary(state);
@@ -443,7 +446,7 @@ function setupIndexPage(state) {
   yearSel?.addEventListener('change', refreshIndex);
   semSel?.addEventListener('change',  refreshIndex);
 
-  // ?꾩옱 ?숆린 ?쒓컙??濡쒕뱶
+  // 현재 학기 시간표 로드
   state.courses = getTimetable(state, state.year, state.semester);
   updateSummary(state);
 
@@ -462,20 +465,21 @@ function setupBlockClicks(container, state) {
     showCoursePopup(block, block.dataset.name, state, () => {
       updateSummary(state);
       renderTimetable(container, state.courses);
-      // ?щ젋??????layer???대깽???ъ뿰寃?      setupBlockClicks(container, state);
+      // 재렌더 후 새 layer에 이벤트 재연결
+      setupBlockClicks(container, state);
     });
   }, { once: true });
 }
 
 function semOrdinal(sem) {
-  return ({ '1?숆린': 1, '?щ쫫?숆린': 2, '2?숆린': 3, '寃⑥슱?숆린': 4 })[sem] ?? 3;
+  return ({ '1학기': 1, '여름학기': 2, '2학기': 3, '겨울학기': 4 })[sem] ?? 3;
 }
 
-/* ?대떦 ?숇뀈???숆린媛 ?꾩옱 ?쒖젏 湲곗??쇰줈 ?대? ?앸궗?붿? ?먮떒
-   1?숆린: 3~7????8???댄썑遺??醫낅즺濡?媛꾩＜
-   ?щ쫫?숆린: 7~8????9???댄썑遺??醫낅즺濡?媛꾩＜
-   2?숆린: 9~12?????ㅼ쓬?대???醫낅즺濡?媛꾩＜
-   寃⑥슱?숆린: 1~2????3???댄썑(媛숈? ???뱀? ?ㅼ쓬??遺??醫낅즺濡?媛꾩＜ */
+/* 해당 학년도+학기가 현재 시점 기준으로 이미 끝났는지 판단
+   1학기: 3~7월 → 8월 이후부터 종료로 간주
+   여름학기: 7~8월 → 9월 이후부터 종료로 간주
+   2학기: 9~12월 → 다음해부터 종료로 간주
+   겨울학기: 1~2월 → 3월 이후(같은 해 혹은 다음해)부터 종료로 간주 */
 function isPastSemester(year, sem) {
   const now  = new Date();
   const nowY = now.getFullYear();
@@ -483,15 +487,15 @@ function isPastSemester(year, sem) {
   const yr   = Number(year);
   if (yr < nowY) return true;
   if (yr > nowY) return false;
-  // 媛숈? ?곕룄
-  if (sem === '1?숆린')   return nowM >= 7;   // 7???댄썑硫?1?숆린 醫낅즺
-  if (sem === '?щ쫫?숆린') return nowM >= 9;   // 9???댄썑硫??щ쫫?숆린 醫낅즺
-  if (sem === '2?숆린')   return false;        // 2?숆린??媛숈? ?댁뿏 ?꾩쭅 ???앸궓
-  if (sem === '寃⑥슱?숆린') return false;        // 寃⑥슱?숆린??留덉갔媛吏
+  // 같은 연도
+  if (sem === '1학기')   return nowM >= 7;   // 7월 이후면 1학기 종료
+  if (sem === '여름학기') return nowM >= 9;   // 9월 이후면 여름학기 종료
+  if (sem === '2학기')   return false;        // 2학기는 같은 해엔 아직 안 끝남
+  if (sem === '겨울학기') return false;        // 겨울학기도 마찬가지
   return false;
 }
 
-/* 吏???숆린 timetables?먯꽌 怨쇰ぉ紐?Set 諛섑솚 */
+/* 지난 학기 timetables에서 과목명 Set 반환 */
 function getPastTimetableCourseNames(state) {
   const names = new Set();
   for (const [key, courses] of Object.entries(state.timetables || {})) {
@@ -527,7 +531,7 @@ function updateSummary(state) {
   if (totalEl) totalEl.textContent = accumulated;
 }
 
-/* ?? Course block popup (index page) ?? */
+/* ── Course block popup (index page) ── */
 let _popup = null;
 function showCoursePopup(block, courseName, state, onDelete) {
   closePopup();
@@ -541,13 +545,13 @@ function showCoursePopup(block, courseName, state, onDelete) {
   popup.className = 'course-popup';
   popup.innerHTML = `
     <div class="popup-name">${courseName}</div>
-    ${course?.professor ? `<div class="popup-meta">?뫀 ${course.professor}</div>` : ''}
-    ${course?.category  ? `<div class="popup-meta">?뱴 ${course.category}${course.subtitle ? ' 쨌 '+course.subtitle : ''}</div>` : ''}
-    ${course?.credits   ? `<div class="popup-meta">?륅툘 ${course.credits}?숈젏</div>` : ''}
+    ${course?.professor ? `<div class="popup-meta">👤 ${course.professor}</div>` : ''}
+    ${course?.category  ? `<div class="popup-meta">📚 ${course.category}${course.subtitle ? ' · '+course.subtitle : ''}</div>` : ''}
+    ${course?.credits   ? `<div class="popup-meta">✏️ ${course.credits}학점</div>` : ''}
     <button class="popup-retake-btn${isRetake ? ' active' : ''}" type="button">
-      ?봽 ${isRetake ? '?ъ닔媛?痍⑥냼' : '?ъ닔媛??꾩슂'}
+      🔄 ${isRetake ? '재수강 취소' : '재수강 필요'}
     </button>
-    <button class="popup-del-btn" type="button">?쒓컙?쒖뿉????젣</button>
+    <button class="popup-del-btn" type="button">시간표에서 삭제</button>
   `;
 
   // Position popup
@@ -595,15 +599,16 @@ function closePopup() {
    ============================================================ */
 let _allCourses     = [];   // loaded from data/courses.json
 let _selected       = [];   // courses user has picked (temp, not saved yet)
-let _myDepartment   = '';   // 濡쒓렇?명븳 ?ъ슜?먯쓽 ?숆낵
+let _myDepartment   = '';   // 로그인한 사용자의 학과
 let _gradReqs       = null; // loaded from data/all_grad_reqs.json
 let _currentState   = null; // reference to current page state
 
 // Filter state
 let _activeType     = '';   // '' | 'liberal' | 'major'
-let _activeDept     = '';   // major: ?숆낵紐?let _activeCategory = '';   // liberal: category
+let _activeDept     = '';   // major: 학과명
+let _activeCategory = '';   // liberal: category
 let _activeSubtitle = '';   // liberal: subtitle
-let _activeYear     = 0;    // 0=?꾩껜 1~4=?숇뀈
+let _activeYear     = 0;    // 0=전체 1~4=학년
 
 function setupGeneratePage(state) {
   _currentState = state;
@@ -617,14 +622,15 @@ function setupGeneratePage(state) {
 
   const yearSel = document.getElementById('generateYear');
   const semSel  = document.getElementById('generateSemester');
-  // 湲곕낯 ?좏깮: ??λ맂 year > ?꾩옱 ?곕룄. admYear???좏깮 踰붿쐞 ?쒖옉媛믪씪 肉?  const defaultYear = state.year || new Date().getFullYear();
+  // 기본 선택: 저장된 year > 현재 연도. admYear는 선택 범위 시작값일 뿐
+  const defaultYear = state.year || new Date().getFullYear();
   fillYearOptions(yearSel, defaultYear, admYear);
-  if (semSel) semSel.value = state.semester || '1?숆린';
+  if (semSel) semSel.value = state.semester || '1학기';
 
   const reloadCourses = () => {
     state.year     = yearSel?.value || state.year;
     state.semester = semSel?.value  || state.semester;
-    // ?대떦 ?숆린????λ맂 ?쒓컙??遺덈윭?ㅺ린
+    // 해당 학기에 저장된 시간표 불러오기
     _selected = getTimetable(state, state.year, state.semester);
     renderSelectedList();
     renderMiniTimetable();
@@ -641,7 +647,7 @@ function setupGeneratePage(state) {
   // Initialize selected from current semester's saved timetable
   _selected = getTimetable(state, state.year, state.semester);
 
-  // ???숆낵 ?명똿
+  // 내 학과 세팅
   _myDepartment = state.department || '';
 
   // Reset filter state on page load
@@ -705,37 +711,38 @@ async function loadRoadmap() {
   return _roadmap;
 }
 
-// ?숆낵+?숇뀈+?숆린 湲곗? 濡쒕뱶留?怨쇰ぉ紐?紐⑸줉 諛섑솚
+// 학과+학년+학기 기준 로드맵 과목명 목록 반환
 function getRoadmapCourses(dept, grade, semester) {
   if (!_roadmap || !dept) return [];
   const deptMap = _roadmap[dept];
   if (!deptMap) return [];
-  const semKey = String(semester).replace('?숆린', '').trim(); // '1?숆린' ??'1'
+  const semKey = String(semester).replace('학기', '').trim(); // '1학기' → '1'
   return (deptMap[String(grade)]?.[semKey]) || [];
 }
 
-// ?꾩옱 濡쒕뱶???숇뀈???숆린 湲곕줉 (以묐났 濡쒕뱶 諛⑹?)
+// 현재 로드된 학년도/학기 기록 (중복 로드 방지)
 let _loadedTerm = '';
 
 async function loadCoursesForTerm(year, semester) {
   const statusEl  = document.getElementById('courseLoadStatus');
   const noticeEl  = document.getElementById('fallbackNotice');
   const y   = year     || String(new Date().getFullYear());
-  const sem = semester || '1?숆린';
+  const sem = semester || '1학기';
   const url = `/api/courses?year=${encodeURIComponent(y)}&semester=${encodeURIComponent(sem)}`;
 
-  if (statusEl) { statusEl.textContent = '濡쒕뵫以묅?; statusEl.className = 'status-badge warn'; }
+  if (statusEl) { statusEl.textContent = '로딩중…'; statusEl.className = 'status-badge warn'; }
   if (noticeEl) noticeEl.classList.add('hidden');
 
   try {
     const res  = await fetch(url);
 
-    // 202: ?쒕쾭?먯꽌 ?щ·留?以???5珥????먮룞 ?ъ떆??    if (res.status === 202) {
-      if (statusEl) { statusEl.textContent = '?섏쭛以묅?; statusEl.className = 'status-badge warn'; }
+    // 202: 서버에서 크롤링 중 → 5초 후 자동 재시도
+    if (res.status === 202) {
+      if (statusEl) { statusEl.textContent = '수집중…'; statusEl.className = 'status-badge warn'; }
       const listEl = document.getElementById('courseList');
       if (listEl) listEl.innerHTML = `<div class="course-list-empty">
-        <strong>${y} ${sem}</strong> 媛뺤쓽 ?곗씠?곕? 泥섏쓬 ?섏쭛 以묒엯?덈떎.<br>
-        <small>?좎떆 ???먮룞?쇰줈 ?ㅼ떆 遺덈윭?듬땲?ㅲ?/small>
+        <strong>${y} ${sem}</strong> 강의 데이터를 처음 수집 중입니다.<br>
+        <small>잠시 후 자동으로 다시 불러옵니다…</small>
       </div>`;
       setTimeout(() => loadCoursesForTerm(year, semester), 5000);
       return;
@@ -746,21 +753,21 @@ async function loadCoursesForTerm(year, semester) {
     const data = await res.json();
     _allCourses = data;
 
-    // ?대갚 ?щ? ?뺤씤 (?쒕쾭 ?ㅻ뜑)
+    // 폴백 여부 확인 (서버 헤더)
     const isFallback   = res.headers.get('X-Is-Fallback') === 'true';
     const actualYear   = res.headers.get('X-Actual-Year') || y;
     const actualSemRaw = res.headers.get('X-Actual-Semester') || encodeURIComponent(sem);
     const actualSem    = (() => { try { return decodeURIComponent(actualSemRaw); } catch { return sem; } })();
 
     if (statusEl) {
-      statusEl.textContent = `${_allCourses.length}媛?媛뺤쓽`;
+      statusEl.textContent = `${_allCourses.length}개 강의`;
       statusEl.className   = 'status-badge ok';
     }
 
-    // ?대갚 ?덈궡 諛곗? ?쒖떆
+    // 폴백 안내 배지 표시
     if (noticeEl) {
       if (isFallback && (actualYear !== y || actualSem !== sem)) {
-        noticeEl.textContent = `?뱟 ${y} ${sem} 誘멸컻????${actualYear} ${actualSem} 湲곗??쇰줈 ?쒖떆`;
+        noticeEl.textContent = `📅 ${y} ${sem} 미개설 → ${actualYear} ${actualSem} 기준으로 표시`;
         noticeEl.classList.remove('hidden');
       } else {
         noticeEl.classList.add('hidden');
@@ -770,30 +777,33 @@ async function loadCoursesForTerm(year, semester) {
     buildTypePills();
     renderCourseList();
   } catch (err) {
-    if (statusEl) { statusEl.textContent = '濡쒕뱶 ?ㅽ뙣'; statusEl.className = 'status-badge warn'; }
+    if (statusEl) { statusEl.textContent = '로드 실패'; statusEl.className = 'status-badge warn'; }
     const listEl = document.getElementById('courseList');
-    if (listEl) listEl.innerHTML = `<div class="course-list-empty">媛뺤쓽 ?곗씠?곕? 遺덈윭?ㅼ? 紐삵뻽?듬땲??<br><small>${err.message}</small></div>`;
+    if (listEl) listEl.innerHTML = `<div class="course-list-empty">강의 데이터를 불러오지 못했습니다.<br><small>${err.message}</small></div>`;
   }
 }
 
 /* ============================================================
-   3?④퀎 ?꾪꽣 pill ?쒖뒪??   ??援먯뼇/?꾧났  ??援먯뼇?믩텇瑜?/ ?꾧났?믫븰怨? ??援먯뼇?믪꽭遺 / ?꾧났?믫븰??   ============================================================ */
+   3단계 필터 pill 시스템
+   ① 교양/전공  ② 교양→분류 / 전공→학과  ③ 교양→세부 / 전공→학년
+   ============================================================ */
 
-/* ?????pills: [?꾩껜] [援먯뼇] [???꾧났] */
+/* ① 타입 pills: [전체] [교양] [내 전공] */
 function buildTypePills() {
   const row = document.getElementById('catFilterRow');
   if (!row) return;
 
-  // ???숆낵 ?꾧났 怨쇰ぉ ??  const myDept      = _myDepartment;
+  // 내 학과 전공 과목 수
+  const myDept      = _myDepartment;
   const myMajorCount = myDept
     ? _allCourses.filter(c => c.type === 'major' && c.department === myDept).length
     : _allCourses.filter(c => c.type === 'major').length;
 
   const types = [
-    { val: '',           label: '?꾩껜',   count: _allCourses.length },
-    { val: 'liberal',    label: '援먯뼇',   count: _allCourses.filter(c => c.type === 'liberal').length },
-    { val: 'major',      label: myDept ? `???꾧났 (${myDept})` : '?꾧났', count: myMajorCount },
-    { val: '?먯쑀?좏깮',   label: '?먯쑀?좏깮', count: _allCourses.filter(c => c.type === '?먯쑀?좏깮').length }
+    { val: '',           label: '전체',   count: _allCourses.length },
+    { val: 'liberal',    label: '교양',   count: _allCourses.filter(c => c.type === 'liberal').length },
+    { val: 'major',      label: myDept ? `내 전공 (${myDept})` : '전공', count: myMajorCount },
+    { val: '자유선택',   label: '자유선택', count: _allCourses.filter(c => c.type === '자유선택').length }
   ].filter(t => t.val === '' || t.count > 0);
 
   row.innerHTML = types.map(t => {
@@ -821,15 +831,15 @@ function buildTypePills() {
   buildSecondRow();
 }
 
-/* ????踰덉㎏ ?? 援먯뼇?믩텇瑜?/ ?꾧났?믫븰怨?*/
+/* ② 두 번째 행: 교양→분류 / 전공→학과 */
 function buildSecondRow() {
   const row = document.getElementById('subFilterRow');
   if (!row) return;
 
   if (!_activeType) { row.classList.add('hidden'); buildThirdRow(); return; }
 
-  // ?먯쑀?좏깮 ?? ?몃? ?꾪꽣 遺덊븘?????④?
-  if (_activeType === '?먯쑀?좏깮') {
+  // 자유선택 탭: 세부 필터 불필요 → 숨김
+  if (_activeType === '자유선택') {
     row.classList.add('hidden');
     buildThirdRow();
     return;
@@ -838,13 +848,13 @@ function buildSecondRow() {
   row.classList.remove('hidden');
 
   if (_activeType === 'liberal') {
-    // 援먯뼇 移댄뀒怨좊━ pills
+    // 교양 카테고리 pills
     const cats = [...new Set(
       _allCourses.filter(c => c.type === 'liberal').map(c => c.category).filter(Boolean)
     )];
     const libBase = _allCourses.filter(c => c.type === 'liberal');
     row.innerHTML = makeRow([
-      { val: '', label: '?꾩껜', count: libBase.length },
+      { val: '', label: '전체', count: libBase.length },
       ...cats.map(cat => ({ val: cat, label: cat, count: libBase.filter(c => c.category === cat).length }))
     ], 'data-cat', _activeCategory, 'sub');
 
@@ -859,22 +869,22 @@ function buildSecondRow() {
     });
 
   } else {
-    // ?꾧났: ???숆낵媛 ?덉쑝硫??먮룞 ?좏깮, ?놁쑝硫??꾩껜 ?숆낵 紐⑸줉
+    // 전공: 내 학과가 있으면 자동 선택, 없으면 전체 학과 목록
     if (_myDepartment) {
-      // ???숆낵 ?먮룞 怨좎젙 ??2?④퀎 ???④?
+      // 내 학과 자동 고정 → 2단계 행 숨김
       _activeDept = _myDepartment;
       row.classList.add('hidden');
       buildThirdRow();
       return;
     }
 
-    // ?숆낵 ?좏깮 pills (?숆낵紐??ㅻ쫫李⑥닚)
+    // 학과 선택 pills (학과명 오름차순)
     const depts = [...new Set(
       _allCourses.filter(c => c.type === 'major' && c.department).map(c => c.department)
     )].sort((a, b) => a.localeCompare(b, 'ko'));
     const majBase = _allCourses.filter(c => c.type === 'major');
     row.innerHTML = makeRow([
-      { val: '', label: '?꾩껜', count: majBase.length },
+      { val: '', label: '전체', count: majBase.length },
       ...depts.map(d => ({ val: d, label: d, count: majBase.filter(c => c.department === d).length }))
     ], 'data-dept', _activeDept, 'sub dept-row');
 
@@ -892,13 +902,13 @@ function buildSecondRow() {
   buildThirdRow();
 }
 
-/* ????踰덉㎏ ?? 援먯뼇?믪꽭遺遺꾨쪟 / ?꾧났?믫븰??*/
+/* ③ 세 번째 행: 교양→세부분류 / 전공→학년 */
 function buildThirdRow() {
   const row = document.getElementById('thirdFilterRow');
   if (!row) return;
 
   if (_activeType === 'liberal' && _activeCategory) {
-    // ?몃?遺꾨쪟 pills
+    // 세부분류 pills
     const subs = [...new Set(
       _allCourses.filter(c => c.type === 'liberal' && c.category === _activeCategory && c.subtitle).map(c => c.subtitle)
     )];
@@ -906,7 +916,7 @@ function buildThirdRow() {
     const base = _allCourses.filter(c => c.type === 'liberal' && c.category === _activeCategory);
     row.classList.remove('hidden');
     row.innerHTML = makeRow([
-      { val: '', label: '?꾩껜', count: base.length },
+      { val: '', label: '전체', count: base.length },
       ...subs.map(s => ({ val: s, label: s, count: base.filter(c => c.subtitle === s).length }))
     ], 'data-sub', _activeSubtitle, 'sub');
 
@@ -919,13 +929,14 @@ function buildThirdRow() {
     });
 
   } else if (_activeType === 'major' && _activeDept) {
-    // ?숇뀈 pills ??gradeOk 湲곗?: ?대떦 ?숇뀈 ?숈깮???섍컯 媛?ν븳 怨쇰ぉ ??    // (?곸쐞 ?숇뀈? ?섏쐞 ?숇뀈 怨쇰ぉ ?ъ닔媛?媛?? ?섏쐞 ?숇뀈? ?곸쐞 ?숇뀈 怨쇰ぉ ?섍컯 遺덇?)
+    // 학년 pills — gradeOk 기준: 해당 학년 학생이 수강 가능한 과목 수
+    // (상위 학년은 하위 학년 과목 재수강 가능, 하위 학년은 상위 학년 과목 수강 불가)
     const base = _allCourses.filter(c => c.type === 'major' && c.department === _activeDept);
     row.classList.remove('hidden');
     row.innerHTML = makeRow([
-      { val: '0', label: '???숇뀈', count: base.length },
+      { val: '0', label: '전 학년', count: base.length },
       ...[1,2,3,4].map(y => ({
-        val: String(y), label: `${y}?숇뀈`,
+        val: String(y), label: `${y}학년`,
         count: base.filter(c => gradeOk(c, y)).length
       })).filter(y => y.count > 0)
     ], 'data-year', String(_activeYear), 'sub');
@@ -943,7 +954,7 @@ function buildThirdRow() {
   }
 }
 
-/* pill HTML ?앹꽦 ?ы띁 */
+/* pill HTML 생성 헬퍼 */
 function makeRow(items, dataAttr, activeVal, extraClass = '') {
   return items.map(item => {
     const active = item.val === activeVal;
@@ -969,7 +980,7 @@ function renderCourseList() {
     }
     if (_activeType === 'major') {
       if (_activeDept && c.department !== _activeDept) return false;
-      // ?곸쐞 ?숇뀈? ?섏쐞 ?숇뀈 怨쇰ぉ ?섍컯 媛???ъ닔媛?, ?섏쐞 ?숇뀈? ?곸쐞 ?숇뀈 怨쇰ぉ ?섍컯 遺덇?
+      // 상위 학년은 하위 학년 과목 수강 가능(재수강), 하위 학년은 상위 학년 과목 수강 불가
       if (_activeYear && !gradeOk(c, _activeYear)) return false;
     }
     if (query && !c.name.toLowerCase().includes(query) &&
@@ -979,24 +990,24 @@ function renderCourseList() {
     return true;
   });
 
-  if (countEl) countEl.textContent = `${filtered.length}媛?媛뺤쓽`;
+  if (countEl) countEl.textContent = `${filtered.length}개 강의`;
 
   if (!filtered.length) {
-    listEl.innerHTML = '<div class="course-list-empty">寃??寃곌낵媛 ?놁뒿?덈떎.</div>';
+    listEl.innerHTML = '<div class="course-list-empty">검색 결과가 없습니다.</div>';
     return;
   }
 
   listEl.innerHTML = filtered.map(course => {
     const isAdded = _selected.some(s => s.name === course.name && s.section === course.section);
     const slotText = course.online
-      ? '?벑 鍮꾨?硫?(?쒓컙???놁쓬)'
-      : course.slots.map(s => `${DAY_NAMES[s.day] || '?'} ${s.start}??{s.end}`).join(' / ');
+      ? '📱 비대면 (시간표 없음)'
+      : course.slots.map(s => `${DAY_NAMES[s.day] || '?'} ${s.start}–${s.end}`).join(' / ');
 
-    // ?숇뀈 諭껋?
+    // 학년 뱃지
     const yearBadge = course.eligible_years?.length
-      ? `<span class="year-badge">${course.eligible_years.map(y => `${y}?숇뀈`).join('쨌')}</span>`
+      ? `<span class="year-badge">${course.eligible_years.map(y => `${y}학년`).join('·')}</span>`
       : '';
-    // ?숆낵 諭껋?: ???숆낵濡??꾪꽣 以묒씠硫??앸왂, ?꾨땲硫??쒖떆
+    // 학과 뱃지: 내 학과로 필터 중이면 생략, 아니면 표시
     const deptBadge = course.type === 'major' && course.department && !_myDepartment
       ? `<span class="dept-badge">${course.department}</span>`
       : '';
@@ -1013,13 +1024,13 @@ function renderCourseList() {
             ${deptBadge}
             ${yearBadge}
             ${course.professor ? `<span class="prof-text">${course.professor}</span>` : ''}
-            <span class="credit-text">${course.credits}?숈젏</span>
+            <span class="credit-text">${course.credits}학점</span>
           </div>
           <div class="course-card-time">${slotText}</div>
         </div>
         <button class="add-btn ${isAdded ? 'added' : ''}" type="button"
                 data-name="${esc(course.name)}" data-section="${esc(course.section || '')}">
-          ${isAdded ? '?? : '+'}
+          ${isAdded ? '✓' : '+'}
         </button>
       </div>
     `;
@@ -1046,7 +1057,7 @@ function toggleCourse(course) {
     // Conflict check
     const conflict = checkConflict(course, _selected);
     if (conflict) {
-      alert(`?쒓컙 異⑸룎: "${conflict}" 媛뺤쓽? ?쒓컙??寃뱀묩?덈떎.`);
+      alert(`시간 충돌: "${conflict}" 강의와 시간이 겹칩니다.`);
       return;
     }
     _selected.push(course);
@@ -1078,11 +1089,11 @@ function renderSelectedList() {
   if (!listEl) return;
 
   const totalCredits = _selected.reduce((s, c) => s + (Number(c.credits) || 0), 0);
-  if (infoEl) infoEl.textContent = `${_selected.length}媛?쨌 ${totalCredits}?숈젏`;
+  if (infoEl) infoEl.textContent = `${_selected.length}개 · ${totalCredits}학점`;
 
   if (!_selected.length) {
     listEl.classList.add('empty');
-    listEl.innerHTML = '?쇱そ?먯꽌 媛뺤쓽瑜??댁븘二쇱꽭??;
+    listEl.innerHTML = '왼쪽에서 강의를 담아주세요';
     return;
   }
 
@@ -1092,12 +1103,12 @@ function renderSelectedList() {
       <div class="selected-item-info">
         <div class="selected-item-name">${c.name}</div>
         <div class="selected-item-meta">
-          ${c.category} 쨌 ${c.credits}?숈젏
-          ${c.professor ? ` 쨌 ${c.professor}` : ''}
+          ${c.category} · ${c.credits}학점
+          ${c.professor ? ` · ${c.professor}` : ''}
         </div>
       </div>
       <button class="remove-btn" type="button"
-              data-name="${esc(c.name)}" data-section="${esc(c.section || '')}">횞</button>
+              data-name="${esc(c.name)}" data-section="${esc(c.section || '')}">×</button>
     </div>
   `).join('');
 
@@ -1121,13 +1132,13 @@ function renderMiniTimetable() {
   const el = document.getElementById('miniTimetable');
   if (!el) return;
   const doRender = () => {
-    // ?ㅼ젣 ?뚮뜑留??덈퉬 湲곗??쇰줈 dayCol 怨꾩궛
+    // 실제 렌더링 너비 기준으로 dayCol 계산
     const containerW = el.getBoundingClientRect().width || el.offsetWidth || 300;
     const timeColW   = 32;
     const dayCol     = Math.max(40, Math.floor((containerW - timeColW - 2) / 5));
     renderTimetable(el, _selected, { mini: true, dayCol, timeColW });
   };
-  // ?덉씠?꾩썐???꾩꽦?????ㅽ뻾
+  // 레이아웃이 완성된 후 실행
   if (el.offsetWidth > 0) { doRender(); }
   else requestAnimationFrame(doRender);
 }
@@ -1152,8 +1163,8 @@ async function setupSettingsPage(state) {
   saveBtn?.addEventListener('click', () => {
     const id   = sidInp?.value.trim() || '';
     const dept = deptSel?.value || '';
-    if (!/^\d{8}$/.test(id)) { alert('?숇쾲? 8?먮━ ?レ옄濡??낅젰??二쇱꽭??'); sidInp?.focus(); return; }
-    if (!dept)                { alert('?숆낵瑜??좏깮??二쇱꽭??'); deptSel?.focus(); return; }
+    if (!/^\d{8}$/.test(id)) { alert('학번은 8자리 숫자로 입력해 주세요.'); sidInp?.focus(); return; }
+    if (!dept)                { alert('학과를 선택해 주세요.'); deptSel?.focus(); return; }
 
     const users = getUsers();
     const idx   = users.findIndex(u => u.studentId === state.studentId);
@@ -1163,7 +1174,7 @@ async function setupSettingsPage(state) {
       saveUsers(users);
     }
 
-    // ?숇쾲??諛붾뚮㈃ 湲곗〈 state瑜????ㅻ줈 ?댁쟾
+    // 학번이 바뀌면 기존 state를 새 키로 이전
     if (id !== state.studentId) {
       const oldKey = STATE_PREFIX + state.studentId;
       const existing = localStorage.getItem(oldKey);
@@ -1179,7 +1190,7 @@ async function setupSettingsPage(state) {
     const admYear = getAdmissionYear(id);
     if (!buildAllowedYears(admYear).includes(Number(state.year))) state.year = String(admYear);
     saveState(state);
-    alert('?ㅼ젙????λ릺?덉뒿?덈떎.');
+    alert('설정이 저장되었습니다.');
     location.href = 'index.html';
   });
 }
@@ -1216,14 +1227,14 @@ function esc(str) {
   return String(str).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 function catClass(cat) {
-  if (cat === '?꾧났?꾩닔')   return 'req';
-  if (cat === '?꾧났?좏깮')   return 'elec';
-  if (cat === '?듯빀?꾧났?꾩닔') return 'fusion-req';
-  if (cat === '?듯빀?꾧났')   return 'fusion';
-  if (cat === '湲곗큹援먯뼇')   return 'basic';
-  if (cat === '洹좏삎援먯뼇')   return 'balance';
-  if (cat === '?뺣?援먯뼇')   return 'expand';
-  if (cat === '?먯쑀?좏깮')   return 'free';
+  if (cat === '전공필수')   return 'req';
+  if (cat === '전공선택')   return 'elec';
+  if (cat === '융합전공필수') return 'fusion-req';
+  if (cat === '융합전공')   return 'fusion';
+  if (cat === '기초교양')   return 'basic';
+  if (cat === '균형교양')   return 'balance';
+  if (cat === '확대교양')   return 'expand';
+  if (cat === '자유선택')   return 'free';
   return 'other';
 }
 
@@ -1236,16 +1247,16 @@ let _autoGrade = 0;
 const _autoPrefs = new Set();
 
 const STYLE_META = {
-  avoid_morning:  { label: '?꾩묠 ?뚰뵾??,    desc: '9??10???댁쟾 ?섏뾽??理쒕???諛곗젣?⑸땲??' },
-  avoid_gap:      { label: '?곗＜怨듦컯 ?뚰뵾',   desc: '媛숈? ??湲?怨듦컯(1?쒓컙 ?댁긽)???앷린吏 ?딅룄濡??⑸땲??' },
-  cluster:        { label: '紐곗븘?ｊ린??,     desc: '?섏뾽???곸? ???섎? 留뚮뱾??怨듦컯?쇱쓣 ?뺣낫?⑸땲??' },
-  spread:         { label: '?먮꼸??遺꾩궛??,   desc: '?붿씪蹂꾨줈 怨좊Ⅴ寃?遺꾩궛?섏뿬 怨쇰????놁씠 援ъ꽦?⑸땲??' },
-  major_first:       { label: '?꾧났 ?곗꽑',          desc: '?꾧났 怨쇰ぉ??理쒕???梨꾩슫 ??援먯뼇?쇰줈 ?섎㉧吏瑜?梨꾩썎?덈떎.' },
-  liberal_first:     { label: '援먯뼇 ?곗꽑',          desc: '援먯뼇 怨쇰ぉ??癒쇱? 梨꾩슫 ???꾧났 ?좏깮?쇰줈 留덈Т由ы빀?덈떎.' },
-  liberal_req_first: { label: '援먯뼇 議몄뾽?붽굔 ?곗꽑', desc: '?꾩닔 援먯뼇(湲곗큹쨌洹좏삎) ?곸뿭???쒕뜡 ?놁씠 諛섎뱶??癒쇱? 梨꾩썎?덈떎. 議몄뾽??珥됰컯????沅뚯옣?⑸땲??' }
+  avoid_morning:  { label: '아침 회피형',    desc: '9시~10시 이전 수업을 최대한 배제합니다.' },
+  avoid_gap:      { label: '우주공강 회피',   desc: '같은 날 긴 공강(1시간 이상)이 생기지 않도록 합니다.' },
+  cluster:        { label: '몰아듣기형',     desc: '수업이 적은 날 수를 만들어 공강일을 확보합니다.' },
+  spread:         { label: '널널한 분산형',   desc: '요일별로 고르게 분산하여 과부하 없이 구성합니다.' },
+  major_first:       { label: '전공 우선',          desc: '전공 과목을 최대한 채운 뒤 교양으로 나머지를 채웁니다.' },
+  liberal_first:     { label: '교양 우선',          desc: '교양 과목을 먼저 채운 뒤 전공 선택으로 마무리합니다.' },
+  liberal_req_first: { label: '교양 졸업요건 우선', desc: '필수 교양(기초·균형) 영역을 랜덤 없이 반드시 먼저 채웁니다. 졸업이 촉박할 때 권장합니다.' }
 };
 
-/* ?? 怨쇰ぉ ?щ’ ??遺??⑥쐞 蹂???? */
+/* ── 과목 슬롯 → 분 단위 변환 ── */
 function courseToFlat(course) {
   return (course.slots || []).map(s => ({
     day:       s.day,
@@ -1255,28 +1266,30 @@ function courseToFlat(course) {
   })).filter(s => s.start_min < s.end_min && s.day >= 0 && s.day <= 4);
 }
 
-/* ?? 異⑸룎 寃???? */
+/* ── 충돌 검사 ── */
 function flatConflict(aSlots, bSlots) {
   return aSlots.some(a => bSlots.some(b =>
     a.day === b.day && a.start_min < b.end_min && a.end_min > b.start_min
   ));
 }
 
-/* ?? ?ㅼ퐫?대쭅: ??怨쇰ぉ??異붽??덉쓣 ???쇰쭏???좏샇?꾩뿉 留욌뒗媛 ?? */
+/* ── 스코어링: 이 과목을 추가했을 때 얼마나 선호도에 맞는가 ── */
 function scoreCourse(course, usedFlat, prefs) {
   const cFlat   = courseToFlat(course);
   const allFlat = [...usedFlat, ...cFlat];
   let score = 0;
 
-  // ?꾩묠 ?뚰뵾????09:00 ?댁쟾 媛뺥븯寃? 10:00 ?댁쟾???⑤꼸??  if (prefs.has('avoid_morning')) {
+  // 아침 회피형 — 09:00 이전 강하게, 10:00 이전도 패널티
+  if (prefs.has('avoid_morning')) {
     cFlat.forEach(s => {
-      if (s.start_min < 9 * 60)        score -= 80;  // 09:00 ?댁쟾
+      if (s.start_min < 9 * 60)        score -= 80;  // 09:00 이전
       else if (s.start_min < 9.5 * 60) score -= 50;  // 09:00~09:30
       else if (s.start_min < 10 * 60)  score -= 20;  // 09:30~10:00
     });
   }
 
-  // ?곗＜怨듦컯 ?뚰뵾?? 湲?怨듦컯?쇱닔濡?媛뺥븳 ?⑤꼸??  if (prefs.has('avoid_gap')) {
+  // 우주공강 회피형: 긴 공강일수록 강한 패널티
+  if (prefs.has('avoid_gap')) {
     for (let day = 0; day < 5; day++) {
       const daySlots = allFlat.filter(s => s.day === day)
         .sort((a, b) => a.start_min - b.start_min);
@@ -1289,7 +1302,8 @@ function scoreCourse(course, usedFlat, prefs) {
     }
   }
 
-  // 紐곗븘?ｊ린?? ?대? ?섏뾽 ?덈뒗 ??媛뺥븯寃??좏샇, ???좎? ?⑤꼸??  if (prefs.has('cluster')) {
+  // 몰아듣기형: 이미 수업 있는 날 강하게 선호, 새 날은 패널티
+  if (prefs.has('cluster')) {
     const usedDays = new Set(usedFlat.map(s => s.day));
     cFlat.forEach(s => {
       if (usedDays.has(s.day)) score += 50;
@@ -1297,7 +1311,7 @@ function scoreCourse(course, usedFlat, prefs) {
     });
   }
 
-  // ?먮꼸??遺꾩궛?? ?덈줈???붿씪 媛뺥븯寃??좏샇
+  // 널널한 분산형: 새로운 요일 강하게 선호
   if (prefs.has('spread')) {
     const usedDays = new Set(usedFlat.map(s => s.day));
     cFlat.forEach(s => {
@@ -1309,69 +1323,70 @@ function scoreCourse(course, usedFlat, prefs) {
   return score;
 }
 
-/* ?? 怨쇰ぉ紐??뺢퇋??(?????쒓굅, 以묐났 諛⑹??? ?? */
+/* ── 과목명 정규화 (★ 등 제거, 중복 방지용) ── */
 function normName(name) {
-  return name.replace(/??g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  return name.replace(/★/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
-/* ?? 湲곕낯 怨쇰ぉ紐?異붿텧 (愿꾪샇 ?ㅻ챸, ???쒓굅 ???섍컯?꾨즺 鍮꾧탳?? ?? */
+/* ── 기본 과목명 추출 (괄호 설명, ★ 제거 → 수강완료 비교용) ── */
 function baseName(name) {
   return name
-    .replace(/??g, '')
-    .replace(/\s*\([^)]*\)\s*/g, '') // (愿꾪샇 ?댁슜) ?꾩껜 ?쒓굅
+    .replace(/★/g, '')
+    .replace(/\s*\([^)]*\)\s*/g, '') // (괄호 내용) 전체 제거
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
 }
 
-/* ?? 湲곗큹援먯뼇 ?꾩닔 ?댁닔 洹몃９ (?꾧탳 怨듯넻, subtitle 湲곗?)
-   subtitles 諛곗뿴: ?곕룄蹂꾨줈 subtitle???ㅻ? ???덉뼱 蹂듭닔 吏??   - 2026: AI?듯빀湲곗큹 / 2025: SW?듯빀湲곗큹(subtitle?놁쓬, name fallback) / 2024: subtitle?놁쓬
-   ?? */
+/* ── 기초교양 필수 이수 그룹 (전교 공통, subtitle 기준)
+   subtitles 배열: 연도별로 subtitle이 다를 수 있어 복수 지정
+   - 2026: AI융합기초 / 2025: SW융합기초(subtitle없음, name fallback) / 2024: subtitle없음
+   ── */
 const REQUIRED_LIBERAL_GROUPS = [
-  { label: '誘몃옒?ㅺ퀎',       picks: 1, subtitles: ['誘몃옒?ㅺ퀎'],                        minCredits: 1 },
-  { label: 'AI?듯빀湲곗큹',     picks: 1, subtitles: ['AI?듯빀湲곗큹', 'SW?듯빀湲곗큹'],         minCredits: 3 },
-  { label: '?대┛?ш퀬??쒗쁽', picks: 1, subtitles: ['?대┛?ш퀬??쒗쁽'],                   minCredits: 3 },
-  { label: '湲濡쒕쾶?섏궗?뚰넻', picks: 1, subtitles: ['湲濡쒕쾶?섏궗?뚰넻'],                   minCredits: 2 },
+  { label: '미래설계',       picks: 1, subtitles: ['미래설계'],                        minCredits: 1 },
+  { label: 'AI융합기초',     picks: 1, subtitles: ['AI융합기초', 'SW융합기초'],         minCredits: 3 },
+  { label: '열린사고와표현', picks: 1, subtitles: ['열린사고와표현'],                   minCredits: 3 },
+  { label: '글로벌의사소통', picks: 1, subtitles: ['글로벌의사소통'],                   minCredits: 2 },
 ];
-// subtitle ?⑥닔 ?묎렐 ?명솚 (湲곗〈 肄붾뱶?먯꽌 .subtitle ?ъ슜?섎뒗 怨??鍮?
+// subtitle 단수 접근 호환 (기존 코드에서 .subtitle 사용하는 곳 대비)
 REQUIRED_LIBERAL_GROUPS.forEach(g => { g.subtitle = g.subtitles[0]; });
 
-/* ?? 洹좏삎援먯뼇 ?꾩닔 ?곸뿭 (4媛??곸뿭 媛?1怨쇰ぉ ?댁긽) ?? */
+/* ── 균형교양 필수 영역 (4개 영역 각 1과목 이상) ── */
 const REQUIRED_GYUNHYUNG_AREAS = [
-  '?붿??몄빱裕ㅻ땲耳?댁뀡',
-  '?몃Ц?덉닠',
-  '?ы쉶?臾명솕',
-  '?먯뿰怨쇳븰湲곗닠?섏씠??,
+  '디지털커뮤니케이션',
+  '인문예술',
+  '사회와문화',
+  '자연과학기술의이해',
 ];
 
-/* ?? 援먯뼇 ?댁닔 湲곗? (?꾧탳 怨듯넻) ?? */
+/* ── 교양 이수 기준 (전교 공통) ── */
 const LIBERAL_REQ = {
-  湲곗큹援먯뼇: 9,   // 誘몃옒?ㅺ퀎1 + AI?듯빀湲곗큹3 + ?대┛?ш퀬??쒗쁽3 + 湲濡쒕쾶?섏궗?뚰넻2
-  洹좏삎援먯뼇: 12,  // 4媛??곸뿭 媛?1怨쇰ぉ ?댁긽
-  ?뺣?援먯뼇: 0,   // ?먯쑉?댁닔
+  기초교양: 9,   // 미래설계1 + AI융합기초3 + 열린사고와표현3 + 글로벌의사소통2
+  균형교양: 12,  // 4개 영역 각 1과목 이상
+  확대교양: 0,   // 자율이수
   total: 34,
 };
 
-/* ?? 怨쇰ぉ???대뒓 ?꾩닔 洹몃９???랁븯?붿? 諛섑솚 ?? */
+/* ── 과목이 어느 필수 그룹에 속하는지 반환 ── */
 function getRequiredGroup(course) {
-  if (course.type !== 'liberal' || course.category !== '湲곗큹援먯뼇') return null;
+  if (course.type !== 'liberal' || course.category !== '기초교양') return null;
   const g = REQUIRED_LIBERAL_GROUPS.find(x =>
     x.subtitles.some(s => s && course.subtitle === s)
   );
   return g ? g.label : null;
 }
 
-/* ?대떦 ?숇뀈???섍컯 媛?ν븳吏 ?먮떒
-   - eligible_years 誘몄꽕?? 紐⑤뱺 ?숇뀈 ?덉슜
-   - eligible_years ?ㅼ젙?? grade ?댄븯???숇뀈???섎굹?쇰룄 ?ы븿?섎㈃ ?덉슜
-     ??4?숇뀈? 1쨌2쨌3?숇뀈 怨쇰ぉ???ㅼ쓣 ???덇퀬,
-       1?숇뀈? 2쨌3쨌4?숇뀈 ?꾩슜 怨쇰ぉ? 異붿쿇諛쏆? ?딆쓬 */
+/* 해당 학년이 수강 가능한지 판단
+   - eligible_years 미설정: 모든 학년 허용
+   - eligible_years 설정됨: grade 이하의 학년이 하나라도 포함되면 허용
+     → 4학년은 1·2·3학년 과목도 들을 수 있고,
+       1학년은 2·3·4학년 전용 과목은 추천받지 않음 */
 function gradeOk(course, grade) {
   if (!course.eligible_years?.length) return true;
   return course.eligible_years.some(y => y <= grade);
 }
 
-/* ?? ?숇뀈蹂?援먯뼇 ? ?? */
+/* ── 학년별 교양 풀 ── */
 function getLiberalPool(grade) {
   return _allCourses.filter(c => {
     if (c.type !== 'liberal') return false;
@@ -1379,58 +1394,58 @@ function getLiberalPool(grade) {
   });
 }
 
-/* ?? ??媛吏 ?쒓컙??蹂???앹꽦 ?? */
+/* ── 한 가지 시간표 변형 생성 ── */
 function generateVariant(state, { grade, prefs, inclRequired, inclElective, inclLiberal, shuffleSeed = 0 }) {
   const dept      = state.department || '';
   const maxCr     = state.maxCredits || 18;
   const completed = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
   const excluded  = new Set((state.excludedCourses  || []).map(n => n.trim().toLowerCase()));
   const retake    = new Set((state.retakeCourses    || []).map(n => n.trim().toLowerCase()));
-  const pastNames = getPastTimetableCourseNames(state); // 吏???숆린 ?쒓컙??怨쇰ぉ
+  const pastNames = getPastTimetableCourseNames(state); // 지난 학기 시간표 과목
   const allowRtk  = state.allowRetake || false;
 
   let schedule = [];
   let usedFlat = [];
   let totalCr  = 0;
 
-  /* ?섍컯?꾨즺 怨쇰ぉ ?쒖쇅 (?ъ닔媛??덉슜 ???ы븿, ?ъ닔媛??꾩슂 ?쒖떆 ???쒖쇅?먯꽌 ?쒖쇅) */
+  /* 수강완료 과목 제외 (재수강 허용 시 포함, 재수강 필요 표시 시 제외에서 제외) */
   const isCompleted = (course) => {
     if (allowRtk) return false;
     const lower = course.name.trim().toLowerCase();
     const norm  = normName(course.name);
     const base  = baseName(course.name);
-    // ?ъ닔媛??꾩슂 怨쇰ぉ? ?댁닔?꾨즺濡?泥섎━?섏? ?딆쓬
+    // 재수강 필요 과목은 이수완료로 처리하지 않음
     if (retake.has(lower) || retake.has(norm) || retake.has(base)) return false;
-    // ?섎룞 ?꾨즺 ?먮뒗 吏???숆린 ?먮룞 ?꾨즺 怨쇰ぉ
+    // 수동 완료 또는 지난 학기 자동 완료 과목
     return completed.has(lower) || completed.has(norm) || completed.has(base)
         || pastNames.has(lower);
   };
 
-  /* ?쒖쇅 怨쇰ぉ 泥댄겕 */
+  /* 제외 과목 체크 */
   const isExcluded = (course) => (
     excluded.has(course.name.trim().toLowerCase()) ||
     excluded.has(normName(course.name)) ||
     excluded.has(baseName(course.name))
   );
 
-  /* 異붽? 媛???щ? ?먮떒 */
+  /* 추가 가능 여부 판단 */
   const canAdd = (course) => {
     const cr = Number(course.credits) || 0;
     if (cr === 0) return false;
-    if (course.type === '援먯쭅' || course.category === '援먯쭅') return false;
+    if (course.type === '교직' || course.category === '교직') return false;
     if (isCompleted(course)) return false;
     if (isExcluded(course)) return false;
     if (totalCr + cr > maxCr) return false;
     const cFlat = courseToFlat(course);
-    // ?⑤씪??鍮꾨?硫? 怨쇰ぉ? ?щ’???놁뼱??異붽? 媛??(?쒓컙 異⑸룎 ?놁쓬)
+    // 온라인(비대면) 과목은 슬롯이 없어도 추가 가능 (시간 충돌 없음)
     if (!cFlat.length && !course.online) return false;
     if (cFlat.length && flatConflict(cFlat, usedFlat)) return false;
-    // ???뺢퇋??+ 愿꾪샇 ?ㅻ챸 ?쒓굅: 媛숈? 怨쇰ぉ紐?以묐났 諛⑹?
+    // ★ 정규화 + 괄호 설명 제거: 같은 과목명 중복 방지
     if (schedule.some(s =>
       normName(s.name) === normName(course.name) ||
       baseName(s.name) === baseName(course.name)
     )) return false;
-    // 媛숈? ?꾩닔 洹몃９?먯꽌 ?대? 1怨쇰ぉ ?댁닔??寃쎌슦 異붽? 李⑤떒 (?? picks > 1??洹몃９ ?쒖쇅)
+    // 같은 필수 그룹에서 이미 1과목 이수한 경우 추가 차단 (단, picks > 1인 그룹 제외)
     const grp = getRequiredGroup(course);
     if (grp) {
       const g = REQUIRED_LIBERAL_GROUPS.find(x => x.label === grp);
@@ -1440,28 +1455,28 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     return true;
   };
 
-  /* 怨쇰ぉ 異붽? */
+  /* 과목 추가 */
   const addCourse = (course) => {
     schedule.push(course);
     usedFlat.push(...courseToFlat(course));
     totalCr += Number(course.credits) || 0;
   };
 
-  /* 媛꾨떒??seeded PRNG (mulberry32 怨꾩뿴) */
+  /* 간단한 seeded PRNG (mulberry32 계열) */
   let _rngState = shuffleSeed * 2654435761 >>> 0 || 1;
   const rng = () => {
     _rngState ^= _rngState << 13; _rngState ^= _rngState >> 17; _rngState ^= _rngState << 5;
     return ((_rngState >>> 0) / 4294967296);
   };
 
-  // ?ㅽ????놁씠 ?좏깮?????ъ슜?섎뒗 鍮?prefs (1쨌2?④퀎??
+  // 스타일 없이 선택할 때 사용하는 빈 prefs (1·2단계용)
   const NOSTYLE = new Set();
 
-  /* ??먯꽌 踰좎뒪???뱀뀡 ?좏깮 ??sp(stylePrefs) 湲곕낯媛?= prefs(?ㅽ????곸슜) */
-  /* ?곸쐞 N媛??꾨낫 以??쒕뜡 ?좏깮 (seed=0?대㈃ ??긽 1???뺤젙) */
+  /* 풀에서 베스트 섹션 선택 — sp(stylePrefs) 기본값 = prefs(스타일 적용) */
+  /* 상위 N개 후보 중 랜덤 선택 (seed=0이면 항상 1등 확정) */
   const pickRandom = (scored) => {
     if (!shuffleSeed || scored.length <= 1) return scored[0].c;
-    // ?곸쐞 min(6, ?꾩껜??40%) 媛?以?洹좊벑 ?쒕뜡
+    // 상위 min(6, 전체의 40%) 개 중 균등 랜덤
     const topN = Math.max(2, Math.min(6, Math.ceil(scored.length * 0.4)));
     return scored[Math.floor(rng() * topN)].c;
   };
@@ -1475,14 +1490,14 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     return pickRandom(scored);
   };
 
-  /* ?꾩껜 pool?먯꽌 ?ㅽ???媛以??쒕뜡 (湲곗큹援먯뼇쨌洹좏삎援먯뼇 洹몃９ ?좏깮???ъ슜)
-     ?ㅽ??쇱씠 ?놁쑝硫??쒖닔 洹좊벑 ?쒕뜡, ?덉쑝硫??ㅽ????먯닔 鍮꾨? 媛以?*/
+  /* 전체 pool에서 스타일 가중 랜덤 (기초교양·균형교양 그룹 선택에 사용)
+     스타일이 없으면 순수 균등 랜덤, 있으면 스타일 점수 비례 가중 */
   const pickBestFull = (pool) => {
     const valid = pool.filter(canAdd);
     if (!valid.length) return null;
     if (valid.length === 1) return valid[0];
     if (!prefs.size) return valid[Math.floor(rng() * valid.length)];
-    // ?ㅽ????먯닔 ??媛以묒튂 (?뚯닔?щ룄 理쒖냼 0.05 蹂댁옣)
+    // 스타일 점수 → 가중치 (음수여도 최소 0.05 보장)
     const scored = valid.map(c => ({
       c, w: Math.max(0.05, 1 + scoreCourse(c, usedFlat, prefs) * 0.025)
     }));
@@ -1492,7 +1507,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     return scored[scored.length - 1].c;
   };
 
-  /* 怨쇰ぉ紐낆쑝濡?臾띠뼱??踰좎뒪???뱀뀡留?異붽? ??sp 湲곕낯媛?= prefs */
+  /* 과목명으로 묶어서 베스트 섹션만 추가 — sp 기본값 = prefs */
   const addPoolByName = (pool, sp = prefs) => {
     const nameMap = new Map();
     for (const c of pool) {
@@ -1500,7 +1515,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (!nameMap.has(key)) nameMap.set(key, []);
       nameMap.get(key).push(c);
     }
-    // 怨쇰ぉ紐??쒖꽌??seed ?덉쑝硫??뷀뵆
+    // 과목명 순서도 seed 있으면 셔플
     const keys = [...nameMap.keys()];
     if (shuffleSeed) keys.sort(() => rng() - 0.5);
     for (const key of keys) {
@@ -1510,10 +1525,10 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
   };
 
-  /* 怨쇰ぉ ?꾩껜瑜??ㅼ퐫?댁닚?쇰줈 異붽? ??sp 湲곕낯媛?= prefs */
+  /* 과목 전체를 스코어순으로 추가 — sp 기본값 = prefs */
   const addPoolGreedy = (pool, sp = prefs) => {
     const usedBaseNames = new Set(schedule.map(c => baseName(c.name)));
-    // 怨쇰ぉ紐낅퀎濡?理쒓퀬 ?뱀뀡留??④린怨??ㅼ퐫???뺣젹
+    // 과목명별로 최고 섹션만 남기고 스코어 정렬
     const nameMap = new Map();
     for (const c of pool.filter(c => !usedBaseNames.has(baseName(c.name)) && canAdd(c))) {
       const key = baseName(c.name);
@@ -1522,7 +1537,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
     let candidates = [...nameMap.values()].sort((a, b) => b.s - a.s);
 
-    // seed ?덉쑝硫??곸쐞 40% ?대궡 怨쇰ぉ?ㅼ쓣 ?뷀뵆?댁꽌 ?ㅼ뼇???뺣낫
+    // seed 있으면 상위 40% 이내 과목들을 셔플해서 다양성 확보
     if (shuffleSeed && candidates.length > 1) {
       const cutIdx = Math.max(2, Math.ceil(candidates.length * 0.4));
       const top    = candidates.slice(0, cutIdx).sort(() => rng() - 0.5);
@@ -1541,8 +1556,8 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
   };
 
-  // ??濡쒕뱶留?怨쇰ぉ ?곗꽑 媛뺤젣 ?ы븿 (?대떦 ?숇뀈쨌?숆린 ?댁닔泥닿퀎??怨쇰ぉ)
-  const semNum = String(state.semester || '1?숆린').replace('?숆린','').trim();
+  // ① 로드맵 과목 우선 강제 포함 (해당 학년·학기 이수체계도 과목)
+  const semNum = String(state.semester || '1학기').replace('학기','').trim();
   const roadmapNames = getRoadmapCourses(dept, grade, semNum);
   if (roadmapNames.length) {
     const usedBase = new Set(schedule.map(c => baseName(c.name)));
@@ -1550,15 +1565,15 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (totalCr >= maxCr) break;
       const bn = baseName(name);
       if (usedBase.has(bn)) continue;
-      // 媛숈? ?대쫫??怨쇰ぉ 紐⑤뱺 遺꾨컲 以?異붽? 媛?ν븳 寃??좏깮 (shuffleSeed濡?蹂??
-      // ?꾧났 怨쇰ぉ? ???숆낵 寃껊쭔 ?덉슜, 援먯뼇 怨쇰ぉ? ?숆낵 臾닿?
+      // 같은 이름의 과목 모든 분반 중 추가 가능한 것 선택 (shuffleSeed로 변형)
+      // 전공 과목은 내 학과 것만 허용, 교양 과목은 학과 무관
       const candidates = _allCourses.filter(c =>
         baseName(c.name) === bn && canAdd(c) &&
         (c.type !== 'major' || !dept || c.department === dept) &&
         gradeOk(c, grade)
       );
       if (!candidates.length) continue;
-      // ?쒓컙 異⑸룎 ?녿뒗 ?꾨낫 以??좏깮 ???댁닔泥닿퀎?꾨뒗 ?ㅽ????놁씠 (NOSTYLE)
+      // 시간 충돌 없는 후보 중 선택 — 이수체계도는 스타일 없이 (NOSTYLE)
       const valid = candidates.filter(c => !checkConflict(c, schedule));
       if (!valid.length) continue;
       const picked = valid.sort((a, b) =>
@@ -1568,26 +1583,26 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
   }
 
-  // ???꾧났?꾩닔 (濡쒕뱶留듭뿉 ?녿뒗 寃? ???ㅽ????놁씠
+  // ② 전공필수 (로드맵에 없는 것) — 스타일 없이
   if (inclRequired) {
     const req = _allCourses.filter(c =>
-      c.type === 'major' && c.category === '?꾧났?꾩닔' &&
+      c.type === 'major' && c.category === '전공필수' &&
       c.department === dept && gradeOk(c, grade)
     );
     addPoolByName(req, NOSTYLE);
   }
 
-  // ???꾧났?좏깮
+  // ③ 전공선택
   const fillElective = () => {
     if (!inclElective || totalCr >= maxCr) return;
     const elec = _allCourses.filter(c =>
-      c.type === 'major' && c.category === '?꾧났?좏깮' &&
+      c.type === 'major' && c.category === '전공선택' &&
       c.department === dept && gradeOk(c, grade)
     );
     addPoolGreedy(elec);
   };
 
-  // ??瑗??ｊ퀬 ?띠? 媛뺤쓽 ???ㅽ????놁씠 (?붿껌 怨쇰ぉ?대?濡??ㅽ???臾닿??섍쾶 ?ы븿)
+  // ④ 꼭 듣고 싶은 강의 — 스타일 없이 (요청 과목이므로 스타일 무관하게 포함)
   const fillPinned = () => {
     const pinned = (state.pinnedCourses || []).map(n => n.trim().toLowerCase());
     for (const pname of pinned) {
@@ -1598,7 +1613,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
         gradeOk(c, grade)
       );
       if (!candidates.length) continue;
-      // 遺꾨컲 ?좏깮留????ㅽ????놁씠
+      // 분반 선택만 — 스타일 없이
       const scored = candidates
         .map(c => ({ c, s: scoreCourse(c, usedFlat, NOSTYLE) + (shuffleSeed ? (rng() - 0.5) * 10 : 0) }))
         .sort((a, b) => b.s - a.s);
@@ -1606,11 +1621,11 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     }
   };
 
-  /* ?? 湲곗큹援먯뼇 ?꾩닔 洹몃９?먯꽌 媛곴컖 1怨쇰ぉ??癒쇱? 梨꾩슦湲??? */
+  /* ── 기초교양 필수 그룹에서 각각 1과목씩 먼저 채우기 ── */
   const fillRequiredLiberalGroups = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
     const liberalPool = getLiberalPool(grade);
-    // shuffleSeed媛 ?덉쑝硫?洹몃９ ?쒖꽌???뷀뵆?댁꽌 ?ㅼ뼇???뺣낫
+    // shuffleSeed가 있으면 그룹 순서도 셔플해서 다양성 확보
     const groups = shuffleSeed ? [...REQUIRED_LIBERAL_GROUPS].sort(() => rng() - 0.5) : REQUIRED_LIBERAL_GROUPS;
     for (const group of groups) {
       if (totalCr >= maxCr) break;
@@ -1618,13 +1633,13 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (alreadyHas) continue;
       const groupPool = liberalPool.filter(c => getRequiredGroup(c) === group.label);
       if (!groupPool.length) continue;
-      // shuffleSeed ?덉쑝硫??꾩껜 pool?먯꽌 洹좊벑 ?쒕뜡 (top ?쒗븳 ?놁쓬)
+      // shuffleSeed 있으면 전체 pool에서 균등 랜덤 (top 제한 없음)
       const best = shuffleSeed ? pickBestFull(groupPool) : pickBest(groupPool, NOSTYLE);
       if (best) addCourse(best);
     }
   };
 
-  /* ?? 洹좏삎援먯뼇 4媛??곸뿭 媛?1怨쇰ぉ 梨꾩슦湲??? */
+  /* ── 균형교양 4개 영역 각 1과목 채우기 ── */
   const fillRequiredGyunhyungAreas = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
     const liberalPool = getLiberalPool(grade);
@@ -1633,7 +1648,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (totalCr >= maxCr) break;
       const alreadyHas = schedule.some(s => s.type === 'liberal' && s.subtitle === area);
       if (alreadyHas) continue;
-      const areaPool = liberalPool.filter(c => c.category === '洹좏삎援먯뼇' && c.subtitle === area);
+      const areaPool = liberalPool.filter(c => c.category === '균형교양' && c.subtitle === area);
       if (!areaPool.length) continue;
       const best = shuffleSeed ? pickBestFull(areaPool) : pickBest(areaPool, NOSTYLE);
       if (best) addCourse(best);
@@ -1645,11 +1660,11 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     addPoolGreedy(getLiberalPool(grade));
   };
 
-  /* ?? 4?쒖쐞 援먯뼇: 媛以묒튂 ?쒕뜡 (留??ㅽ뻾留덈떎 ?ㅻⅨ 怨쇰ぉ 議고빀) ?? */
+  /* ── 4순위 교양: 가중치 랜덤 (매 실행마다 다른 과목 조합) ── */
   const fillLiberalRandom = () => {
     if (!inclLiberal || totalCr >= maxCr) return;
 
-    // ???대? ?댁닔 ?꾨즺??湲곗큹援먯뼇 ?꾩닔 洹몃９ ?뚯븙 (completed + pastNames + ??schedule)
+    // ① 이미 이수 완료된 기초교양 필수 그룹 파악 (completed + pastNames + 현 schedule)
     const doneGichyoGroups = new Set();
     for (const g of REQUIRED_LIBERAL_GROUPS) {
       const inCompleted = _allCourses.some(c =>
@@ -1660,47 +1675,49 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (inCompleted || inSchedule) doneGichyoGroups.add(g.label);
     }
 
-    // ???대? ?댁닔 ?꾨즺??洹좏삎援먯뼇 ?곸뿭 ?뚯븙
+    // ② 이미 이수 완료된 균형교양 영역 파악
     const doneGyunhyungAreas = new Set();
     for (const area of REQUIRED_GYUNHYUNG_AREAS) {
       const inCompleted = _allCourses.some(c =>
-        c.category === '洹좏삎援먯뼇' && c.subtitle === area &&
+        c.category === '균형교양' && c.subtitle === area &&
         (completed.has(c.name.trim().toLowerCase()) || pastNames.has(c.name.trim().toLowerCase()))
       );
-      const inSchedule = schedule.some(c => c.category === '洹좏삎援먯뼇' && c.subtitle === area);
+      const inSchedule = schedule.some(c => c.category === '균형교양' && c.subtitle === area);
       if (inCompleted || inSchedule) doneGyunhyungAreas.add(area);
     }
 
-    // ??湲대컯??怨꾩궛: ?⑥? ?숆린 ?鍮?誘몄씠???꾩닔 ?곸뿭 ??    const semOrd = ((grade || 1) - 1) * 2 + (['2?숆린','寃⑥슱?숆린'].includes(state.semester) ? 2 : 1);
+    // ③ 긴박도 계산: 남은 학기 대비 미이수 필수 영역 수
+    const semOrd = ((grade || 1) - 1) * 2 + (['2학기','겨울학기'].includes(state.semester) ? 2 : 1);
     const remainingAfter = Math.max(1, 8 - semOrd);
     const unfulfilledRequired =
       REQUIRED_LIBERAL_GROUPS.filter(g => !doneGichyoGroups.has(g.label)).length +
       REQUIRED_GYUNHYUNG_AREAS.filter(a => !doneGyunhyungAreas.has(a)).length;
-    // urgency 0~4: ?⑥? ?숆린蹂대떎 誘몄씠?섍? 留롮쓣?섎줉 ?щ씪媛?    const urgency = Math.min(4, unfulfilledRequired / remainingAfter);
+    // urgency 0~4: 남은 학기보다 미이수가 많을수록 올라감
+    const urgency = Math.min(4, unfulfilledRequired / remainingAfter);
 
-    // ??媛以묒튂: 湲대컯?꾩뿉 鍮꾨??댁꽌 ?꾩닔 ?곸뿭 媛以묒튂 ?ㅼ??쇱뾽
-    //    urgency=0 ??湲곗큹援먯뼇횞3, 洹좏삎援먯뼇횞2 (湲곕낯)
-    //    urgency=4 ??湲곗큹援먯뼇횞15, 洹좏삎援먯뼇횞10 (嫄곗쓽 媛뺤젣)
+    // ④ 가중치: 긴박도에 비례해서 필수 영역 가중치 스케일업
+    //    urgency=0 → 기초교양×3, 균형교양×2 (기본)
+    //    urgency=4 → 기초교양×15, 균형교양×10 (거의 강제)
     const getWeight = (c) => {
       const grp = getRequiredGroup(c);
       if (grp) return doneGichyoGroups.has(grp) ? 0.5 : 3 * (1 + urgency);
-      if (c.category === '洹좏삎援먯뼇' && c.subtitle)
+      if (c.category === '균형교양' && c.subtitle)
         return doneGyunhyungAreas.has(c.subtitle) ? 0.5 : 2 * (1 + urgency);
       return 1;
     };
 
-    // ???좏슚 媛以묒튂 怨꾩궛: 議몄뾽 媛以묒튂 횞 ?ㅽ???諛곗쑉
-    //    ?ㅽ????먯닔 踰붿쐞 ???-100~+100 ??諛곗쑉 0.05~3.5
-    //    ?ㅽ????놁쑝硫?諛곗쑉 1.0 (議몄뾽 媛以묒튂 洹몃?濡?
+    // ⑤ 유효 가중치 계산: 졸업 가중치 × 스타일 배율
+    //    스타일 점수 범위 대략 -100~+100 → 배율 0.05~3.5
+    //    스타일 없으면 배율 1.0 (졸업 가중치 그대로)
     const effectiveW = (c) => {
-      const gw = getWeight(c);                              // 議몄뾽 媛以묒튂
+      const gw = getWeight(c);                              // 졸업 가중치
       if (!prefs.size) return gw;
-      const ss = scoreCourse(c, usedFlat, prefs);           // ?ㅽ????먯닔
-      const multiplier = Math.max(0.05, 1 + ss * 0.025);   // ?ㅽ???諛곗쑉
+      const ss = scoreCourse(c, usedFlat, prefs);           // 스타일 점수
+      const multiplier = Math.max(0.05, 1 + ss * 0.025);   // 스타일 배율
       return gw * multiplier;
     };
 
-    // ??怨쇰ぉ紐?湲곗? dedup ??媛숈? ?대쫫 以??좏슚媛以묒튂 ?믪? ?뱀뀡 ?좏깮
+    // ⑥ 과목명 기준 dedup — 같은 이름 중 유효가중치 높은 섹션 선택
     const pool = getLiberalPool(grade);
     const nameMap = new Map();
     for (const c of pool) {
@@ -1711,13 +1728,13 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (!cur || ew > cur.ew) nameMap.set(key, { c, ew });
     }
 
-    // ???좏슚媛以묒튂 湲곕컲 ?쒕뜡 ?좏깮 ????怨쇰ぉ??戮묒븘??異붽?
+    // ⑦ 유효가중치 기반 랜덤 선택 — 한 과목씩 뽑아서 추가
     const candidates = [...nameMap.values()];
     while (totalCr < maxCr && candidates.length > 0) {
       const available = candidates.filter(({ c }) => canAdd(c));
       if (!available.length) break;
 
-      // canAdd ?ы솗?????좏슚媛以묒튂 ?ш퀎??(?쒓컙??蹂??諛섏쁺)
+      // canAdd 재확인 후 유효가중치 재계산 (시간표 변화 반영)
       const weighted = available.map(({ c }) => ({ c, ew: effectiveW(c) }));
       const totalW = weighted.reduce((sum, x) => sum + x.ew, 0);
       if (totalW <= 0) break;
@@ -1728,14 +1745,14 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
 
       if (canAdd(picked.c)) addCourse(picked.c);
 
-      // candidates?먯꽌 ?숈씪 怨쇰ぉ(baseName 湲곗?) ?쒓굅
+      // candidates에서 동일 과목(baseName 기준) 제거
       const pickedKey = baseName(picked.c.name);
       const idx = candidates.findIndex(x => baseName(x.c.name) === pickedKey);
       if (idx !== -1) candidates.splice(idx, 1);
     }
   };
 
-  /* ?? ?숆낵 沅뚯옣 洹좏삎援먯뼇 怨쇰ぉ ?곗꽑 梨꾩슦湲????ㅽ????놁씠 ?? */
+  /* ── 학과 권장 균형교양 과목 우선 채우기 — 스타일 없이 ── */
   const recLibNames = new Set(
     (_gradReqs?.[dept]?.recommended_liberal || []).map(r => baseName(r.name))
   );
@@ -1744,31 +1761,31 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     const pool = getLiberalPool(grade).filter(c =>
       recLibNames.has(baseName(c.name))
     );
-    addPoolByName(pool, NOSTYLE);   // 沅뚯옣援먯뼇? ?ㅽ????놁씠
+    addPoolByName(pool, NOSTYLE);   // 권장교양은 스타일 없이
   };
 
-  /* ?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧
-     ?먮룞 ?앹꽦 ?곗꽑?쒖쐞:
-       1?④퀎 (?ㅽ????놁쓬): ?꾧났 ?댁닔泥닿퀎?????꾧났?꾩닔 ??瑗??ｊ퀬?띠? 媛뺤쓽
-       2?④퀎 (?ㅽ????놁쓬): ?숆낵 沅뚯옣援먯뼇
-       3?④퀎 (?ㅽ????곸슜): 議몄뾽?붽굔 湲곗큹援먯뼇 ??洹좏삎援먯뼇 ???섎㉧吏(?꾧났?좏깮/援먯뼇)
-     ?쒓컙???ㅽ????꾩묠?뚰뵾, 紐곗븘?ｊ린 ??? 3?④퀎?먯꽌留??묐룞
-     ?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧?먥븧 */
+  /* ══════════════════════════════════════════════════════
+     자동 생성 우선순위:
+       1단계 (스타일 없음): 전공 이수체계도 → 전공필수 → 꼭 듣고싶은 강의
+       2단계 (스타일 없음): 학과 권장교양
+       3단계 (스타일 적용): 졸업요건 기초교양 → 균형교양 → 나머지(전공선택/교양)
+     시간표 스타일(아침회피, 몰아듣기 등)은 3단계에서만 작동
+     ══════════════════════════════════════════════════════ */
 
-  // 1?④퀎: ?댁닔泥닿퀎???졻몼) ?대? ?꾨즺 ??瑗??ｊ퀬 ?띠? 媛뺤쓽
+  // 1단계: 이수체계도(①②) 이미 완료 → 꼭 듣고 싶은 강의
   fillPinned();
 
-  // 2?④퀎: ?숆낵 沅뚯옣援먯뼇 (?ㅽ???臾닿?)
+  // 2단계: 학과 권장교양 (스타일 무관)
   fillRecommendedLiberal();
 
-  // 3?④퀎: 議몄뾽?붽굔 援먯뼇 (?ㅽ????곸슜 ?쒖옉)
-  fillRequiredLiberalGroups();    // 湲곗큹援먯뼇 ?꾩닔 4媛??곸뿭
-  fillRequiredGyunhyungAreas();   // 洹좏삎援먯뼇 4媛??곸뿭
+  // 3단계: 졸업요건 교양 (스타일 적용 시작)
+  fillRequiredLiberalGroups();    // 기초교양 필수 4개 영역
+  fillRequiredGyunhyungAreas();   // 균형교양 4개 영역
 
-  // ?섎㉧吏 ?숈젏: ?꾧났?곗꽑 ?ㅽ??쇱씠硫??꾧났?좏깮 癒쇱?, ?꾨땲硫?援먯뼇 癒쇱?
-  // liberal_req_first ?ㅽ??? ?쒕뜡 ?놁씠 ?꾩닔 ?곸뿭 媛뺤젣 梨꾩슦湲?(議몄뾽 珥됰컯 ??
-  // shuffleSeed=0(異붿쿇 A): 寃곗젙濡좎쟻 理쒖쟻
-  // 洹??? 湲대컯??諛섏쁺 媛以묒튂 ?쒕뜡
+  // 나머지 학점: 전공우선 스타일이면 전공선택 먼저, 아니면 교양 먼저
+  // liberal_req_first 스타일: 랜덤 없이 필수 영역 강제 채우기 (졸업 촉박 시)
+  // shuffleSeed=0(추천 A): 결정론적 최적
+  // 그 외: 긴박도 반영 가중치 랜덤
   const _fillLib = (prefs.has('liberal_req_first') || !shuffleSeed) ? fillLiberal : fillLiberalRandom;
   if (prefs.has('major_first')) {
     fillElective();
@@ -1778,34 +1795,34 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     fillElective();
   }
 
-  // ??理쒖쥌 ?숈젏 梨꾩슦湲?fallback
-  // ???④퀎?먯꽌 ?쒓컙 異⑸룎 ?깆쑝濡??숈젏????梨꾩썙吏?寃쎌슦,
-  // ?ㅽ???媛以묒튂 ?놁씠 ?⑥? ?먮━瑜?理쒕???梨꾩?
+  // ★ 최종 학점 채우기 fallback
+  // 위 단계에서 시간 충돌 등으로 학점이 덜 채워진 경우,
+  // 스타일/가중치 없이 남은 자리를 최대한 채움
   if (totalCr < maxCr) {
-    addPoolGreedy(getLiberalPool(grade), NOSTYLE);  // ?⑥? 援먯뼇 greedy
+    addPoolGreedy(getLiberalPool(grade), NOSTYLE);  // 남은 교양 greedy
     if (totalCr < maxCr) {
       const elecPool = _allCourses.filter(c =>
         c.type === 'major' && c.department === dept && gradeOk(c, grade)
       );
-      addPoolGreedy(elecPool, NOSTYLE);             // ?⑥? ?꾧났 greedy
+      addPoolGreedy(elecPool, NOSTYLE);             // 남은 전공 greedy
     }
   }
 
   return schedule;
 }
 
-/* ?? ?쒓컙???붿빟 ?뺣낫 怨꾩궛 ?? */
+/* ── 시간표 요약 정보 계산 ── */
 function summarizeSchedule(schedule) {
   const totalCr  = schedule.reduce((s, c) => s + (Number(c.credits) || 0), 0);
   const flat     = schedule.flatMap(courseToFlat);
   const daysUsed = new Set(flat.map(s => s.day)).size;
 
-  // 媛???대Ⅸ ?쒖옉
+  // 가장 이른 시작
   const earliest = flat.length ? Math.min(...flat.map(s => s.start_min)) : 0;
   const h = Math.floor(earliest / 60), m = earliest % 60;
   const earliestStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
 
-  // 理쒕? 怨듦컯
+  // 최대 공강
   let maxGap = 0;
   for (let day = 0; day < 5; day++) {
     const ds = flat.filter(s => s.day === day).sort((a,b) => a.start_min - b.start_min);
@@ -1817,37 +1834,37 @@ function summarizeSchedule(schedule) {
   return { totalCr, daysUsed, earliestStr, maxGap };
 }
 
-/* ?? 湲대컯??寃쎄퀬 諛곕꼫 ?뚮뜑留??? */
+/* ── 긴박도 경고 배너 렌더링 ── */
 function renderUrgencyWarning(urgency, unfull, remain, isReqFirstOn) {
   const wrap = document.getElementById('autoResults');
   const existing = document.getElementById('urgencyBanner');
   if (existing) existing.remove();
   if (!wrap) return;
 
-  // urgency < 0.8 ?대㈃ 寃쎄퀬 ?놁쓬
+  // urgency < 0.8 이면 경고 없음
   if (urgency < 0.8 || unfull === 0) return;
 
   let level, icon, msg;
   if (urgency >= 2) {
-    // 留ㅼ슦 ?꾪뿕: ?⑥? ?숆린蹂대떎 誘몄씠?섍? 2諛??댁긽
+    // 매우 위험: 남은 학기보다 미이수가 2배 이상
     level = 'danger';
-    icon  = '?슚';
-    msg   = `議몄뾽源뚯? <strong>${remain}?숆린</strong> ?⑥븯?붾뜲 ?꾩닔 援먯뼇??<strong>${unfull}媛??곸뿭</strong> 誘몄씠?섏엯?덈떎. 吏湲?諛붾줈 梨꾩슦吏 ?딆쑝硫??꾪뿕?⑸땲??`;
+    icon  = '🚨';
+    msg   = `졸업까지 <strong>${remain}학기</strong> 남았는데 필수 교양이 <strong>${unfull}개 영역</strong> 미이수입니다. 지금 바로 채우지 않으면 위험합니다!`;
   } else if (urgency >= 1) {
-    // 寃쎄퀬: ?⑥? ?숆린? 誘몄씠?섍? 鍮꾩듂
+    // 경고: 남은 학기와 미이수가 비슷
     level = 'warn';
-    icon  = '?좑툘';
-    msg   = `議몄뾽源뚯? <strong>${remain}?숆린</strong> ?⑥븯怨??꾩닔 援먯뼇??<strong>${unfull}媛??곸뿭</strong> 誘몄씠?섏엯?덈떎. 留??숆린 1~2媛쒖뵫 梨꾩썙???⑸땲??`;
+    icon  = '⚠️';
+    msg   = `졸업까지 <strong>${remain}학기</strong> 남았고 필수 교양이 <strong>${unfull}개 영역</strong> 미이수입니다. 매 학기 1~2개씩 채워야 합니다.`;
   } else {
-    // 二쇱쓽
+    // 주의
     level = 'info';
-    icon  = '?뱥';
-    msg   = `?꾩닔 援먯뼇 <strong>${unfull}媛??곸뿭</strong>???꾩쭅 誘몄씠?섏엯?덈떎. 袁몄???梨꾩썙媛?몄슂.`;
+    icon  = '📋';
+    msg   = `필수 교양 <strong>${unfull}개 영역</strong>이 아직 미이수입니다. 꾸준히 채워가세요.`;
   }
 
   const hint = isReqFirstOn
-    ? `<span class="ub-hint">??'援먯뼇 議몄뾽?붽굔 ?곗꽑' ?듭뀡??耳쒖졇 ?덉뒿?덈떎.</span>`
-    : `<span class="ub-hint">?뮕 ?ㅽ??쇱뿉??<strong>援먯뼇 議몄뾽?붽굔 ?곗꽑</strong>???좏깮?섎㈃ ?꾩닔 ?곸뿭??媛뺤젣 諛곗젙?⑸땲??</span>`;
+    ? `<span class="ub-hint">✅ '교양 졸업요건 우선' 옵션이 켜져 있습니다.</span>`
+    : `<span class="ub-hint">💡 스타일에서 <strong>교양 졸업요건 우선</strong>을 선택하면 필수 영역을 강제 배정합니다.</span>`;
 
   const banner = document.createElement('div');
   banner.id = 'urgencyBanner';
@@ -1856,7 +1873,7 @@ function renderUrgencyWarning(urgency, unfull, remain, isReqFirstOn) {
   wrap.before(banner);
 }
 
-/* ?? ?먮룞 ?앹꽦 寃곌낵 ?뚮뜑留??? */
+/* ── 자동 생성 결과 렌더링 ── */
 function renderAutoResults(variants, state) {
   const wrap   = document.getElementById('autoResults');
   const grid   = document.getElementById('autoResultsGrid');
@@ -1866,22 +1883,22 @@ function renderAutoResults(variants, state) {
   if (!variants.length || variants.every(v => !v.schedule.length)) {
     wrap.classList.remove('hidden');
     grid.innerHTML = `<div class="auto-empty">
-      ?좏깮??議곌굔?쇰줈 ?앹꽦???쒓컙?쒓? ?놁뒿?덈떎.<br>
-      <small>?숈젏 ?쒕룄瑜??믪씠嫄곕굹 ?ы븿 ?듭뀡???뺤씤??二쇱꽭??</small>
+      선택한 조건으로 생성된 시간표가 없습니다.<br>
+      <small>학점 한도를 높이거나 포함 옵션을 확인해 주세요.</small>
     </div>`;
     desc.textContent = '';
     return;
   }
 
-  const labels = ['異붿쿇 A', '異붿쿇 B', '異붿쿇 C'];
-  const labelIcons = ['?쪍', '?쪎', '?쪏'];
+  const labels = ['추천 A', '추천 B', '추천 C'];
+  const labelIcons = ['🥇', '🥈', '🥉'];
 
   grid.innerHTML = variants.map((v, i) => {
     const { totalCr, daysUsed, earliestStr, maxGap } = summarizeSchedule(v.schedule);
     const colorMap = buildColorMap(v.schedule);
     const flat     = v.schedule.flatMap(courseToFlat);
 
-    // 誘몃땲 ?쒓컙??HTML
+    // 미니 시간표 HTML
     const dayCol = 60, hourH = 36, timeColW = 32;
     const baseMin = timeToMin('09:00');
     const hours   = HOUR_ROWS;
@@ -1900,7 +1917,7 @@ function renderAutoResults(variants, state) {
       const leftPx   = slot.day * dayCol + 1;
       const widthPx  = dayCol - 2;
       const color    = colorMap[flat.find(f => f === slot)?.name] || COLORS[0];
-      // ?대쫫 李얘린
+      // 이름 찾기
       const courseName = v.schedule.find(c =>
         courseToFlat(c).some(f =>
           f.day === slot.day && f.start_min === slot.start_min
@@ -1913,24 +1930,35 @@ function renderAutoResults(variants, state) {
       </div>`;
     });
 
-    const gapText = maxGap > 90 ? `理쒕? 怨듦컯 ${Math.round(maxGap/60*10)/10}h` : '怨듦컯 ?곸쓬';
+    const gapText = maxGap > 90 ? `최대 공강 ${Math.round(maxGap/60*10)/10}h` : '공강 적음';
+
+    // 연강 이동 거리 요약
+    const pairs     = getConsecutivePairs(v.schedule);
+    const maxWalk   = pairs.length ? Math.max(...pairs.map(p => p.walkMin ?? 0)) : 0;
+    const moveTag   = pairs.length === 0 ? ''
+      : maxWalk === 0 ? `<span class="result-tag move-tag move-ok">🚶 이동 없음</span>`
+      : maxWalk <= 3   ? `<span class="result-tag move-tag move-ok">🚶 최대 ${maxWalk}분</span>`
+      : maxWalk <= 6   ? `<span class="result-tag move-tag move-tight">🚶 최대 ${maxWalk}분</span>`
+      :                  `<span class="result-tag move-tag move-urgent">🚶 최대 ${maxWalk}분</span>`;
 
     return `
       <div class="result-card" data-variant="${i}">
         <div class="result-card-head">
           <div class="result-label">${labelIcons[i]} ${labels[i]}</div>
           <div class="result-tag-row">
-            <span class="result-tag">${totalCr}?숈젏</span>
-            <span class="result-tag">${daysUsed}???섏뾽</span>
-            <span class="result-tag">${earliestStr} ?쒖옉</span>
+            <span class="result-tag">${totalCr}학점</span>
+            <span class="result-tag">${daysUsed}일 수업</span>
+            <span class="result-tag">${earliestStr} 시작</span>
             <span class="result-tag">${gapText}</span>
+            ${moveTag}
           </div>
+          ${pairs.length ? `<button class="result-location-btn" data-variant="${i}" type="button">🗺 이동 지도 보기</button>` : ''}
         </div>
 
-        <!-- ?몃씪??誘몃땲 ?쒓컙??-->
+        <!-- 인라인 미니 시간표 -->
         <div class="result-tt">
           <div class="rt-header">
-            <div class="rt-corner">?쒓컙</div>
+            <div class="rt-corner">시간</div>
             ${DAY_NAMES.map(d => `<div class="rt-day">${d}</div>`).join('')}
           </div>
           <div class="rt-body">
@@ -1941,32 +1969,41 @@ function renderAutoResults(variants, state) {
           </div>
         </div>
 
-        <!-- 怨쇰ぉ 紐⑸줉 -->
+        <!-- 과목 목록 -->
         <div class="result-course-list">
           ${v.schedule.map(c => `
             <div class="result-course-item" data-name="${esc(c.name)}" data-variant-idx="${i}">
               <span class="result-course-name">${c.name}</span>
               <span class="cat-badge cat-${catClass(c.category)} small">${c.category}</span>
-              <span class="result-course-credit">${c.credits}?숈젏</span>
-              <button class="result-course-add-btn" data-name="${esc(c.name)}" data-variant-idx="${i}" type="button" title="?닿린">竊뗫떞湲?/button>
-              <button class="result-course-exc-btn" data-name="${esc(c.name)}" type="button" title="異붿쿇 ?쒖쇅">?슟</button>
-              <button class="result-course-info-btn" data-name="${esc(c.name)}" type="button" title="?곸꽭 ?뺣낫">??/button>
+              <span class="result-course-credit">${c.credits}학점</span>
+              <button class="result-course-add-btn" data-name="${esc(c.name)}" data-variant-idx="${i}" type="button" title="담기">＋담기</button>
+              <button class="result-course-exc-btn" data-name="${esc(c.name)}" type="button" title="추천 제외">🚫</button>
+              <button class="result-course-info-btn" data-name="${esc(c.name)}" type="button" title="상세 정보">ℹ</button>
             </div>
           `).join('')}
         </div>
 
         <button class="result-apply-btn primary-btn full" data-variant="${i}" type="button">
-          ???쒓컙???곸슜?섍린
+          이 시간표 적용하기
         </button>
       </div>
     `;
   }).join('');
 
-  desc.textContent = `${_autoGrade}?숇뀈 湲곗? 쨌 理쒕? ${state.maxCredits}?숈젏`;
+  desc.textContent = `${_autoGrade}학년 기준 · 최대 ${state.maxCredits}학점`;
   wrap.classList.remove('hidden');
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // ?곸슜 踰꾪듉 ?대깽??  grid.querySelectorAll('.result-apply-btn').forEach(btn => {
+  // 이동 지도 버튼
+  grid.querySelectorAll('.result-location-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.variant);
+      showLocationModal(variants[idx].schedule, labels[idx]);
+    });
+  });
+
+  // 적용 버튼 이벤트
+  grid.querySelectorAll('.result-apply-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = Number(btn.dataset.variant);
       _selected = [...variants[idx].schedule];
@@ -1978,7 +2015,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // 怨쇰ぉ 紐⑸줉 ??竊뗫떞湲?踰꾪듉 ?좉? (?닿린 ???댁젣)
+  // 과목 목록 — ＋담기 버튼 토글 (담기 ↔ 해제)
   grid.querySelectorAll('.result-course-add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -1989,7 +2026,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // 怨쇰ぉ 紐⑸줉 ???슟 ?쒖쇅 踰꾪듉 ?대┃
+  // 과목 목록 — 🚫 제외 버튼 클릭
   grid.querySelectorAll('.result-course-exc-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -1997,7 +2034,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // 怨쇰ぉ 紐⑸줉 ????踰꾪듉 ?대┃ ???곸꽭 ?앹뾽
+  // 과목 목록 — ℹ 버튼 클릭 → 상세 팝업
   grid.querySelectorAll('.result-course-info-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -2005,7 +2042,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // rt-block 醫뚰겢由???媛뺤쓽 ?뺣낫 + ?꾩튂 吏??紐⑤떖
+  // rt-block 좌클릭 → 강의 정보 + 위치 지도 모달
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('click', e => {
       if (e.button !== 0) return;
@@ -2017,7 +2054,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // rt-block ?고겢由???而⑦뀓?ㅽ듃 硫붾돱 (?닿린/?댁젣 + ?쒖쇅 + ?섍컯?꾨즺)
+  // rt-block 우클릭 → 컨텍스트 메뉴 (담기/해제 + 제외 + 수강완료)
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('contextmenu', e => {
       e.preventDefault();
@@ -2029,25 +2066,25 @@ function renderAutoResults(variants, state) {
   });
 }
 
-/* ?? 異붿쿇 ?쒓컙???닿린 踰꾪듉 ?좉? (?닿린 ???댁젣) ?? */
+/* ── 추천 시간표 담기 버튼 토글 (담기 ↔ 해제) ── */
 function toggleCourseFromResult(course, btnEl) {
   if (!course) return;
   const idx = _selected.findIndex(s => s.name === course.name && s.section === course.section);
 
   if (idx >= 0) {
-    // ?대? ?닿꺼?덉쑝硫????댁젣
+    // 이미 담겨있으면 → 해제
     _selected.splice(idx, 1);
     renderCourseList();
     renderSelectedList();
     renderMiniTimetable();
     if (_gradReqs && _currentState) renderGradReq(_currentState);
     syncResultAddButtons();
-    showToast(`"${course.name}" ?닿린 ?댁젣`);
+    showToast(`"${course.name}" 담기 해제`);
   } else {
-    // ?놁쑝硫????닿린
+    // 없으면 → 담기
     const conflict = checkConflict(course, _selected);
     if (conflict) {
-      showToast(`???쒓컙 異⑸룎: "${conflict}"? 寃뱀퀜 ?댁쓣 ???놁뒿?덈떎.`);
+      showToast(`⚠ 시간 충돌: "${conflict}"와 겹쳐 담을 수 없습니다.`);
       return;
     }
     _selected.push(course);
@@ -2056,81 +2093,82 @@ function toggleCourseFromResult(course, btnEl) {
     renderMiniTimetable();
     if (_gradReqs && _currentState) renderGradReq(_currentState);
     syncResultAddButtons();
-    showToast(`"${course.name}" ?댁븯?듬땲????);
+    showToast(`"${course.name}" 담았습니다 ✓`);
   }
 }
 
-/* ?? 異붿쿇 移대뱶???닿린 踰꾪듉 ?곹깭瑜?_selected 湲곗??쇰줈 ?숆린???? */
+/* ── 추천 카드의 담기 버튼 상태를 _selected 기준으로 동기화 ── */
 function syncResultAddButtons() {
   document.querySelectorAll('.result-course-add-btn').forEach(btn => {
     const cName = btn.dataset.name;
     const isIn  = _selected.some(s => s.name === cName);
     btn.classList.toggle('active', isIn);
-    btn.textContent = isIn ? '?볥떞源' : '竊뗫떞湲?;
+    btn.textContent = isIn ? '✓담김' : '＋담기';
   });
-  // rt-block?먮룄 ?닿릿 ?곹깭 ?쒖떆
+  // rt-block에도 담긴 상태 표시
   document.querySelectorAll('.rt-block').forEach(block => {
     const isIn = _selected.some(s => s.name === block.dataset.name);
     block.classList.toggle('rt-block--added', isIn);
   });
 }
 
-/* ?? 異붿쿇 ?쒓컙?쒖뿉??怨쇰ぉ ?쒖쇅 泥섎━ (怨듯넻) ?? */
+/* ── 추천 시간표에서 과목 제외 처리 (공통) ── */
 function excludeCourseFromResult(courseName) {
   if (!courseName || !_currentState) return;
   const idx = _currentState.excludedCourses.indexOf(courseName);
   if (idx >= 0) {
-    // ?대? ?쒖쇅 以????댁젣
+    // 이미 제외 중 → 해제
     _currentState.excludedCourses.splice(idx, 1);
     saveState(_currentState);
     setupExcludedCourses(_currentState);
     syncResultExcButtons();
-    showToast(`"${courseName}" ?쒖쇅 ?댁젣?먯뒿?덈떎.`);
+    showToast(`"${courseName}" 제외 해제됐습니다.`);
   } else {
-    // ?놁쑝硫????쒖쇅 異붽?
+    // 없으면 → 제외 추가
     _currentState.excludedCourses.push(courseName);
     saveState(_currentState);
     setupExcludedCourses(_currentState);
-    // ?쒖쇅 ?⑤꼸 ?쇱튂湲?    const body    = document.getElementById('excludedBody');
+    // 제외 패널 펼치기
+    const body    = document.getElementById('excludedBody');
     const chevron = document.getElementById('excludedChevron');
     if (body?.classList.contains('hidden')) {
       body.classList.remove('hidden');
-      if (chevron) chevron.textContent = '??;
+      if (chevron) chevron.textContent = '▼';
     }
     syncResultExcButtons();
-    showToast(`"${courseName}" 異붿쿇 ?쒖쇅 紐⑸줉??異붽??덉뒿?덈떎.`);
+    showToast(`"${courseName}" 추천 제외 목록에 추가했습니다.`);
   }
 }
 
-/* ?? 異붿쿇 移대뱶???쒖쇅 踰꾪듉 ?곹깭瑜?excludedCourses 湲곗??쇰줈 ?숆린???? */
+/* ── 추천 카드의 제외 버튼 상태를 excludedCourses 기준으로 동기화 ── */
 function syncResultExcButtons() {
   const excluded = _currentState?.excludedCourses || [];
   document.querySelectorAll('.result-course-exc-btn').forEach(btn => {
     const isExc = excluded.includes(btn.dataset.name);
     btn.classList.toggle('active', isExc);
-    btn.textContent = isExc ? '?볦젣?몄쨷' : '?슟';
-    btn.title = isExc ? '?쒖쇅 ?댁젣' : '異붿쿇 ?쒖쇅';
+    btn.textContent = isExc ? '✓제외중' : '🚫';
+    btn.title = isExc ? '제외 해제' : '추천 제외';
   });
 }
 
-/* ?? ?먮룞?앹꽦 寃곌낵 怨쇰ぉ ?대┃ ???곸꽭 ?뺣낫 ?앹뾽 ?? */
+/* ── 자동생성 결과 과목 클릭 → 상세 정보 팝업 ── */
 let _infoPopup = null;
-/* ?? 異붿쿇 ?쒓컙??釉붾줉 醫뚰겢由???媛뺤쓽 ?뺣낫 + ?꾩튂 吏??紐⑤떖 ?? */
+/* ── 추천 시간표 블록 좌클릭 → 강의 정보 + 위치 지도 모달 ── */
 let _blockInfoModal = null;
 
 function showBlockInfoModal(courseName, courseObj) {
-  // 湲곗〈 紐⑤떖 ?リ린
+  // 기존 모달 닫기
   if (_blockInfoModal) { _blockInfoModal.backdrop.remove(); _blockInfoModal.modal.remove(); _blockInfoModal = null; }
 
   const course = courseObj || _allCourses.find(c => c.name === courseName);
   if (!course) return;
 
-  const days = ['??,'??,'??,'紐?,'湲?];
+  const days = ['월','화','수','목','금'];
   const slotRows = (course.slots || []).map(s =>
-    `<div>${days[s.day] || '?'}?붿씪 ${s.start}~${s.end}${s.room ? ' 쨌 ' + s.room : ''}</div>`
-  ).join('') || '<div>?쒓컙 ?뺣낫 ?놁쓬</div>';
+    `<div>${days[s.day] || '?'}요일 ${s.start}~${s.end}${s.room ? ' · ' + s.room : ''}</div>`
+  ).join('') || '<div>시간 정보 없음</div>';
 
-  // 嫄대Ъ 異붿텧 (吏?꾩슜)
+  // 건물 추출 (지도용)
   const rooms = (course.slots || []).map(s => s.room).filter(Boolean);
   const blds  = [...new Set(rooms.map(r => getRoomBuilding(r)).filter(b => b && BUILDING_COORDS[b]))];
   const hasMap = blds.length > 0;
@@ -2145,22 +2183,22 @@ function showBlockInfoModal(courseName, courseObj) {
   modal.innerHTML = `
     <div class="cip-header">
       <span class="cat-badge cat-${catClass(course.category)}">${course.category}</span>
-      <button class="cip-close" type="button">??/button>
+      <button class="cip-close" type="button">✕</button>
     </div>
     <div class="cip-name">${course.name}</div>
     <div class="cip-rows">
-      <div class="cip-row"><span class="cip-label">?대떦援먯닔</span><span>${course.professor || '誘몄젙'}</span></div>
-      <div class="cip-row"><span class="cip-label">?숈젏</span><span>${course.credits}?숈젏</span></div>
-      <div class="cip-row"><span class="cip-label">遺꾨컲</span><span>${course.section || '-'}</span></div>
-      <div class="cip-row cip-row-slots"><span class="cip-label">?쒓컙/?μ냼</span><span>${slotRows}</span></div>
-      ${course.department ? `<div class="cip-row"><span class="cip-label">媛쒖꽕?숆낵</span><span>${course.department}</span></div>` : ''}
+      <div class="cip-row"><span class="cip-label">담당교수</span><span>${course.professor || '미정'}</span></div>
+      <div class="cip-row"><span class="cip-label">학점</span><span>${course.credits}학점</span></div>
+      <div class="cip-row"><span class="cip-label">분반</span><span>${course.section || '-'}</span></div>
+      <div class="cip-row cip-row-slots"><span class="cip-label">시간/장소</span><span>${slotRows}</span></div>
+      ${course.department ? `<div class="cip-row"><span class="cip-label">개설학과</span><span>${course.department}</span></div>` : ''}
     </div>
     ${hasMap
       ? `<div class="cip-map-wrap"><div id="cipMapEl" class="cip-map-el"></div></div>`
-      : `<div class="cip-map-none">?룶 媛뺤쓽???꾩튂 ?뺣낫 ?놁쓬 (?⑤씪???먮뒗 誘몄젙)</div>`}
+      : `<div class="cip-map-none">🏫 강의실 위치 정보 없음 (온라인 또는 미정)</div>`}
     <div class="cip-actions">
       <button class="cip-add-btn${isIn ? ' active' : ''}" type="button">
-        ${isIn ? '???닿? ???대┃ ???댁젣' : '竊??닿린'}
+        ${isIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기'}
       </button>
     </div>
   `;
@@ -2175,16 +2213,16 @@ function showBlockInfoModal(courseName, courseObj) {
   backdrop.addEventListener('click', close);
   modal.querySelector('.cip-close').addEventListener('click', close);
 
-  // ?닿린 踰꾪듉 ?좉?
+  // 담기 버튼 토글
   modal.querySelector('.cip-add-btn').addEventListener('click', () => {
     toggleCourseFromResult(course, null);
     const btn = modal.querySelector('.cip-add-btn');
     const nowIn = _selected.some(s => s.name === course.name && s.section === course.section);
     btn.classList.toggle('active', nowIn);
-    btn.textContent = nowIn ? '???닿? ???대┃ ???댁젣' : '竊??닿린';
+    btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
   });
 
-  // Leaflet 吏??(嫄대Ъ ?꾩튂)
+  // Leaflet 지도 (건물 위치)
   if (hasMap) {
     setTimeout(() => {
       const el = document.getElementById('cipMapEl');
@@ -2218,39 +2256,39 @@ function showCourseInfoPopup(courseName) {
   if (!course) return;
 
   const slotText = (course.slots || []).map(s => {
-    const days = ['??,'??,'??,'紐?,'湲?];
+    const days = ['월','화','수','목','금'];
     return `${days[s.day] || '?'} ${s.start}~${s.end}${s.room ? ' '+s.room : ''}`;
-  }).join(', ') || '?쒓컙 ?뺣낫 ?놁쓬';
+  }).join(', ') || '시간 정보 없음';
 
   const popup = document.createElement('div');
   popup.className = 'course-info-popup';
   popup.innerHTML = `
     <div class="cip-header">
       <span class="cat-badge cat-${catClass(course.category)}">${course.category}</span>
-      <button class="cip-close" type="button">??/button>
+      <button class="cip-close" type="button">✕</button>
     </div>
     <div class="cip-name">${course.name}</div>
     <div class="cip-rows">
-      <div class="cip-row"><span class="cip-label">?대떦援먯닔</span><span>${course.professor || '誘몄젙'}</span></div>
-      <div class="cip-row"><span class="cip-label">?숈젏</span><span>${course.credits}?숈젏</span></div>
-      <div class="cip-row"><span class="cip-label">遺꾨컲</span><span>${course.section || '-'}</span></div>
-      <div class="cip-row"><span class="cip-label">?쒓컙/?μ냼</span><span>${slotText}</span></div>
-      ${course.department ? `<div class="cip-row"><span class="cip-label">媛쒖꽕?숆낵</span><span>${course.department}</span></div>` : ''}
-      ${course.eligible_years?.length ? `<div class="cip-row"><span class="cip-label">?섍컯???/span><span>${course.eligible_years.join('쨌')}?숇뀈</span></div>` : ''}
+      <div class="cip-row"><span class="cip-label">담당교수</span><span>${course.professor || '미정'}</span></div>
+      <div class="cip-row"><span class="cip-label">학점</span><span>${course.credits}학점</span></div>
+      <div class="cip-row"><span class="cip-label">분반</span><span>${course.section || '-'}</span></div>
+      <div class="cip-row"><span class="cip-label">시간/장소</span><span>${slotText}</span></div>
+      ${course.department ? `<div class="cip-row"><span class="cip-label">개설학과</span><span>${course.department}</span></div>` : ''}
+      ${course.eligible_years?.length ? `<div class="cip-row"><span class="cip-label">수강대상</span><span>${course.eligible_years.join('·')}학년</span></div>` : ''}
     </div>
   `;
 
   document.body.appendChild(popup);
   _infoPopup = popup;
 
-  // ?붾㈃ 以묒븰 怨좎젙
+  // 화면 중앙 고정
   popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10000;';
 
   popup.querySelector('.cip-close').addEventListener('click', () => {
     popup.remove(); _infoPopup = null;
   });
 
-  // 諛곌꼍 ?대┃ ???リ린
+  // 배경 클릭 시 닫기
   const backdrop = document.createElement('div');
   backdrop.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.3);';
   backdrop.addEventListener('click', () => {
@@ -2259,7 +2297,7 @@ function showCourseInfoPopup(courseName) {
   document.body.insertBefore(backdrop, popup);
 }
 
-/* ?? ?먮룞?앹꽦 寃곌낵 怨쇰ぉ ?고겢由?硫붾돱 ?? */
+/* ── 자동생성 결과 과목 우클릭 메뉴 ── */
 let _ctxMenu = null;
 function showResultContextMenu(x, y, courseName, courseObj) {
   closeCtxMenu();
@@ -2273,23 +2311,23 @@ function showResultContextMenu(x, y, courseName, courseObj) {
   menu.innerHTML = `
     <div class="ctx-course-name">${courseName}</div>
     <button class="ctx-item ctx-add${isInCart ? ' active' : ''}" data-action="add" type="button">
-      ${isInCart ? '???닿? ???대┃ ???댁젣' : '?뱿 ?닿린'}
+      ${isInCart ? '✓ 담김 — 클릭 시 해제' : '📥 담기'}
     </button>
     <div class="ctx-divider"></div>
     <button class="ctx-item${isExcluded ? ' active' : ''}" data-action="exclude" type="button">
-      ${isExcluded ? '???쒖쇅 以????대┃ ???댁젣' : '?슟 異붿쿇 ?쒖쇅 怨쇰ぉ?쇰줈 ?ㅼ젙'}
+      ${isExcluded ? '✓ 제외 중 — 클릭 시 해제' : '🚫 추천 제외 과목으로 설정'}
     </button>
-    <button class="ctx-item" data-action="completed" type="button">???섍컯 ?꾨즺濡??쒖떆</button>
+    <button class="ctx-item" data-action="completed" type="button">✅ 수강 완료로 표시</button>
     <div class="ctx-divider"></div>
-    <button class="ctx-item ctx-cancel" data-action="close" type="button">?リ린</button>
+    <button class="ctx-item ctx-cancel" data-action="close" type="button">닫기</button>
   `;
 
-  // ?붾㈃ 寃쎄퀎 泥댄겕
+  // 화면 경계 체크
   menu.style.cssText = `position:fixed;left:${x}px;top:${y}px;z-index:9999;`;
   document.body.appendChild(menu);
   _ctxMenu = menu;
 
-  // ?붾㈃ 諛뽰쑝濡??섍?硫?蹂댁젙
+  // 화면 밖으로 나가면 보정
   requestAnimationFrame(() => {
     const r = menu.getBoundingClientRect();
     if (r.right  > window.innerWidth)  menu.style.left = `${x - r.width}px`;
@@ -2306,13 +2344,13 @@ function showResultContextMenu(x, y, courseName, courseObj) {
           _currentState.completedCourses.push(courseName);
           saveState(_currentState);
           if (_gradReqs) renderGradReq(_currentState);
-          showToast(`"${courseName}"??瑜? ?섍컯 ?꾨즺濡??쒖떆?덉뒿?덈떎.`);
+          showToast(`"${courseName}"을(를) 수강 완료로 표시했습니다.`);
         } else {
-          showToast(`?대? ?섍컯 ?꾨즺 紐⑸줉???덈뒗 怨쇰ぉ?낅땲??`);
+          showToast(`이미 수강 완료 목록에 있는 과목입니다.`);
         }
       } else if (action === 'add') {
         if (courseObj) toggleCourseFromResult(courseObj, null);
-        else showToast('怨쇰ぉ ?뺣낫瑜?李얠쓣 ???놁뒿?덈떎.');
+        else showToast('과목 정보를 찾을 수 없습니다.');
       }
       closeCtxMenu();
     });
@@ -2336,9 +2374,9 @@ function showToast(msg) {
   setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
-/* ?? ?먮룞 ?앹꽦 UI ?ㅼ젙 ?? */
+/* ── 자동 생성 UI 설정 ── */
 /* ============================================================
-   議몄뾽?붽굔 ?꾪솴 ?⑤꼸
+   졸업요건 현황 패널
    ============================================================ */
 function setupGradReqPanel(state) {
   const toggle  = document.getElementById('gradReqToggle');
@@ -2349,7 +2387,7 @@ function setupGradReqPanel(state) {
   toggle.addEventListener('click', () => {
     const open = !body.classList.contains('hidden');
     body.classList.toggle('hidden', open);
-    if (chevron) chevron.textContent = open ? '?? : '??;
+    if (chevron) chevron.textContent = open ? '▶' : '▼';
   });
 
   renderGradReq(state);
@@ -2365,56 +2403,56 @@ function renderGradReq(state) {
 
   if (!req) {
     content.innerHTML = `<div class="grad-no-data">
-      <span>?뱥</span>
-      <p><strong>${dept || '?숆낵 誘몄꽕??}</strong>??議몄뾽?붽굔 ?곗씠?곌? ?놁뒿?덈떎.</p>
-      <small>?ㅼ젙 ?섏씠吏?먯꽌 ?숆낵瑜??뺤씤?섍굅???숆탳 ?숈궗吏?먰???臾몄쓽?섏꽭??</small>
+      <span>📋</span>
+      <p><strong>${dept || '학과 미설정'}</strong>의 졸업요건 데이터가 없습니다.</p>
+      <small>설정 페이지에서 학과를 확인하거나 학교 학사지원팀에 문의하세요.</small>
     </div>`;
     if (badge) badge.textContent = '';
     return;
   }
 
-  // ?섍컯?꾨즺 怨쇰ぉ 怨꾩궛
-  // 1) ?섎룞 ?꾨즺 ?쒖떆  2) 吏???숆린 timetable 怨쇰ぉ (?먮룞)  3) ?꾩옱 ?댁? 怨쇰ぉ
+  // 수강완료 과목 계산
+  // 1) 수동 완료 표시  2) 지난 학기 timetable 과목 (자동)  3) 현재 담은 과목
   const completed    = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
   const pastCourses  = getPastTimetableCourseNames(state);
   const retakeSet    = new Set((state.retakeCourses   || []).map(n => n.trim().toLowerCase()));
   const selected     = _selected || [];
 
-  // 紐⑤뱺 ?댁닔 怨쇰ぉ = ?섎룞?꾨즺 + 吏?쒗븰湲??먮룞?꾨즺 + ?꾩옱 ?좏깮以?(?? ?ъ닔媛?怨쇰ぉ ?쒖쇅)
+  // 모든 이수 과목 = 수동완료 + 지난학기 자동완료 + 현재 선택중 (단, 재수강 과목 제외)
   const allTaken = new Set([
     ...Array.from(completed).filter(n => !retakeSet.has(n)),
     ...Array.from(pastCourses).filter(n => !retakeSet.has(n)),
     ...selected.map(c => c.name.trim().toLowerCase())
   ]);
 
-  // 怨쇰ぉ紐????숈젏/???議고쉶 (courses.json ?곗꽑, ?놁쑝硫?議몄뾽?붽굔 ?꾩닔怨쇰ぉ 紐⑸줉, ?놁쑝硫?湲곕낯 3?숈젏)
+  // 과목명 → 학점/타입 조회 (courses.json 우선, 없으면 졸업요건 필수과목 목록, 없으면 기본 3학점)
   const reqCourseMap = {};
   (req.required_courses || []).forEach(rc => {
     reqCourseMap[rc.name.trim().toLowerCase()] = rc;
   });
 
   const lookupCourse = (nameLower) => {
-    // courses.json?먯꽌 李얘린
+    // courses.json에서 찾기
     const c = _allCourses.find(x => x.name.trim().toLowerCase() === nameLower);
     if (c) return c;
-    // 議몄뾽?붽굔 ?꾩닔怨쇰ぉ 紐⑸줉?먯꽌 李얘린 ???꾧났?꾩닔濡?媛꾩＜
+    // 졸업요건 필수과목 목록에서 찾기 → 전공필수로 간주
     const rc = reqCourseMap[nameLower];
-    if (rc) return { type: 'major', category: '?꾧났?꾩닔', department: dept, credits: rc.credits || 3 };
-    // 湲곕낯: ?꾧났?좏깮 3?숈젏?쇰줈 異붿젙
+    if (rc) return { type: 'major', category: '전공필수', department: dept, credits: rc.credits || 3 };
+    // 기본: 전공선택 3학점으로 추정
     return null;
   };
 
-  // 移댄뀒怨좊━蹂??댁닔 ?숈젏 怨꾩궛 (?섎룞?꾨즺 + 吏?쒗븰湲??먮룞?꾨즺 + ?꾩옱?댁?怨쇰ぉ)
+  // 카테고리별 이수 학점 계산 (수동완료 + 지난학기 자동완료 + 현재담은과목)
   const calcEarned = (filterFn) => {
     let cr = 0;
     const counted = new Set();
-    // ?섎룞 ?꾨즺 + 吏???숆린 ?먮룞 ?꾨즺
+    // 수동 완료 + 지난 학기 자동 완료
     for (const name of allTaken) {
       if (counted.has(name)) continue;
       const c = lookupCourse(name);
       if (c && filterFn(c)) { cr += Number(c.credits) || 0; counted.add(name); }
     }
-    // ?꾩옱 ?댁? 怨쇰ぉ (allTaken???녿뒗 寃껊쭔)
+    // 현재 담은 과목 (allTaken에 없는 것만)
     for (const c of selected) {
       const name = c.name.trim().toLowerCase();
       if (!counted.has(name) && filterFn(c)) { cr += Number(c.credits) || 0; counted.add(name); }
@@ -2422,41 +2460,42 @@ function renderGradReq(state) {
     return cr;
   };
 
-  // ?꾨즺怨쇰ぉ 以?courses.json???녿뒗 寃껋? ?꾧났?꾩닔 ?щ?瑜?reqCourseMap?쇰줈 ?먮떒
+  // 완료과목 중 courses.json에 없는 것은 전공필수 여부를 reqCourseMap으로 판단
   const earnedLiberal   = calcEarned(c => c.type === 'liberal');
-  const earnedMajorReq  = calcEarned(c => c.type === 'major' && c.category === '?꾧났?꾩닔');
-  const earnedMajorElec = calcEarned(c => c.type === 'major' && c.category === '?꾧났?좏깮' && (!c.department || c.department === dept));
+  const earnedMajorReq  = calcEarned(c => c.type === 'major' && c.category === '전공필수');
+  const earnedMajorElec = calcEarned(c => c.type === 'major' && c.category === '전공선택' && (!c.department || c.department === dept));
   const earnedMajor     = earnedMajorReq + earnedMajorElec;
   const earnedTotal     = earnedLiberal + earnedMajor;
   const totalReq         = req.total || 130;
 
   if (badge) {
     const pct = Math.round(earnedTotal / totalReq * 100);
-    badge.textContent = `${earnedTotal}/${totalReq}?숈젏 (${pct}%)`;
+    badge.textContent = `${earnedTotal}/${totalReq}학점 (${pct}%)`;
     badge.style.background = pct >= 80 ? '#e3f7df' : pct >= 50 ? '#fff1d8' : '#f0f4ff';
     badge.style.color       = pct >= 80 ? '#1a6a1a' : pct >= 50 ? '#8a5800' : '#3b6bdc';
   }
 
-  // 移댄뀒怨좊━蹂?Progress bar ?곗씠??  const liberal = req.liberal || {};
+  // 카테고리별 Progress bar 데이터
+  const liberal = req.liberal || {};
   const major   = req.major   || {};
-  const libReq  = LIBERAL_REQ.湲곗큹援먯뼇 + LIBERAL_REQ.洹좏삎援먯뼇; // 34?숈젏 湲곗? 理쒖냼 ?꾩닔
-  const majReq  = (major['?꾧났?꾩닔'] || 0) + (major['?꾧났?좏깮'] || 0);
+  const libReq  = LIBERAL_REQ.기초교양 + LIBERAL_REQ.균형교양; // 34학점 기준 최소 필수
+  const majReq  = (major['전공필수'] || 0) + (major['전공선택'] || 0);
 
-  // 援먯뼇 ?몃? earned
-  const earnedGichyo    = calcEarned(c => c.type === 'liberal' && c.category === '湲곗큹援먯뼇');
-  const earnedGyunhyung = calcEarned(c => c.type === 'liberal' && c.category === '洹좏삎援먯뼇');
-  const earnedHwakdae   = calcEarned(c => c.type === 'liberal' && c.category === '?뺣?援먯뼇');
+  // 교양 세부 earned
+  const earnedGichyo    = calcEarned(c => c.type === 'liberal' && c.category === '기초교양');
+  const earnedGyunhyung = calcEarned(c => c.type === 'liberal' && c.category === '균형교양');
+  const earnedHwakdae   = calcEarned(c => c.type === 'liberal' && c.category === '확대교양');
 
-  // 湲곗큹援먯뼇 洹몃９蹂??댁닔 ?щ? (subtitle 蹂듭닔 + liberal_areas 怨쇰ぉ紐?fallback)
+  // 기초교양 그룹별 이수 여부 (subtitle 복수 + liberal_areas 과목명 fallback)
   const _liberalAreasMap = {};
   (req.liberal_areas || []).forEach(a => { _liberalAreasMap[a.name] = a; });
   const gichyoGroups = REQUIRED_LIBERAL_GROUPS.map(g => {
-    // subtitle 留ㅼ묶
+    // subtitle 매칭
     const subtitleDone = Array.from(allTaken).some(name => {
       const c = _allCourses.find(x => x.name.trim().toLowerCase() === name);
       return c && c.type === 'liberal' && g.subtitles.some(s => c.subtitle === s);
     }) || selected.some(c => c.type === 'liberal' && g.subtitles.some(s => c.subtitle === s));
-    // liberal_areas 怨쇰ぉ紐?baseName 留ㅼ묶 (援ы삎 ?곗씠??fallback)
+    // liberal_areas 과목명 baseName 매칭 (구형 데이터 fallback)
     const areaInfo = _liberalAreasMap[g.label];
     const nameDone = areaInfo
       ? Array.from(allTaken).some(name => areaInfo.courses.some(n => baseName(n) === baseName(name)))
@@ -2465,7 +2504,7 @@ function renderGradReq(state) {
     return { label: g.label, minCr: g.minCredits, done: subtitleDone || nameDone };
   });
 
-  // 洹좏삎援먯뼇 4媛??곸뿭 ?댁닔 ?щ?
+  // 균형교양 4개 영역 이수 여부
   const gyunhyungAreas = REQUIRED_GYUNHYUNG_AREAS.map(area => {
     const done = Array.from(allTaken).some(name => {
       const c = _allCourses.find(x => x.name.trim().toLowerCase() === name);
@@ -2476,26 +2515,27 @@ function renderGradReq(state) {
   const gyunhyungDoneCount = gyunhyungAreas.filter(a => a.done).length;
 
   const subMaj = [
-    { label: '?꾧났?꾩닔', earned: earnedMajorReq,  req: major['?꾧났?꾩닔'] || 0 },
-    { label: '?꾧났?좏깮', earned: earnedMajorElec, req: major['?꾧났?좏깮'] || 0 },
+    { label: '전공필수', earned: earnedMajorReq,  req: major['전공필수'] || 0 },
+    { label: '전공선택', earned: earnedMajorElec, req: major['전공선택'] || 0 },
   ].filter(x => x.req > 0);
 
-  if (major['?ы솕?꾧났']) subMaj.push({ label: '?ы솕?꾧났', earned: 0, req: major['?ы솕?꾧났'] });
+  if (major['심화전공']) subMaj.push({ label: '심화전공', earned: 0, req: major['심화전공'] });
 
-  // ?댁닔 泥닿퀎????(roadmap 湲곕컲, ?꾧났?꾩닔+?꾧났?좏깮)
+  // 이수 체계도 표 (roadmap 기반, 전공필수+전공선택)
   const roadmap = _roadmap?.[dept] || {};
-  // required_courses瑜?name??grade,semester} 留듭쑝濡?蹂??  const reqMap = {};
+  // required_courses를 name→{grade,semester} 맵으로 변환
+  const reqMap = {};
   (req.required_courses || []).forEach(rc => {
     reqMap[rc.name.trim().toLowerCase()] = rc;
   });
 
   const makeRoadmapTable = () => {
-    // roadmap?먯꽌 ?숆낵 ?꾧났怨쇰ぉ留?異붿텧 (?대? dept 湲곗?)
-    // 援ъ“: roadmap[grade][sem] = [courseName, ...]
+    // roadmap에서 학과 전공과목만 추출 (이미 dept 기준)
+    // 구조: roadmap[grade][sem] = [courseName, ...]
     const grades = ['1', '2', '3', '4'];
     const sems   = ['1', '2'];
 
-    // 媛??(grade횞sem)??怨쇰ぉ 紐⑸줉 鍮뚮뱶
+    // 각 셀(grade×sem)의 과목 목록 빌드
     const cells = {};
     for (const g of grades) {
       for (const s of sems) {
@@ -2507,7 +2547,7 @@ function renderGradReq(state) {
             (c.type === 'major') && (!c.department || c.department === dept)
           );
           const isReq = !!reqMap[lower];
-          const cat = course?.category || (isReq ? '?꾧났?꾩닔' : '?꾧났?좏깮');
+          const cat = course?.category || (isReq ? '전공필수' : '전공선택');
           const credits = course?.credits ?? reqMap[lower]?.credits ?? 3;
           const isRetakeMarked = retakeSet.has(lower);
           const done = !isRetakeMarked && allTaken.has(lower);
@@ -2517,11 +2557,11 @@ function renderGradReq(state) {
       }
     }
 
-    // ?ㅼ젣 ?곗씠?곌? ?덈뒗 ?숇뀈留??쒖떆
+    // 실제 데이터가 있는 학년만 표시
     const activeGrades = grades.filter(g => sems.some(s => cells[`${g}_${s}`]?.length));
     if (!activeGrades.length) return '';
 
-    const semLabel = { '1': '1?숆린', '2': '2?숆린' };
+    const semLabel = { '1': '1학기', '2': '2학기' };
 
     const headerRow = `
       <tr class="rmap-header-row">
@@ -2532,7 +2572,7 @@ function renderGradReq(state) {
     const bodyRows = activeGrades.map(g => {
       const cols = sems.map(s => {
         const items = cells[`${g}_${s}`];
-        if (!items.length) return `<td class="rmap-cell rmap-empty">??/td>`;
+        if (!items.length) return `<td class="rmap-cell rmap-empty">—</td>`;
         return `<td class="rmap-cell">
           ${items.map(item => {
             const cls = item.isRetakeMarked ? 'rmap-course retake'
@@ -2540,35 +2580,36 @@ function renderGradReq(state) {
               : item.inProgress ? 'rmap-course in-progress'
               : 'rmap-course';
             const badge = item.isReq
-              ? `<span class="rmap-badge req">?꾩닔</span>`
-              : `<span class="rmap-badge elec">?좏깮</span>`;
+              ? `<span class="rmap-badge req">필수</span>`
+              : `<span class="rmap-badge elec">선택</span>`;
             const status = item.isRetakeMarked
-              ? `<span class="rmap-status retake-icon">?봽?ъ닔媛?/span>`
+              ? `<span class="rmap-status retake-icon">🔄재수강</span>`
               : item.done
-              ? `<span class="rmap-status done-icon">??/span>`
+              ? `<span class="rmap-status done-icon">✓</span>`
               : item.inProgress
-              ? `<span class="rmap-status prog-icon">?대뒗以?/span>`
+              ? `<span class="rmap-status prog-icon">담는중</span>`
               : '';
-            return `<div class="${cls}" title="${item.name} 쨌 ${item.credits}?숈젏">
+            return `<div class="${cls}" title="${item.name} · ${item.credits}학점">
               ${badge}
               <span class="rmap-name">${item.name}</span>
-              <span class="rmap-cr">${item.credits}?숈젏</span>
+              <span class="rmap-cr">${item.credits}학점</span>
               ${status}
             </div>`;
           }).join('')}
         </td>`;
       }).join('');
-      return `<tr><td class="rmap-grade-label">${g}?숇뀈</td>${cols}</tr>`;
+      return `<tr><td class="rmap-grade-label">${g}학년</td>${cols}</tr>`;
     }).join('');
 
     return `
       <div class="grad-section">
-        <div class="grad-section-title">?꾧났 ?댁닔 泥닿퀎??          <span class="rmap-legend">
-            <span class="rmap-badge req">?꾩닔</span> ?꾧났?꾩닔 &nbsp;
-            <span class="rmap-badge elec">?좏깮</span> ?꾧났?좏깮 &nbsp;
-            <span class="rmap-status done-icon">??/span> ?댁닔?꾨즺 &nbsp;
-            <span class="rmap-status prog-icon">?대뒗以?/span> ?꾩옱 ?댁쓬 &nbsp;
-            <span class="rmap-status retake-icon">?봽?ъ닔媛?/span> ?ъ닔媛??꾩슂
+        <div class="grad-section-title">전공 이수 체계도
+          <span class="rmap-legend">
+            <span class="rmap-badge req">필수</span> 전공필수 &nbsp;
+            <span class="rmap-badge elec">선택</span> 전공선택 &nbsp;
+            <span class="rmap-status done-icon">✓</span> 이수완료 &nbsp;
+            <span class="rmap-status prog-icon">담는중</span> 현재 담음 &nbsp;
+            <span class="rmap-status retake-icon">🔄재수강</span> 재수강 필요
           </span>
         </div>
         <div class="rmap-scroll">
@@ -2583,20 +2624,20 @@ function renderGradReq(state) {
 
   const roadmapHtml = makeRoadmapTable();
 
-  /* ?? 援먯뼇 ?댁닔 ?꾪솴 ?뚯씠釉??? */
+  /* ── 교양 이수 현황 테이블 ── */
   const makeLiberalTable = () => {
-    const HWAKDAE_AREAS = ['?몄뼱?섏꽭怨?, '?뚯뼇援먯쑁'];
+    const HWAKDAE_AREAS = ['언어의세계', '소양교육'];
 
-    // liberal_areas 留?(?대쫫 ??{courses, credits}) ??all_grad_reqs.json?먯꽌
+    // liberal_areas 맵 (이름 → {courses, credits}) — all_grad_reqs.json에서
     const liberalAreasMap = {};
     (req.liberal_areas || []).forEach(a => { liberalAreasMap[a.name] = a; });
 
-    // subtitle 湲곗??쇰줈 ?댁닔 怨쇰ぉ 李얘린 + liberal_areas 怨쇰ぉ紐?湲곗? 蹂댁셿
+    // subtitle 기준으로 이수 과목 찾기 + liberal_areas 과목명 기준 보완
     const findTakenByArea = (subtitle, areaName) => {
       const result = [];
       const seen = new Set();
 
-      // 1) subtitle 湲곗? (湲곗〈 諛⑹떇)
+      // 1) subtitle 기준 (기존 방식)
       for (const name of allTaken) {
         const c = _allCourses.find(x => x.name.trim().toLowerCase() === name && x.type === 'liberal' && x.subtitle === subtitle);
         if (c && !seen.has(c.name)) { seen.add(c.name); result.push({ ...c, status: 'done' }); }
@@ -2607,8 +2648,8 @@ function renderGradReq(state) {
         }
       }
 
-      // 2) liberal_areas 怨쇰ぉ紐?湲곗? 蹂댁셿 (subtitle???녿뒗 援ы삎 ?곗씠??而ㅻ쾭)
-      // baseName 湲곗??쇰줈 留ㅼ묶 ??愿꾪샇 ?ㅻ챸쨌?낆씠 ?ㅻⅨ 蹂?뺣룄 ?몄떇
+      // 2) liberal_areas 과목명 기준 보완 (subtitle이 없는 구형 데이터 커버)
+      // baseName 기준으로 매칭 → 괄호 설명·★이 다른 변형도 인식
       const areaInfo = liberalAreasMap[areaName];
       if (areaInfo) {
         const baseSet = new Set(areaInfo.courses.map(n => baseName(n)));
@@ -2632,7 +2673,7 @@ function renderGradReq(state) {
       return result;
     };
 
-    // subtitle 湲곗?留?(洹좏삎援먯뼇쨌?뺣?援먯뼇??
+    // subtitle 기준만 (균형교양·확대교양용)
     const findTakenBySubtitle = (subtitle) => {
       const result = [];
       const seen = new Set();
@@ -2651,18 +2692,18 @@ function renderGradReq(state) {
     const courseTag = (c) => {
       const retake = retakeSet.has(c.name.trim().toLowerCase());
       const cls = retake ? 'lib-tag retake' : c.status === 'inProgress' ? 'lib-tag prog' : 'lib-tag done';
-      const icon = retake ? '?봽' : c.status === 'inProgress' ? '' : '??;
-      return `<span class="${cls}">${icon} ${c.name}<span class="lib-tag-cr">${c.credits}?숈젏</span></span>`;
+      const icon = retake ? '🔄' : c.status === 'inProgress' ? '' : '✓';
+      return `<span class="${cls}">${icon} ${c.name}<span class="lib-tag-cr">${c.credits}학점</span></span>`;
     };
 
     const statusCell = (taken, required) => {
       if (required) {
-        return taken.length ? `<span class="rmap-status done-icon">??/span>` : `<span class="lib-required">?꾩닔</span>`;
+        return taken.length ? `<span class="rmap-status done-icon">✓</span>` : `<span class="lib-required">필수</span>`;
       }
-      return taken.length ? `<span class="rmap-status done-icon">??/span>` : `<span class="lib-optional">?먯쑉</span>`;
+      return taken.length ? `<span class="rmap-status done-icon">✓</span>` : `<span class="lib-optional">자율</span>`;
     };
 
-    // 湲곗큹援먯뼇 rows ??liberal_areas 怨쇰ぉ紐??뚰듃 ?ы븿
+    // 기초교양 rows — liberal_areas 과목명 힌트 포함
     const gichyoRows = REQUIRED_LIBERAL_GROUPS.map(g => {
       const areaInfo = liberalAreasMap[g.label];
       return {
@@ -2674,26 +2715,26 @@ function renderGradReq(state) {
       };
     });
 
-    // 洹좏삎援먯뼇 rows
+    // 균형교양 rows
     const gyunRows = REQUIRED_GYUNHYUNG_AREAS.map(area => ({
       area, minCr: null, taken: findTakenBySubtitle(area), required: true, hintCourses: []
     }));
 
-    // ?뺣?援먯뼇 rows
+    // 확대교양 rows
     const hwakRows = HWAKDAE_AREAS.map(area => ({
       area, minCr: null, taken: findTakenBySubtitle(area), required: false, hintCourses: []
     }));
 
     const renderRows = (rows, catLabel, catNote, rowspan) => rows.map((row, i) => {
       const hintHtml = (!row.taken.length && row.hintCourses.length)
-        ? `<div class="lib-hint-courses">?댁닔 媛?? ${row.hintCourses.map(n => `<span class="lib-hint-tag">${n}</span>`).join('')}</div>`
+        ? `<div class="lib-hint-courses">이수 가능: ${row.hintCourses.map(n => `<span class="lib-hint-tag">${n}</span>`).join('')}</div>`
         : '';
       return `
       <tr class="${row.taken.length ? 'lib-row-done' : 'lib-row'}">
         ${i === 0 ? `<td class="lib-cat-cell" rowspan="${rowspan}">${catLabel}${catNote ? `<br><small>${catNote}</small>` : ''}</td>` : ''}
-        <td class="lib-area-cell">${row.area}${row.minCr ? `<br><small class="lib-cr-hint">${row.minCr}?숈젏</small>` : ''}</td>
+        <td class="lib-area-cell">${row.area}${row.minCr ? `<br><small class="lib-cr-hint">${row.minCr}학점</small>` : ''}</td>
         <td class="lib-courses-cell">
-          ${row.taken.length ? row.taken.map(courseTag).join('') : '<span class="lib-empty">誘몄씠??/span>'}
+          ${row.taken.length ? row.taken.map(courseTag).join('') : '<span class="lib-empty">미이수</span>'}
           ${hintHtml}
         </td>
         <td class="lib-status-cell">${statusCell(row.taken, row.required)}</td>
@@ -2702,27 +2743,27 @@ function renderGradReq(state) {
 
     return `
       <div class="grad-section">
-        <div class="grad-section-title">援먯뼇 ?댁닔 ?꾪솴
+        <div class="grad-section-title">교양 이수 현황
           <span class="rmap-legend">
-            <span class="lib-tag done">???댁닔?꾨즺</span> &nbsp;
-            <span class="lib-tag prog">?대뒗以?/span> &nbsp;
-            <span class="lib-tag retake">?봽 ?ъ닔媛?/span>
+            <span class="lib-tag done">✓ 이수완료</span> &nbsp;
+            <span class="lib-tag prog">담는중</span> &nbsp;
+            <span class="lib-tag retake">🔄 재수강</span>
           </span>
         </div>
         <div class="rmap-scroll">
           <table class="lib-table">
             <thead>
               <tr>
-                <th class="lib-cat-th">援щ텇</th>
-                <th class="lib-area-th">?곸뿭</th>
-                <th class="lib-courses-th">?댁닔 怨쇰ぉ</th>
-                <th class="lib-status-th">?곹깭</th>
+                <th class="lib-cat-th">구분</th>
+                <th class="lib-area-th">영역</th>
+                <th class="lib-courses-th">이수 과목</th>
+                <th class="lib-status-th">상태</th>
               </tr>
             </thead>
             <tbody>
-              ${renderRows(gichyoRows, '湲곗큹援먯뼇', `${earnedGichyo}/${LIBERAL_REQ.湲곗큹援먯뼇}?숈젏`, gichyoRows.length)}
-              ${renderRows(gyunRows,   '洹좏삎援먯뼇', `${earnedGyunhyung}?숈젏`, gyunRows.length)}
-              ${renderRows(hwakRows,   '?뺣?援먯뼇', '?먯쑉?댁닔', hwakRows.length)}
+              ${renderRows(gichyoRows, '기초교양', `${earnedGichyo}/${LIBERAL_REQ.기초교양}학점`, gichyoRows.length)}
+              ${renderRows(gyunRows,   '균형교양', `${earnedGyunhyung}학점`, gyunRows.length)}
+              ${renderRows(hwakRows,   '확대교양', '자율이수', hwakRows.length)}
             </tbody>
           </table>
         </div>
@@ -2730,14 +2771,14 @@ function renderGradReq(state) {
     `;
   };
 
-  /* ?? ?숆낵 沅뚯옣 洹좏삎援먯뼇 ?댁닔 ?꾪솴 ?? */
+  /* ── 학과 권장 균형교양 이수 현황 ── */
   const makeRecommendedLiberalTable = () => {
     const recList = req.recommended_liberal || [];
     if (!recList.length) return '';
 
     const rows = recList.map(r => {
       const nameLower = baseName(r.name);
-      // ?댁닔 ?щ?: allTaken ?먮뒗 ?꾩옱 ?좏깮
+      // 이수 여부: allTaken 또는 현재 선택
       const doneName = Array.from(allTaken).find(n => baseName(n) === nameLower);
       const inProgressCourse = selected.find(c => baseName(c.name) === nameLower);
       const retake = doneName ? retakeSet.has(doneName) : false;
@@ -2745,14 +2786,14 @@ function renderGradReq(state) {
       const inProgress = !done && !retake && !!inProgressCourse;
 
       let statusHtml;
-      if (retake)       statusHtml = `<span class="lib-tag retake">?봽 ?ъ닔媛?/span>`;
-      else if (done)    statusHtml = `<span class="rmap-status done-icon">??/span>`;
-      else if (inProgress) statusHtml = `<span class="lib-tag prog">?대뒗以?/span>`;
-      else              statusHtml = `<span class="rec-lib-pending">誘몄씠??/span>`;
+      if (retake)       statusHtml = `<span class="lib-tag retake">🔄 재수강</span>`;
+      else if (done)    statusHtml = `<span class="rmap-status done-icon">✓</span>`;
+      else if (inProgress) statusHtml = `<span class="lib-tag prog">담는중</span>`;
+      else              statusHtml = `<span class="rec-lib-pending">미이수</span>`;
 
       return `
         <tr class="${done ? 'lib-row-done' : 'lib-row'}">
-          <td class="lib-area-cell">${r.name}<br><small class="lib-cr-hint">${r.credits}?숈젏</small></td>
+          <td class="lib-area-cell">${r.name}<br><small class="lib-cr-hint">${r.credits}학점</small></td>
           <td class="lib-area-cell rec-lib-area">${r.area}</td>
           <td class="lib-status-cell">${statusHtml}</td>
         </tr>`;
@@ -2766,22 +2807,22 @@ function renderGradReq(state) {
 
     return `
       <div class="grad-section">
-        <div class="grad-section-title">?숆낵 沅뚯옣 援먯뼇怨쇰ぉ
-          <span class="rec-lib-badge">${doneCount}/${recList.length} ?댁닔</span>
+        <div class="grad-section-title">학과 권장 교양과목
+          <span class="rec-lib-badge">${doneCount}/${recList.length} 이수</span>
         </div>
         <div class="rmap-scroll">
           <table class="lib-table">
             <thead>
               <tr>
-                <th class="lib-area-th">怨쇰ぉ紐?/th>
-                <th class="lib-area-th">洹좏삎援먯뼇 ?곸뿭</th>
-                <th class="lib-status-th">?곹깭</th>
+                <th class="lib-area-th">과목명</th>
+                <th class="lib-area-th">균형교양 영역</th>
+                <th class="lib-status-th">상태</th>
               </tr>
             </thead>
             <tbody>${rows.join('')}</tbody>
           </table>
         </div>
-        <small class="rec-lib-note">?뱦 ?숆낵?먯꽌 洹좏삎援먯뼇?쇰줈 沅뚯옣?섎뒗 怨쇰ぉ?낅땲?? ?먮룞 ?쒓컙???앹꽦 ???곗꽑 ?ы븿?⑸땲??</small>
+        <small class="rec-lib-note">📌 학과에서 균형교양으로 권장하는 과목입니다. 자동 시간표 생성 시 우선 포함됩니다.</small>
       </div>
     `;
   };
@@ -2807,8 +2848,8 @@ function renderGradReq(state) {
     return `
       <div class="grad-bar-block">
         <div class="grad-bar-header">
-          <span class="grad-bar-label">${done ? '??' : ''}${label}</span>
-          <span class="grad-bar-val ${done ? 'done' : ''}">${earned}/${req}?숈젏</span>
+          <span class="grad-bar-label">${done ? '✓ ' : ''}${label}</span>
+          <span class="grad-bar-val ${done ? 'done' : ''}">${earned}/${req}학점</span>
         </div>
         <div class="grad-bar-wrap">
           <div class="grad-bar" style="width:${pct}%;background:${color}"></div>
@@ -2818,21 +2859,21 @@ function renderGradReq(state) {
     `;
   };
 
-  // 珥??댁닔 吏꾪뻾
+  // 총 이수 진행
   const totalPct = Math.min(100, Math.round(earnedTotal / totalReq * 100));
 
   content.innerHTML = `
     <div class="grad-total-row">
-      <div class="grad-total-label">?꾩껜 ?댁닔 吏꾪뻾瑜?/div>
+      <div class="grad-total-label">전체 이수 진행률</div>
       <div class="grad-total-bar-wrap">
         <div class="grad-total-bar" style="width:${totalPct}%"></div>
       </div>
-      <div class="grad-total-val">${earnedTotal} / ${totalReq}?숈젏 (${totalPct}%)</div>
+      <div class="grad-total-val">${earnedTotal} / ${totalReq}학점 (${totalPct}%)</div>
     </div>
 
     <div class="grad-bars-grid">
-      ${makeBar('援먯뼇', earnedLiberal, LIBERAL_REQ.湲곗큹援먯뼇 + LIBERAL_REQ.洹좏삎援먯뼇, '#3b6bdc', null)}
-      ${makeBar('?꾧났', earnedMajor,   majReq, '#2a7a1a', subMaj)}
+      ${makeBar('교양', earnedLiberal, LIBERAL_REQ.기초교양 + LIBERAL_REQ.균형교양, '#3b6bdc', null)}
+      ${makeBar('전공', earnedMajor,   majReq, '#2a7a1a', subMaj)}
     </div>
 
     ${roadmapHtml}
@@ -2840,13 +2881,14 @@ function renderGradReq(state) {
     ${makeRecommendedLiberalTable()}
 
     <div class="grad-note">
-      <small>* ?섍컯?꾨즺 怨쇰ぉ怨??꾩옱 ?댁? 媛뺤쓽 湲곗??쇰줈 怨꾩궛?⑸땲?? ?ㅼ젣 ?댁닔 ?숈젏? ?숆탳 ?숈궗?쒖뒪?쒖쓣 ?뺤씤?섏꽭??</small>
+      <small>* 수강완료 과목과 현재 담은 강의 기준으로 계산됩니다. 실제 이수 학점은 학교 학사시스템을 확인하세요.</small>
     </div>
   `;
 }
 
 /* ============================================================
-   異붿쿇 ?쒖쇅 怨쇰ぉ 愿由?   ============================================================ */
+   추천 제외 과목 관리
+   ============================================================ */
 function setupExcludedCourses(state) {
   const section    = document.getElementById('excludedSection');
   const toggle     = document.getElementById('excludedToggle');
@@ -2862,16 +2904,16 @@ function setupExcludedCourses(state) {
 
   const renderList = () => {
     const list = state.excludedCourses;
-    if (countEl) countEl.textContent = list.length ? `${list.length}怨쇰ぉ` : '';
+    if (countEl) countEl.textContent = list.length ? `${list.length}과목` : '';
     if (!listEl) return;
     if (!list.length) {
-      listEl.innerHTML = '<span class="completed-empty">?쒖쇅??怨쇰ぉ???놁뒿?덈떎.</span>';
+      listEl.innerHTML = '<span class="completed-empty">제외할 과목이 없습니다.</span>';
       return;
     }
     listEl.innerHTML = list.map((name, i) => `
       <span class="completed-tag excluded-tag">
         ${name}
-        <button class="completed-tag-del" data-idx="${i}" type="button" title="??젣">횞</button>
+        <button class="completed-tag-del" data-idx="${i}" type="button" title="삭제">×</button>
       </span>
     `).join('');
     listEl.querySelectorAll('.completed-tag-del').forEach(btn => {
@@ -2886,7 +2928,7 @@ function setupExcludedCourses(state) {
   toggle?.addEventListener('click', () => {
     const open = !body.classList.contains('hidden');
     body.classList.toggle('hidden', open);
-    if (chevron) chevron.textContent = open ? '?? : '??;
+    if (chevron) chevron.textContent = open ? '▶' : '▼';
   });
 
   let debounceTimer;
@@ -2904,9 +2946,9 @@ function setupExcludedCourses(state) {
         <div class="completed-sug-item" data-name="${esc(c.name)}">
           <span class="completed-sug-name">${c.name}</span>
           <span class="completed-sug-meta">${
-            c.type === 'major' ? '?꾧났' :
-            c.type === '?먯쑀?좏깮' ? '?먯쑀?좏깮' : '援먯뼇'
-          } 쨌 ${c.credits}?숈젏</span>
+            c.type === 'major' ? '전공' :
+            c.type === '자유선택' ? '자유선택' : '교양'
+          } · ${c.credits}학점</span>
         </div>
       `).join('');
       suggestions.querySelectorAll('.completed-sug-item').forEach(item => {
@@ -2932,7 +2974,7 @@ function setupExcludedCourses(state) {
 
   document.getElementById('excludedClearAll')?.addEventListener('click', () => {
     if (!state.excludedCourses.length) return;
-    if (confirm(`?쒖쇅 怨쇰ぉ ${state.excludedCourses.length}媛쒕? 紐⑤몢 ??젣?좉퉴??`)) {
+    if (confirm(`제외 과목 ${state.excludedCourses.length}개를 모두 삭제할까요?`)) {
       state.excludedCourses = [];
       saveState(state);
       renderList();
@@ -2943,7 +2985,8 @@ function setupExcludedCourses(state) {
 }
 
 /* ============================================================
-   瑗??ｊ퀬 ?띠? 媛뺤쓽 (pinnedCourses) 愿由?   ============================================================ */
+   꼭 듣고 싶은 강의 (pinnedCourses) 관리
+   ============================================================ */
 function setupPinnedCourses(state) {
   const section    = document.getElementById('pinnedSection');
   const toggle     = document.getElementById('pinnedToggle');
@@ -2959,22 +3002,22 @@ function setupPinnedCourses(state) {
 
   const renderList = () => {
     const list = state.pinnedCourses;
-    if (countEl) countEl.textContent = list.length ? `${list.length}怨쇰ぉ` : '';
+    if (countEl) countEl.textContent = list.length ? `${list.length}과목` : '';
     if (!listEl) return;
     if (!list.length) {
-      listEl.innerHTML = '<span class="completed-empty">吏?뺣맂 怨쇰ぉ???놁뒿?덈떎.</span>';
+      listEl.innerHTML = '<span class="completed-empty">지정된 과목이 없습니다.</span>';
       return;
     }
     listEl.innerHTML = list.map((name, i) => {
       const course = _allCourses.find(c => c.name === name);
       const slotText = course
-        ? (course.slots || []).map(s => `${DAY_NAMES[s.day]} ${s.start}??{s.end}`).join(' / ')
+        ? (course.slots || []).map(s => `${DAY_NAMES[s.day]} ${s.start}–${s.end}`).join(' / ')
         : '';
       return `
         <span class="completed-tag pinned-tag">
-          ?뱦 ${name}
+          📌 ${name}
           ${slotText ? `<span class="pinned-slot">${slotText}</span>` : ''}
-          <button class="completed-tag-del" data-idx="${i}" type="button" title="??젣">횞</button>
+          <button class="completed-tag-del" data-idx="${i}" type="button" title="삭제">×</button>
         </span>
       `;
     }).join('');
@@ -2987,14 +3030,14 @@ function setupPinnedCourses(state) {
     });
   };
 
-  // ?⑤꼸 ?좉?
+  // 패널 토글
   toggle?.addEventListener('click', () => {
     const open = !body.classList.contains('hidden');
     body.classList.toggle('hidden', open);
-    if (chevron) chevron.textContent = open ? '?? : '??;
+    if (chevron) chevron.textContent = open ? '▶' : '▼';
   });
 
-  // 寃??+ ?먮룞?꾩꽦
+  // 검색 + 자동완성
   let debounceTimer;
   searchInp?.addEventListener('input', () => {
     clearTimeout(debounceTimer);
@@ -3007,11 +3050,11 @@ function setupPinnedCourses(state) {
         .slice(0, 8);
       if (!matches.length) { suggestions.innerHTML = ''; return; }
       suggestions.innerHTML = matches.map(c => {
-        const slotText = (c.slots || []).map(s => `${DAY_NAMES[s.day]} ${s.start}??{s.end}`).join(' / ');
+        const slotText = (c.slots || []).map(s => `${DAY_NAMES[s.day]} ${s.start}–${s.end}`).join(' / ');
         return `
           <div class="completed-sug-item" data-name="${esc(c.name)}">
             <span class="completed-sug-name">${c.name}</span>
-            <span class="completed-sug-meta">${c.type === 'major' ? '?꾧났' : c.type === '?먯쑀?좏깮' ? '?먯쑀?좏깮' : '援먯뼇'} 쨌 ${c.credits}?숈젏 쨌 ${slotText}</span>
+            <span class="completed-sug-meta">${c.type === 'major' ? '전공' : c.type === '자유선택' ? '자유선택' : '교양'} · ${c.credits}학점 · ${slotText}</span>
           </div>
         `;
       }).join('');
@@ -3022,9 +3065,10 @@ function setupPinnedCourses(state) {
             state.pinnedCourses.push(name);
             saveState(state);
             renderList();
-            // ?⑤꼸???ロ? ?덉쑝硫??댁뼱以?            if (body.classList.contains('hidden')) {
+            // 패널이 닫혀 있으면 열어줌
+            if (body.classList.contains('hidden')) {
               body.classList.remove('hidden');
-              if (chevron) chevron.textContent = '??;
+              if (chevron) chevron.textContent = '▼';
             }
           }
           searchInp.value = '';
@@ -3034,17 +3078,17 @@ function setupPinnedCourses(state) {
     }, 200);
   });
 
-  // ?몃? ?대┃ ???먮룞?꾩꽦 ?リ린
+  // 외부 클릭 시 자동완성 닫기
   document.addEventListener('click', (e) => {
     if (!suggestions?.contains(e.target) && e.target !== searchInp) {
       if (suggestions) suggestions.innerHTML = '';
     }
   });
 
-  // ?꾩껜 ??젣
+  // 전체 삭제
   document.getElementById('pinnedClearAll')?.addEventListener('click', () => {
     if (!state.pinnedCourses.length) return;
-    if (confirm(`?꾩닔 ?ы븿 怨쇰ぉ ${state.pinnedCourses.length}媛쒕? 紐⑤몢 ??젣?좉퉴??`)) {
+    if (confirm(`필수 포함 과목 ${state.pinnedCourses.length}개를 모두 삭제할까요?`)) {
       state.pinnedCourses = [];
       saveState(state);
       renderList();
@@ -3055,7 +3099,8 @@ function setupPinnedCourses(state) {
 }
 
 /* ============================================================
-   ?섍컯 ?꾨즺 怨쇰ぉ 愿由?   ============================================================ */
+   수강 완료 과목 관리
+   ============================================================ */
 function setupCompletedCourses(state) {
   const section    = document.getElementById('completedSection');
   const toggle     = document.getElementById('completedToggle');
@@ -3071,16 +3116,16 @@ function setupCompletedCourses(state) {
 
   const renderList = () => {
     const list = state.completedCourses;
-    if (countEl) countEl.textContent = list.length ? `${list.length}怨쇰ぉ` : '';
+    if (countEl) countEl.textContent = list.length ? `${list.length}과목` : '';
     if (!listEl) return;
     if (!list.length) {
-      listEl.innerHTML = '<span class="completed-empty">?꾩쭅 異붽???怨쇰ぉ???놁뒿?덈떎.</span>';
+      listEl.innerHTML = '<span class="completed-empty">아직 추가된 과목이 없습니다.</span>';
       return;
     }
     listEl.innerHTML = list.map((name, i) => `
       <span class="completed-tag">
         ${name}
-        <button class="completed-tag-del" data-idx="${i}" type="button" title="??젣">횞</button>
+        <button class="completed-tag-del" data-idx="${i}" type="button" title="삭제">×</button>
       </span>
     `).join('');
     listEl.querySelectorAll('.completed-tag-del').forEach(btn => {
@@ -3097,7 +3142,7 @@ function setupCompletedCourses(state) {
   toggle?.addEventListener('click', () => {
     const open = !body.classList.contains('hidden');
     body.classList.toggle('hidden', open);
-    if (chevron) chevron.textContent = open ? '?? : '??;
+    if (chevron) chevron.textContent = open ? '▶' : '▼';
   });
 
   // Search + suggestion
@@ -3115,7 +3160,7 @@ function setupCompletedCourses(state) {
       suggestions.innerHTML = matches.map(c => `
         <div class="completed-sug-item" data-name="${c.name}">
           <span class="completed-sug-name">${c.name}</span>
-          <span class="completed-sug-meta">${c.type === 'major' ? '?꾧났' : c.type === '?먯쑀?좏깮' ? '?먯쑀?좏깮' : '援먯뼇'} 쨌 ${c.credits}?숈젏</span>
+          <span class="completed-sug-meta">${c.type === 'major' ? '전공' : c.type === '자유선택' ? '자유선택' : '교양'} · ${c.credits}학점</span>
         </div>
       `).join('');
       suggestions.querySelectorAll('.completed-sug-item').forEach(item => {
@@ -3144,7 +3189,7 @@ function setupCompletedCourses(state) {
   // Clear all button
   document.getElementById('completedClearAll')?.addEventListener('click', () => {
     if (!state.completedCourses.length) return;
-    if (confirm(`?섍컯 ?꾨즺 怨쇰ぉ ${state.completedCourses.length}媛쒕? 紐⑤몢 ??젣?좉퉴??`)) {
+    if (confirm(`수강 완료 과목 ${state.completedCourses.length}개를 모두 삭제할까요?`)) {
       state.completedCourses = [];
       saveState(state);
       renderList();
@@ -3155,17 +3200,17 @@ function setupCompletedCourses(state) {
 }
 
 function setupAutoGen(state) {
-  // ?⑤꼸 ?좉?
+  // 패널 토글
   const toggle  = document.getElementById('autoGenToggle');
   const body    = document.getElementById('autoGenBody');
   const chevron = document.getElementById('autoGenChevron');
   toggle?.addEventListener('click', () => {
     const open = !body.classList.contains('hidden');
     body.classList.toggle('hidden', open);
-    chevron.textContent = open ? '?? : '??;
+    chevron.textContent = open ? '▶' : '▼';
   });
 
-  // ?숇뀈 pills
+  // 학년 pills
   const gradePills = document.getElementById('gradePills');
   gradePills?.querySelectorAll('.ag-pill').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -3174,7 +3219,7 @@ function setupAutoGen(state) {
       _autoGrade = Number(btn.dataset.grade);
     });
   });
-  // ?숇쾲?먯꽌 ?낇븰?꾨룄 ???숇뀈 異붿젙
+  // 학번에서 입학년도 → 학년 추정
   const admYear = getAdmissionYear(state.studentId);
   if (admYear) {
     const guessGrade = Math.min(4, Math.max(1, new Date().getFullYear() - admYear + 1));
@@ -3184,29 +3229,29 @@ function setupAutoGen(state) {
     });
   }
 
-  // ?ㅽ???pills (蹂듭닔 ?좏깮)
+  // 스타일 pills (복수 선택)
   const descRow = document.getElementById('styleDescRow');
   document.getElementById('stylePills')?.querySelectorAll('.ag-pill').forEach(btn => {
     btn.addEventListener('click', () => {
       const s = btn.dataset.style;
-      // cluster ??spread ?곹샇 諛곗젣
+      // cluster ↔ spread 상호 배제
       if (s === 'cluster' && _autoPrefs.has('spread'))   _autoPrefs.delete('spread');
       if (s === 'spread'  && _autoPrefs.has('cluster'))  _autoPrefs.delete('cluster');
-      // major_first ??liberal_first ?곹샇 諛곗젣
+      // major_first ↔ liberal_first 상호 배제
       if (s === 'major_first'   && _autoPrefs.has('liberal_first'))     _autoPrefs.delete('liberal_first');
       if (s === 'liberal_first' && _autoPrefs.has('major_first'))       _autoPrefs.delete('major_first');
-      // liberal_req_first ??liberal_first ?곹샇 諛곗젣
+      // liberal_req_first ↔ liberal_first 상호 배제
       if (s === 'liberal_req_first' && _autoPrefs.has('liberal_first')) _autoPrefs.delete('liberal_first');
       if (s === 'liberal_first' && _autoPrefs.has('liberal_req_first')) _autoPrefs.delete('liberal_req_first');
 
       if (_autoPrefs.has(s)) _autoPrefs.delete(s);
       else                   _autoPrefs.add(s);
 
-      // 踰꾪듉 ?곹깭 ?낅뜲?댄듃
+      // 버튼 상태 업데이트
       document.getElementById('stylePills').querySelectorAll('.ag-pill').forEach(b => {
         b.classList.toggle('active', _autoPrefs.has(b.dataset.style));
       });
-      // ?ㅻ챸 ?낅뜲?댄듃
+      // 설명 업데이트
       if (descRow) {
         descRow.innerHTML = [..._autoPrefs].map(p =>
           `<span class="style-desc-item">${STYLE_META[p]?.desc || ''}</span>`
@@ -3215,7 +3260,7 @@ function setupAutoGen(state) {
     });
   });
 
-  // ?ъ닔媛??덉슜 ?좉? (?④꺼吏?怨좉툒 ?듭뀡)
+  // 재수강 허용 토글 (숨겨진 고급 옵션)
   const retakeToggle = document.getElementById('allowRetake');
   if (retakeToggle) {
     retakeToggle.checked = state.allowRetake || false;
@@ -3227,22 +3272,22 @@ function setupAutoGen(state) {
 
   document.getElementById('maxCredits')?.addEventListener('change', () => {});
 
-  // ?앹꽦 踰꾪듉
+  // 생성 버튼
   document.getElementById('autoGenBtn')?.addEventListener('click', () => {
     if (!_autoGrade) {
-      alert('癒쇱? ?꾩옱 ?숇뀈???좏깮??二쇱꽭??');
+      alert('먼저 현재 학년을 선택해 주세요.');
       return;
     }
     if (!state.department) {
-      alert('?쒖옉?섍린 ?꾩뿉 ?ㅼ젙?먯꽌 ?숆낵瑜?吏?뺥빐 二쇱꽭??');
+      alert('시작하기 전에 설정에서 학과를 지정해 주세요.');
       return;
     }
 
     const btn = document.getElementById('autoGenBtn');
-    btn.textContent = '?앹꽦 以묅?;
+    btn.textContent = '생성 중…';
     btn.disabled = true;
 
-    // ?쎄컙 delay 以섏꽌 UI ?낅뜲?댄듃 ???앹꽦
+    // 약간 delay 줘서 UI 업데이트 후 생성
     setTimeout(() => {
       const options = {
         grade:       _autoGrade,
@@ -3253,15 +3298,16 @@ function setupAutoGen(state) {
       };
 
       try {
-        // A: 寃곗젙濡좎쟻 理쒖쟻 / B쨌C: 留??ㅽ뻾留덈떎 ?ㅻⅨ seed ???ㅻⅨ 援먯뼇 議고빀
+        // A: 결정론적 최적 / B·C: 매 실행마다 다른 seed → 다른 교양 조합
         const now = Date.now();
         const seedB = (now % 65521) + 1;          // 1~65521
-        const seedC = ((now >> 5) % 65521) + 101; // 101~65621 (B? 援щ텇)
+        const seedC = ((now >> 5) % 65521) + 101; // 101~65621 (B와 구분)
         const v0 = generateVariant(state, { ...options, shuffleSeed: 0 });
         const v1 = generateVariant(state, { ...options, shuffleSeed: seedB });
         const v2 = generateVariant(state, { ...options, shuffleSeed: seedC });
 
-        // 以묐났 泥댄겕: A=B硫?B?먯꽌 A 怨쇰ぉ ?쇰? 媛뺤젣 ?쒖쇅 ???ъ깮??        const scheduleKey = s => s.map(c => c.name + (c.section||'')).sort().join('|');
+        // 중복 체크: A=B면 B에서 A 과목 일부 강제 제외 후 재생성
+        const scheduleKey = s => s.map(c => c.name + (c.section||'')).sort().join('|');
         const k0 = scheduleKey(v0), k1 = scheduleKey(v1), k2 = scheduleKey(v2);
 
         const forceExclude = (base, seed) => {
@@ -3279,21 +3325,21 @@ function setupAutoGen(state) {
           { schedule: k2 === k0 || k2 === k1 ? forceExclude(v0, seedC + 37) : v2 }
         ];
 
-        // 湲대컯??寃쎄퀬 怨꾩궛
+        // 긴박도 경고 계산
         const _comp    = new Set((state.completedCourses || []).map(n => n.trim().toLowerCase()));
         const _past    = getPastTimetableCourseNames(state);
         const _isDone  = c => _comp.has(c.name.trim().toLowerCase()) || _past.has(c.name.trim().toLowerCase());
         const _doneG   = REQUIRED_LIBERAL_GROUPS.filter(g => _allCourses.some(c => getRequiredGroup(c) === g.label && _isDone(c))).length;
-        const _doneA   = REQUIRED_GYUNHYUNG_AREAS.filter(a => _allCourses.some(c => c.category === '洹좏삎援먯뼇' && c.subtitle === a && _isDone(c))).length;
+        const _doneA   = REQUIRED_GYUNHYUNG_AREAS.filter(a => _allCourses.some(c => c.category === '균형교양' && c.subtitle === a && _isDone(c))).length;
         const _unfull  = (REQUIRED_LIBERAL_GROUPS.length - _doneG) + (REQUIRED_GYUNHYUNG_AREAS.length - _doneA);
-        const _semOrd  = ((_autoGrade || 1) - 1) * 2 + (['2?숆린','寃⑥슱?숆린'].includes(state.semester) ? 2 : 1);
+        const _semOrd  = ((_autoGrade || 1) - 1) * 2 + (['2학기','겨울학기'].includes(state.semester) ? 2 : 1);
         const _remain  = Math.max(1, 8 - _semOrd);
         const _urgency = _unfull / _remain;
         renderUrgencyWarning(_urgency, _unfull, _remain, _autoPrefs.has('liberal_req_first'));
 
         renderAutoResults(variants, state);
       } finally {
-        btn.textContent = '???쒓컙???먮룞 ?앹꽦';
+        btn.textContent = '✨ 시간표 자동 생성';
         btn.disabled = false;
       }
     }, 60);
@@ -3327,39 +3373,39 @@ async function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 /* ============================================================
-   ?꾩튂 湲곕컲 ?대룞 ?뺣낫 紐⑤뱢
+   위치 기반 이동 정보 모듈
    ============================================================ */
 
-/* ?? 李쎌썝? 嫄대Ъ 醫뚰몴 ?뚯씠釉??? */
+/* ── 창원대 건물 좌표 테이블 ── */
 const BUILDING_COORDS = {
-  '11':  { lat: 35.2463093, lng: 128.6921212, name: '11?멸?' },
-  '22':  { lat: 35.2474355, lng: 128.6921226, name: '22?멸?' },
-  '32':  { lat: 35.2454557, lng: 128.6950178, name: '32?멸?' },
-  '33':  { lat: 35.2443687, lng: 128.6932992, name: '33?멸?' },
-  '34':  { lat: 35.2459461, lng: 128.6948307, name: '34?멸?' },
-  '35':  { lat: 35.2448000, lng: 128.6943000, name: '35?멸?' },
-  '41':  { lat: 35.2443812, lng: 128.6926772, name: '41?멸?' },
-  '4??: { lat: 35.2443812, lng: 128.6926772, name: '41?멸?' },
-  '50':  { lat: 35.2419925, lng: 128.6982163, name: '50?멸?' },
-  '52':  { lat: 35.2416249, lng: 128.6993138, name: '52?멸?' },
-  '53':  { lat: 35.2413921, lng: 128.6977360, name: '53?멸?' },
-  '54':  { lat: 35.2411474, lng: 128.6987354, name: '54?멸?' },
-  '55':  { lat: 35.2413997, lng: 128.6958770, name: '55?멸?' },
-  '61':  { lat: 35.2451384, lng: 128.6962653, name: '61?멸?' },
-  '62':  { lat: 35.2446674, lng: 128.6966943, name: '62?멸?' },
-  '63':  { lat: 35.2441996, lng: 128.6962994, name: '63?멸?' },
-  '64':  { lat: 35.2456716, lng: 128.6958435, name: '64?멸?' },
-  '81':  { lat: 35.2428419, lng: 128.6979290, name: '81?멸?' },
-  '8??: { lat: 35.2428419, lng: 128.6979290, name: '81?멸?' },
-  '85':  { lat: 35.2408562, lng: 128.6973639, name: '85?멸?' },
-  '86':  { lat: 35.2477478, lng: 128.6947957, name: '86?멸?' },
-  '98':  { lat: 35.2419937, lng: 128.6942744, name: '98?멸?' },
-  'B21': { lat: 35.2447500, lng: 128.6941000, name: 'B21?멸?' },
-  'N98': { lat: 35.2418000, lng: 128.6940000, name: 'N98?멸?' },
-  'T98': { lat: 35.2421000, lng: 128.6944000, name: 'T98?멸?' },
+  '11':  { lat: 35.2463093, lng: 128.6921212, name: '11호관' },
+  '22':  { lat: 35.2474355, lng: 128.6921226, name: '22호관' },
+  '32':  { lat: 35.2454557, lng: 128.6950178, name: '32호관' },
+  '33':  { lat: 35.2443687, lng: 128.6932992, name: '33호관' },
+  '34':  { lat: 35.2459461, lng: 128.6948307, name: '34호관' },
+  '35':  { lat: 35.2448000, lng: 128.6943000, name: '35호관' },
+  '41':  { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
+  '4동': { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
+  '50':  { lat: 35.2419925, lng: 128.6982163, name: '50호관' },
+  '52':  { lat: 35.2416249, lng: 128.6993138, name: '52호관' },
+  '53':  { lat: 35.2413921, lng: 128.6977360, name: '53호관' },
+  '54':  { lat: 35.2411474, lng: 128.6987354, name: '54호관' },
+  '55':  { lat: 35.2413997, lng: 128.6958770, name: '55호관' },
+  '61':  { lat: 35.2451384, lng: 128.6962653, name: '61호관' },
+  '62':  { lat: 35.2446674, lng: 128.6966943, name: '62호관' },
+  '63':  { lat: 35.2441996, lng: 128.6962994, name: '63호관' },
+  '64':  { lat: 35.2456716, lng: 128.6958435, name: '64호관' },
+  '81':  { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
+  '8동': { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
+  '85':  { lat: 35.2408562, lng: 128.6973639, name: '85호관' },
+  '86':  { lat: 35.2477478, lng: 128.6947957, name: '86호관' },
+  '98':  { lat: 35.2419937, lng: 128.6942744, name: '98호관' },
+  'B21': { lat: 35.2447500, lng: 128.6941000, name: 'B21호관' },
+  'N98': { lat: 35.2418000, lng: 128.6940000, name: 'N98호관' },
+  'T98': { lat: 35.2421000, lng: 128.6944000, name: 'T98호관' },
 };
 
-/* ?? 媛뺤쓽??肄붾뱶 ??嫄대Ъ 踰덊샇 異붿텧 ?? */
+/* ── 강의실 코드 → 건물 번호 추출 ── */
 function getRoomBuilding(room) {
   if (!room || room === '99999') return null;
   const m5   = room.match(/^(\d{2})\d{3}(-\d)?$/);   if (m5)   return m5[1];
@@ -3368,6 +3414,204 @@ function getRoomBuilding(room) {
   return null;
 }
 
-/* ── 지도 상수 (OSM / Leaflet) ── */
-const OSM_TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const OSM_ATTR = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+/* ── Haversine 직선거리 (m) ── */
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000, toR = x => x * Math.PI / 180;
+  const dLat = toR(lat2 - lat1), dLng = toR(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toR(lat1))*Math.cos(toR(lat2))*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+/* ── 직선거리 → 도보 분 (4.5km/h, 우회계수 1.3) ── */
+function walkingMinutes(distM) {
+  return Math.ceil(distM * 1.3 / (4500 / 60));
+}
+
+/* ── 연강 이동 쌍 탐지 ── */
+function getConsecutivePairs(schedule) {
+  const pairs = [];
+  for (let day = 0; day < 5; day++) {
+    const slots = [];
+    schedule.forEach(course => {
+      (course.slots || []).forEach(s => {
+        if (s.day !== day) return;
+        const bld = getRoomBuilding(s.room);
+        slots.push({ course, start: timeToMin(s.start), end: timeToMin(s.end), room: s.room, bld });
+      });
+    });
+    if (slots.length < 2) continue;
+    slots.sort((a, b) => a.start - b.start);
+    for (let i = 0; i < slots.length - 1; i++) {
+      const a = slots[i], b = slots[i+1];
+      const gap = b.start - a.end;
+      if (gap < 0 || gap > 60) continue;
+      if (a.bld && b.bld && a.bld === b.bld) continue; // 같은 건물이면 패스
+      let distM = null, walkMin = null;
+      const cA = a.bld ? BUILDING_COORDS[a.bld] : null;
+      const cB = b.bld ? BUILDING_COORDS[b.bld] : null;
+      if (cA && cB) { distM = haversineDistance(cA.lat, cA.lng, cB.lat, cB.lng); walkMin = walkingMinutes(distM); }
+      pairs.push({ day, courseA: a.course, courseB: b.course, roomA: a.room, roomB: b.room,
+                   bldA: a.bld, bldB: b.bld, endA: a.end, startB: b.start, gapMin: gap, distM, walkMin });
+    }
+  }
+  return pairs;
+}
+
+/* ══════════════════════════════════════════
+   지도 모듈 (Leaflet + OpenStreetMap)
+   eval 없음 → CSP 문제 없음
+   ══════════════════════════════════════════ */
+
+const DAY_COLORS   = ['#e53e3e','#dd6b20','#38a169','#3182ce','#805ad5'];
+const DAY_NAMES_KR = ['월','화','수','목','금'];
+const OSM_TILE     = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTR     = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+/* ── 이동 지도 모달 ── */
+let _locModal    = null;
+let _leafletMap  = null;
+let _leafletPoly = [];   // Leaflet Polyline 객체 배열
+
+function showLocationModal(schedule, label) {
+  closeLocationModal();
+  const pairs = getConsecutivePairs(schedule);
+  const usedBlds = new Set();
+  schedule.forEach(c => (c.slots||[]).forEach(s => {
+    const b = getRoomBuilding(s.room);
+    if (b && BUILDING_COORDS[b]) usedBlds.add(b);
+  }));
+
+  const pairsHtml = pairs.length ? pairs.map((p, idx) => {
+    const nA = p.bldA ? (BUILDING_COORDS[p.bldA]?.name || p.bldA) : p.roomA;
+    const nB = p.bldB ? (BUILDING_COORDS[p.bldB]?.name || p.bldB) : p.roomB;
+    const distText = p.distM !== null
+      ? (p.distM < 1000 ? Math.round(p.distM)+'m' : (p.distM/1000).toFixed(1)+'km') : '거리 미확인';
+    const urgCls = p.walkMin === null ? '' : p.walkMin > p.gapMin ? 'move-urgent' : p.walkMin > p.gapMin*0.7 ? 'move-tight' : 'move-ok';
+    const warn = p.walkMin !== null && p.walkMin > p.gapMin ? ' ⚠' : '';
+    return `
+      <div class="move-pair" data-pair-idx="${idx}" style="border-left:3px solid ${DAY_COLORS[p.day]}">
+        <div class="move-pair-top">
+          <span class="move-day-badge" style="background:${DAY_COLORS[p.day]}">${DAY_NAMES_KR[p.day]}요일</span>
+          <span class="move-courses">${p.courseA.name} → ${p.courseB.name}</span>
+        </div>
+        <div class="move-route">
+          <span class="move-bld">${nA}</span>
+          <span class="move-arrow">→</span>
+          <span class="move-bld">${nB}</span>
+        </div>
+        <div class="move-meta">
+          <span class="move-gap">이동 가능 시간 <b>${p.gapMin}분</b></span>
+          <span class="move-dist ${urgCls}">${distText} · 약 ${p.walkMin ?? '?'}분${warn}</span>
+        </div>
+      </div>`;
+  }).join('') : '<div class="move-none">연강 이동 구간이 없습니다 👍</div>';
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'loc-backdrop';
+  const modal = document.createElement('div');
+  modal.className = 'loc-modal';
+  modal.innerHTML = `
+    <div class="loc-header">
+      <h3>🗺 이동 지도 — ${label}</h3>
+      <button class="loc-close" type="button">✕</button>
+    </div>
+    <div class="loc-body">
+      <div class="kakao-map-wrap">
+        <div id="locMapEl" class="kakao-map-el"></div>
+      </div>
+      <div class="move-list">
+        <p class="move-list-hint">구간을 클릭하면 지도에서 강조됩니다</p>
+        ${pairsHtml}
+      </div>
+    </div>`;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+  _locModal = modal;
+
+  modal.querySelector('.loc-close').addEventListener('click', closeLocationModal);
+  backdrop.addEventListener('click', closeLocationModal);
+
+  modal.querySelectorAll('.move-pair').forEach(row => {
+    row.addEventListener('click', () => {
+      const idx = Number(row.dataset.pairIdx);
+      highlightPair(idx, pairs);
+      modal.querySelectorAll('.move-pair').forEach(r => r.classList.remove('active'));
+      row.classList.add('active');
+    });
+  });
+
+  // Leaflet 초기화 — 다음 프레임에 컨테이너 크기 확정 후 실행
+  // 모달 애니메이션이 끝난 뒤 초기화해야 컨테이너 크기가 잡힘
+  setTimeout(() => initLeafletMap('locMapEl', usedBlds, pairs, true), 120);
+}
+
+function closeLocationModal() {
+  if (_leafletMap) { _leafletMap.remove(); _leafletMap = null; }
+  _leafletPoly = [];
+  _locModal?.remove(); _locModal = null;
+  document.querySelector('.loc-backdrop')?.remove();
+}
+
+/* ── Leaflet 지도 초기화 (공통) ── */
+function initLeafletMap(elId, usedBlds, pairs, storePoly) {
+  const el = document.getElementById(elId);
+  if (!el || typeof L === 'undefined') return null;
+
+  // 기본 센터 (창원대 캠퍼스 중심)
+  const map = L.map(el, { zoomControl: true }).setView([35.2440, 128.6958], 16);
+  L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
+
+  // 컨테이너 크기 재계산 (모달 안 렌더링 시 필수)
+  map.invalidateSize();
+
+  const allLatLngs = [];
+
+  // 건물 마커
+  usedBlds.forEach(bld => {
+    const c = BUILDING_COORDS[bld]; if (!c) return;
+    const ll = [c.lat, c.lng];
+    allLatLngs.push(ll);
+    L.marker(ll)
+      .bindPopup(`<b>${c.name}</b>`, { closeButton: false, autoClose: false, closeOnClick: false })
+      .addTo(map)
+      .openPopup();
+  });
+
+  // 경로 폴리라인
+  const polylines = [];
+  pairs.forEach(p => {
+    const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
+    const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
+    if (!cA || !cB) { polylines.push(null); return; }
+    const pl = L.polyline(
+      [[cA.lat, cA.lng], [cB.lat, cB.lng]],
+      { color: DAY_COLORS[p.day], weight: 5, opacity: 0.85, dashArray: '10 6' }
+    ).addTo(map);
+    polylines.push(pl);
+    allLatLngs.push([cA.lat, cA.lng], [cB.lat, cB.lng]);
+  });
+
+  // 모든 마커/경로가 보이도록 자동 줌
+  if (allLatLngs.length > 0) {
+    map.fitBounds(allLatLngs, { padding: [40, 40], maxZoom: 17 });
+  }
+
+  if (storePoly) { _leafletMap = map; _leafletPoly = polylines; }
+  return { map, polylines };
+}
+
+/* ── 구간 강조 ── */
+function highlightPair(pairIdx, pairs) {
+  _leafletPoly.forEach((pl, i) => {
+    if (!pl) return;
+    pl.setStyle({ weight: i === pairIdx ? 7 : 3, opacity: i === pairIdx ? 1 : 0.25 });
+  });
+  const p = pairs[pairIdx];
+  if (!p || !_leafletMap) return;
+  const cA = p.bldA ? BUILDING_COORDS[p.bldA] : null;
+  const cB = p.bldB ? BUILDING_COORDS[p.bldB] : null;
+  if (cA && cB) {
+    _leafletMap.panTo([(cA.lat+cB.lat)/2, (cA.lng+cB.lng)/2]);
+  }
+}
