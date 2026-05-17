@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self';
+             script-src 'self' 'unsafe-inline' 'unsafe-eval' https://dapi.kakao.com https://*.kakaocdn.net https://*.kakao.com;
+             style-src 'self' 'unsafe-inline' https://*.kakaocdn.net https://*.kakao.com;
+             img-src 'self' data: blob: https://*.kakao.com https://*.kakaocdn.net;
+             connect-src 'self' https://*.kakao.com https://*.kakaocdn.net;
+             font-src 'self' https://*.kakaocdn.net;" />
   <title>시간표 생성 · 창원대</title>
   <link rel="stylesheet" href="styles.css" />
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e"></script>
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e"></script>
 </head>
 <body data-page="generate">
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
