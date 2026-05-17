@@ -2042,7 +2042,7 @@ function renderAutoResults(variants, state) {
     });
   });
 
-  // rt-block 좌클릭 → 담기 토글
+  // rt-block 좌클릭 → 강의 정보 + 위치 지도 모달
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('click', e => {
       if (e.button !== 0) return;
@@ -2050,11 +2050,11 @@ function renderAutoResults(variants, state) {
       const vIdx   = Number(block.dataset.variantIdx);
       const cName  = block.dataset.name;
       const course = variants[vIdx]?.schedule.find(c => c.name === cName);
-      if (course) toggleCourseFromResult(course, null);
+      showBlockInfoModal(cName, course);
     });
   });
 
-  // rt-block 우클릭 → 컨텍스트 메뉴 (담기 + 제외 + 수강완료 + 상세정보)
+  // rt-block 우클릭 → 컨텍스트 메뉴 (담기/해제 + 제외 + 수강완료)
   grid.querySelectorAll('.rt-block').forEach(block => {
     block.addEventListener('contextmenu', e => {
       e.preventDefault();
@@ -2153,6 +2153,105 @@ function syncResultExcButtons() {
 
 /* ── 자동생성 결과 과목 클릭 → 상세 정보 팝업 ── */
 let _infoPopup = null;
+/* ── 추천 시간표 블록 좌클릭 → 강의 정보 + 위치 지도 모달 ── */
+let _blockInfoModal = null;
+
+function showBlockInfoModal(courseName, courseObj) {
+  // 기존 모달 닫기
+  if (_blockInfoModal) { _blockInfoModal.backdrop.remove(); _blockInfoModal.modal.remove(); _blockInfoModal = null; }
+
+  const course = courseObj || _allCourses.find(c => c.name === courseName);
+  if (!course) return;
+
+  const days = ['월','화','수','목','금'];
+  const slotRows = (course.slots || []).map(s =>
+    `<div>${days[s.day] || '?'}요일 ${s.start}~${s.end}${s.room ? ' · ' + s.room : ''}</div>`
+  ).join('') || '<div>시간 정보 없음</div>';
+
+  // 건물 추출 (지도용)
+  const rooms = (course.slots || []).map(s => s.room).filter(Boolean);
+  const blds  = [...new Set(rooms.map(r => getRoomBuilding(r)).filter(b => b && BUILDING_COORDS[b]))];
+  const hasMap = blds.length > 0;
+
+  const isIn = _selected.some(s => s.name === course.name && s.section === course.section);
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'cip-backdrop';
+
+  const modal = document.createElement('div');
+  modal.className = 'course-info-popup cip-block-modal';
+  modal.innerHTML = `
+    <div class="cip-header">
+      <span class="cat-badge cat-${catClass(course.category)}">${course.category}</span>
+      <button class="cip-close" type="button">✕</button>
+    </div>
+    <div class="cip-name">${course.name}</div>
+    <div class="cip-rows">
+      <div class="cip-row"><span class="cip-label">담당교수</span><span>${course.professor || '미정'}</span></div>
+      <div class="cip-row"><span class="cip-label">학점</span><span>${course.credits}학점</span></div>
+      <div class="cip-row"><span class="cip-label">분반</span><span>${course.section || '-'}</span></div>
+      <div class="cip-row cip-row-slots"><span class="cip-label">시간/장소</span><span>${slotRows}</span></div>
+      ${course.department ? `<div class="cip-row"><span class="cip-label">개설학과</span><span>${course.department}</span></div>` : ''}
+    </div>
+    ${hasMap
+      ? `<div class="cip-map-wrap"><div id="cipMapEl" class="cip-map-el"></div></div>`
+      : `<div class="cip-map-none">🏫 강의실 위치 정보 없음 (온라인 또는 미정)</div>`}
+    <div class="cip-actions">
+      <button class="cip-add-btn${isIn ? ' active' : ''}" type="button">
+        ${isIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기'}
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+  _blockInfoModal = { backdrop, modal };
+
+  const close = () => {
+    backdrop.remove(); modal.remove(); _blockInfoModal = null;
+  };
+  backdrop.addEventListener('click', close);
+  modal.querySelector('.cip-close').addEventListener('click', close);
+
+  // 담기 버튼 토글
+  modal.querySelector('.cip-add-btn').addEventListener('click', () => {
+    toggleCourseFromResult(course, null);
+    const btn = modal.querySelector('.cip-add-btn');
+    const nowIn = _selected.some(s => s.name === course.name && s.section === course.section);
+    btn.classList.toggle('active', nowIn);
+    btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
+  });
+
+  // 카카오맵 (건물 위치)
+  if (hasMap) {
+    loadKakaoMap(() => {
+      const el = document.getElementById('cipMapEl');
+      if (!el) return;
+      try {
+        const firstCoord = BUILDING_COORDS[blds[0]];
+        const map = new kakao.maps.Map(el, {
+          center: new kakao.maps.LatLng(firstCoord.lat, firstCoord.lng),
+          level: 3,
+        });
+        blds.forEach(bld => {
+          const c = BUILDING_COORDS[bld];
+          const pos = new kakao.maps.LatLng(c.lat, c.lng);
+          const marker = new kakao.maps.Marker({ position: pos, map });
+          const iw = new kakao.maps.InfoWindow({
+            content: `<div style="padding:3px 8px;font-size:12px;font-weight:700;white-space:nowrap">${c.name}</div>`
+          });
+          iw.open(map, marker);
+          kakao.maps.event.addListener(marker, 'click', () => iw.open(map, marker));
+        });
+      } catch(e) {
+        console.warn('강의 위치 지도 초기화 실패:', e);
+        const el2 = document.getElementById('cipMapEl');
+        if (el2) el2.innerHTML = '<div class="map-error">지도 로드 실패<br><small>카카오 도메인 등록을 확인하세요</small></div>';
+      }
+    });
+  }
+}
+
 function showCourseInfoPopup(courseName) {
   if (_infoPopup) { _infoPopup.remove(); _infoPopup = null; }
   if (!courseName) return;
@@ -2208,15 +2307,21 @@ function showResultContextMenu(x, y, courseName, courseObj) {
   closeCtxMenu();
   if (!courseName) return;
 
+  const isInCart    = courseObj ? _selected.some(s => s.name === courseObj.name && s.section === courseObj.section) : false;
+  const isExcluded  = _currentState?.excludedCourses?.includes(courseName) ?? false;
+
   const menu = document.createElement('div');
   menu.className = 'result-ctx-menu';
   menu.innerHTML = `
     <div class="ctx-course-name">${courseName}</div>
-    <button class="ctx-item ctx-add" data-action="add" type="button">📥 담기</button>
+    <button class="ctx-item ctx-add${isInCart ? ' active' : ''}" data-action="add" type="button">
+      ${isInCart ? '✓ 담김 — 클릭 시 해제' : '📥 담기'}
+    </button>
     <div class="ctx-divider"></div>
-    <button class="ctx-item" data-action="exclude" type="button">🚫 추천 제외 과목으로 설정</button>
+    <button class="ctx-item${isExcluded ? ' active' : ''}" data-action="exclude" type="button">
+      ${isExcluded ? '✓ 제외 중 — 클릭 시 해제' : '🚫 추천 제외 과목으로 설정'}
+    </button>
     <button class="ctx-item" data-action="completed" type="button">✅ 수강 완료로 표시</button>
-    <button class="ctx-item" data-action="info" type="button">ℹ 상세 정보</button>
     <div class="ctx-divider"></div>
     <button class="ctx-item ctx-cancel" data-action="close" type="button">닫기</button>
   `;
@@ -2248,10 +2353,8 @@ function showResultContextMenu(x, y, courseName, courseObj) {
           showToast(`이미 수강 완료 목록에 있는 과목입니다.`);
         }
       } else if (action === 'add') {
-        if (courseObj) addCourseToSelectedFromResult(courseObj);
+        if (courseObj) toggleCourseFromResult(courseObj, null);
         else showToast('과목 정보를 찾을 수 없습니다.');
-      } else if (action === 'info') {
-        showCourseInfoPopup(courseName);
       }
       closeCtxMenu();
     });

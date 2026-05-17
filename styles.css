@@ -3084,6 +3084,105 @@ body {
   font-weight: 600;
 }
 
+/* ── 블록 클릭 정보 모달 (지도 포함) ── */
+.cip-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9998;
+  animation: loc-fade-in 0.18s ease;
+}
+.cip-block-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 420px;
+  width: 92vw;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 88vh;
+}
+.cip-block-modal .cip-header,
+.cip-block-modal .cip-name,
+.cip-block-modal .cip-rows {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.cip-block-modal .cip-header { padding-top: 18px; margin-bottom: 8px; }
+.cip-block-modal .cip-name   { padding-bottom: 4px; }
+.cip-block-modal .cip-rows   { padding-bottom: 12px; overflow-y: auto; }
+.cip-row-slots span { display: flex; flex-direction: column; gap: 2px; }
+
+/* 지도 영역 */
+.cip-map-wrap {
+  width: 100%;
+  height: 200px;
+  flex-shrink: 0;
+  background: #e8eef8;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.cip-map-el {
+  width: 100%;
+  height: 100%;
+}
+.cip-map-none {
+  padding: 12px 20px;
+  font-size: 12px;
+  color: var(--muted);
+  background: #f9fafb;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+/* 담기 버튼 */
+.cip-actions {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.cip-add-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.cip-add-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+.cip-add-btn.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.cip-add-btn.active:hover {
+  background: #16a34a;
+  color: #fff;
+}
+
+/* 컨텍스트 메뉴 active 상태 */
+.ctx-item.active {
+  background: #f0fdf4;
+  color: #16a34a;
+  font-weight: 700;
+}
+.ctx-item.ctx-add.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
 /* ── 자동생성 결과 우클릭 컨텍스트 메뉴 ── */
 .result-ctx-menu {
   background: #fff;
