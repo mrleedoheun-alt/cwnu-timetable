@@ -3553,25 +3553,18 @@ function closeLocationModal() {
   _kakaoMap = null; _mapPolylines = []; _mapMarkers = [];
 }
 
-/* ── Kakao Maps SDK 동적 로드 후 콜백 ── */
-// autoload=false 이므로 kakao.maps 객체는 있어도 Map 생성자가 없을 수 있음
-// → kakao.maps.Map이 실제로 존재할 때만 cb() 직접 호출
+/* ── Kakao Maps SDK 준비 대기 후 콜백 ── */
+// autoload 방식(기본값): SDK 로드 완료 시 kakao.maps.Map 바로 사용 가능
+// 스크립트 로드가 늦을 수 있으므로 폴링으로 대기
 function loadKakaoMap(cb) {
   if (typeof kakao !== 'undefined' && typeof kakao.maps?.Map === 'function') {
-    // 이미 완전히 초기화됨
     cb();
     return;
   }
-  if (typeof kakao !== 'undefined' && typeof kakao.maps?.load === 'function') {
-    // SDK 로드됐지만 maps 아직 초기화 전 → load() 호출
-    kakao.maps.load(cb);
-    return;
-  }
-  // SDK 자체가 아직 로드 안 됨 → 폴링
   const check = setInterval(() => {
-    if (typeof kakao !== 'undefined' && typeof kakao.maps?.load === 'function') {
+    if (typeof kakao !== 'undefined' && typeof kakao.maps?.Map === 'function') {
       clearInterval(check);
-      kakao.maps.load(cb);
+      cb();
     }
   }, 100);
 }
