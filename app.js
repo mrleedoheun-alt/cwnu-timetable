@@ -2224,23 +2224,27 @@ function showBlockInfoModal(courseName, courseObj) {
 
   // Leaflet 지도 (건물 위치)
   if (hasMap) {
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const el = document.getElementById('cipMapEl');
       if (!el || typeof L === 'undefined') return;
       const firstCoord = BUILDING_COORDS[blds[0]];
       const map = L.map(el).setView([firstCoord.lat, firstCoord.lng], 17);
       L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
-      blds.forEach(bld => {
+      map.invalidateSize();
+      const markers = blds.map(bld => {
         const c = BUILDING_COORDS[bld];
-        L.marker([c.lat, c.lng])
-          .bindPopup(`<b>${c.name}</b>`, { closeButton: false })
+        return L.marker([c.lat, c.lng])
+          .bindPopup(`<b>${c.name}</b>`, { closeButton: false, autoClose: false, closeOnClick: false })
           .addTo(map)
           .openPopup();
       });
-      // 모달 닫힐 때 Leaflet 정리
-      backdrop.addEventListener('click', () => map.remove(), { once: true });
-      modal.querySelector('.cip-close').addEventListener('click', () => map.remove(), { once: true });
-    });
+      if (blds.length > 1) {
+        map.fitBounds(blds.map(b => [BUILDING_COORDS[b].lat, BUILDING_COORDS[b].lng]), { padding: [40, 40], maxZoom: 17 });
+      }
+      const cleanup = () => map.remove();
+      backdrop.addEventListener('click', cleanup, { once: true });
+      modal.querySelector('.cip-close').addEventListener('click', cleanup, { once: true });
+    }, 120);
   }
 }
 
@@ -3538,7 +3542,8 @@ function showLocationModal(schedule, label) {
   });
 
   // Leaflet 초기화 — 다음 프레임에 컨테이너 크기 확정 후 실행
-  requestAnimationFrame(() => initLeafletMap('locMapEl', usedBlds, pairs, true));
+  // 모달 애니메이션이 끝난 뒤 초기화해야 컨테이너 크기가 잡힘
+  setTimeout(() => initLeafletMap('locMapEl', usedBlds, pairs, true), 120);
 }
 
 function closeLocationModal() {
@@ -3553,14 +3558,22 @@ function initLeafletMap(elId, usedBlds, pairs, storePoly) {
   const el = document.getElementById(elId);
   if (!el || typeof L === 'undefined') return null;
 
+  // 기본 센터 (창원대 캠퍼스 중심)
   const map = L.map(el, { zoomControl: true }).setView([35.2440, 128.6958], 16);
   L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
+
+  // 컨테이너 크기 재계산 (모달 안 렌더링 시 필수)
+  map.invalidateSize();
+
+  const allLatLngs = [];
 
   // 건물 마커
   usedBlds.forEach(bld => {
     const c = BUILDING_COORDS[bld]; if (!c) return;
-    L.marker([c.lat, c.lng])
-      .bindPopup(`<b>${c.name}</b>`, { closeButton: false })
+    const ll = [c.lat, c.lng];
+    allLatLngs.push(ll);
+    L.marker(ll)
+      .bindPopup(`<b>${c.name}</b>`, { closeButton: false, autoClose: false, closeOnClick: false })
       .addTo(map)
       .openPopup();
   });
@@ -3573,10 +3586,16 @@ function initLeafletMap(elId, usedBlds, pairs, storePoly) {
     if (!cA || !cB) { polylines.push(null); return; }
     const pl = L.polyline(
       [[cA.lat, cA.lng], [cB.lat, cB.lng]],
-      { color: DAY_COLORS[p.day], weight: 4, opacity: 0.75, dashArray: '8 6' }
+      { color: DAY_COLORS[p.day], weight: 5, opacity: 0.85, dashArray: '10 6' }
     ).addTo(map);
     polylines.push(pl);
+    allLatLngs.push([cA.lat, cA.lng], [cB.lat, cB.lng]);
   });
+
+  // 모든 마커/경로가 보이도록 자동 줌
+  if (allLatLngs.length > 0) {
+    map.fitBounds(allLatLngs, { padding: [40, 40], maxZoom: 17 });
+  }
 
   if (storePoly) { _leafletMap = map; _leafletPoly = polylines; }
   return { map, polylines };
