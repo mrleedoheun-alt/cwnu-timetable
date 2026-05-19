@@ -29,6 +29,13 @@ const DAY_NAMES   = ['월', '화', '수', '목', '금'];
 const HOUR_ROWS   = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
 const HOUR_ROWS_END = '18:00';
 
+/* 강의 고유 ID: 학수번호+분반 (없으면 과목명+학과+분반) — 동명이강의 구분용 */
+function courseId(c) {
+  if (!c) return '';
+  if (c.course_code) return c.course_code + '||' + (c.section || '');
+  return c.name + '||' + (c.department || '') + '||' + (c.section || '');
+}
+
 // 에브리타임 스타일 파스텔 팔레트
 const COLORS = [
   { bg: '#ffd6d6', border: '#e05555', text: '#8b0000' },
@@ -998,7 +1005,8 @@ function renderCourseList() {
   }
 
   listEl.innerHTML = filtered.map(course => {
-    const isAdded = _selected.some(s => s.name === course.name && s.section === course.section);
+    const cid     = courseId(course);
+    const isAdded = _selected.some(s => courseId(s) === cid);
     const slotText = course.online
       ? '📱 비대면 (시간표 없음)'
       : course.slots.map(s => `${DAY_NAMES[s.day] || '?'} ${s.start}–${s.end}`).join(' / ');
@@ -1015,7 +1023,8 @@ function renderCourseList() {
     return `
       <div class="course-card ${isAdded ? 'added' : ''}"
            data-name="${esc(course.name)}"
-           data-section="${esc(course.section || '')}">
+           data-section="${esc(course.section || '')}"
+           data-cid="${esc(cid)}">
         <div class="course-card-left">
           <div class="course-card-name">${course.name}</div>
           <div class="course-card-meta">
@@ -1030,7 +1039,8 @@ function renderCourseList() {
           <div class="course-card-time">${slotText}</div>
         </div>
         <button class="add-btn ${isAdded ? 'added' : ''}" type="button"
-                data-name="${esc(course.name)}" data-section="${esc(course.section || '')}">
+                data-name="${esc(course.name)}" data-section="${esc(course.section || '')}"
+                data-cid="${esc(cid)}">
           ${isAdded ? '✓' : '+'}
         </button>
       </div>
@@ -1041,9 +1051,8 @@ function renderCourseList() {
   listEl.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      const name    = btn.dataset.name;
-      const section = btn.dataset.section;
-      const course  = _allCourses.find(c => c.name === name && (c.section || '') === section);
+      const cid    = btn.dataset.cid;
+      const course = _allCourses.find(c => courseId(c) === cid);
       if (!course) return;
       toggleCourse(course);
     });
@@ -1051,7 +1060,7 @@ function renderCourseList() {
 }
 
 function toggleCourse(course) {
-  const idx = _selected.findIndex(s => s.name === course.name && s.section === course.section);
+  const idx = _selected.findIndex(s => courseId(s) === courseId(course));
   if (idx >= 0) {
     _selected.splice(idx, 1);
   } else {
@@ -1109,15 +1118,13 @@ function renderSelectedList() {
         </div>
       </div>
       <button class="remove-btn" type="button"
-              data-name="${esc(c.name)}" data-section="${esc(c.section || '')}">×</button>
+              data-cid="${esc(courseId(c))}">×</button>
     </div>
   `).join('');
 
   listEl.querySelectorAll('.remove-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const idx = _selected.findIndex(
-        s => s.name === btn.dataset.name && (s.section || '') === btn.dataset.section
-      );
+      const idx = _selected.findIndex(s => courseId(s) === btn.dataset.cid);
       if (idx >= 0) {
         _selected.splice(idx, 1);
         renderSelectedList();
@@ -1919,14 +1926,16 @@ function renderAutoResults(variants, state) {
       const widthPx  = dayCol - 2;
       const color    = colorMap[flat.find(f => f === slot)?.name] || COLORS[0];
       // 이름 찾기
-      const courseName = v.schedule.find(c =>
+      const blockCourse = v.schedule.find(c =>
         courseToFlat(c).some(f =>
           f.day === slot.day && f.start_min === slot.start_min
         )
-      )?.name || '';
+      );
+      const courseName = blockCourse?.name || '';
+      const blockCid   = blockCourse ? courseId(blockCourse) : '';
       const bg = color?.bg || '#dbe9ff';
       const bd = color?.border || '#8fb1f5';
-      blocks += `<div class="rt-block" data-name="${esc(courseName)}" data-variant-idx="${i}" style="left:${leftPx}px;top:${topPx}px;width:${widthPx}px;height:${heightPx - 1}px;background:${bg};border:1px solid ${bd};pointer-events:auto;cursor:pointer;">
+      blocks += `<div class="rt-block" data-name="${esc(courseName)}" data-cid="${esc(blockCid)}" data-variant-idx="${i}" style="left:${leftPx}px;top:${topPx}px;width:${widthPx}px;height:${heightPx - 1}px;background:${bg};border:1px solid ${bd};pointer-events:auto;cursor:pointer;">
         <div class="rt-block-name">${courseName}</div>
       </div>`;
     });
@@ -1966,7 +1975,7 @@ function renderAutoResults(variants, state) {
               <span class="result-course-name">${c.name}</span>
               <span class="cat-badge cat-${catClass(c.category)} small">${c.category}</span>
               <span class="result-course-credit">${c.credits}학점</span>
-              <button class="result-course-add-btn" data-name="${esc(c.name)}" data-variant-idx="${i}" type="button" title="담기">＋담기</button>
+              <button class="result-course-add-btn" data-name="${esc(c.name)}" data-cid="${esc(courseId(c))}" data-variant-idx="${i}" type="button" title="담기">＋담기</button>
               <button class="result-course-exc-btn" data-name="${esc(c.name)}" type="button" title="추천 제외">🚫</button>
               <button class="result-course-info-btn" data-name="${esc(c.name)}" type="button" title="상세 정보">ℹ</button>
             </div>
@@ -2051,7 +2060,7 @@ function renderAutoResults(variants, state) {
 /* ── 추천 시간표 담기 버튼 토글 (담기 ↔ 해제) ── */
 function toggleCourseFromResult(course, btnEl) {
   if (!course) return;
-  const idx = _selected.findIndex(s => s.name === course.name && s.section === course.section);
+  const idx = _selected.findIndex(s => courseId(s) === courseId(course));
 
   if (idx >= 0) {
     // 이미 담겨있으면 → 해제
@@ -2082,14 +2091,19 @@ function toggleCourseFromResult(course, btnEl) {
 /* ── 추천 카드의 담기 버튼 상태를 _selected 기준으로 동기화 ── */
 function syncResultAddButtons() {
   document.querySelectorAll('.result-course-add-btn').forEach(btn => {
-    const cName = btn.dataset.name;
-    const isIn  = _selected.some(s => s.name === cName);
+    const cid  = btn.dataset.cid || btn.dataset.name; // cid 우선, 없으면 name 폴백
+    const isIn = cid
+      ? _selected.some(s => courseId(s) === cid)
+      : false;
     btn.classList.toggle('active', isIn);
     btn.textContent = isIn ? '✓담김' : '＋담기';
   });
   // rt-block에도 담긴 상태 표시
   document.querySelectorAll('.rt-block').forEach(block => {
-    const isIn = _selected.some(s => s.name === block.dataset.name);
+    const cid  = block.dataset.cid || block.dataset.name;
+    const isIn = cid
+      ? _selected.some(s => courseId(s) === cid)
+      : false;
     block.classList.toggle('rt-block--added', isIn);
   });
 }
@@ -2155,7 +2169,7 @@ function showBlockInfoModal(courseName, courseObj) {
   const blds  = [...new Set(rooms.map(r => getRoomBuilding(r)).filter(b => b && BUILDING_COORDS[b]))];
   const hasMap = blds.length > 0;
 
-  const isIn = _selected.some(s => s.name === course.name && s.section === course.section);
+  const isIn = _selected.some(s => courseId(s) === courseId(course));
 
   const backdrop = document.createElement('div');
   backdrop.className = 'cip-backdrop';
@@ -2200,7 +2214,7 @@ function showBlockInfoModal(courseName, courseObj) {
   modal.querySelector('.cip-add-btn').addEventListener('click', () => {
     toggleCourseFromResult(course, null);
     const btn = modal.querySelector('.cip-add-btn');
-    const nowIn = _selected.some(s => s.name === course.name && s.section === course.section);
+    const nowIn = _selected.some(s => courseId(s) === courseId(course));
     btn.classList.toggle('active', nowIn);
     btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
   });
@@ -2287,7 +2301,7 @@ function showResultContextMenu(x, y, courseName, courseObj) {
   closeCtxMenu();
   if (!courseName) return;
 
-  const isInCart    = courseObj ? _selected.some(s => s.name === courseObj.name && s.section === courseObj.section) : false;
+  const isInCart    = courseObj ? _selected.some(s => courseId(s) === courseId(courseObj)) : false;
   const isExcluded  = _currentState?.excludedCourses?.includes(courseName) ?? false;
 
   const menu = document.createElement('div');
