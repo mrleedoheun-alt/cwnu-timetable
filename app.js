@@ -319,6 +319,29 @@ function renderTimetable(container, courses, opts = {}) {
   wrap.appendChild(body);
   container.appendChild(wrap);
 
+  // ── 온라인 강의 하단 바 ──
+  const onlineCourses = courses.filter(c => c.online);
+  if (onlineCourses.length) {
+    const bar = document.createElement('div');
+    bar.className = 'online-bar' + (mini ? ' online-bar-mini' : '');
+    bar.innerHTML = `<div class="online-bar-title">📱 온라인 강의</div>
+      <div class="online-bar-chips">${
+        onlineCourses.map(c => {
+          const color = colorMap[c.name] || COLORS[0];
+          const isRetake = retakeSet.has((c.name || '').trim().toLowerCase());
+          return `<div class="online-chip${isRetake ? ' retake' : ''}"
+            style="background:${color.bg};border-color:${color.border};color:${color.text};"
+            data-name="${esc(c.name)}">
+            <span class="online-chip-name">${c.name}</span>
+            <span class="online-chip-sep">·</span>
+            <span class="online-chip-cr">${c.credits}학점</span>
+            ${isRetake && !mini ? '<span class="online-chip-retake">🔄</span>' : ''}
+          </div>`;
+        }).join('')
+      }</div>`;
+    container.appendChild(bar);
+  }
+
   return layer; // caller may attach click handlers
 }
 
@@ -464,18 +487,29 @@ function setupIndexPage(state) {
 }
 
 function setupBlockClicks(container, state) {
+  const onDelete = () => {
+    updateSummary(state);
+    renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
+    setupBlockClicks(container, state);
+  };
+
+  // 일반 블록 클릭
   const layer = container.querySelector('.courses-layer');
-  if (!layer) return;
-  layer.addEventListener('click', e => {
-    const block = e.target.closest('.course-block');
-    if (!block) return;
-    showCoursePopup(block, block.dataset.name, state, () => {
-      updateSummary(state);
-      renderTimetable(container, state.courses);
-      // 재렌더 후 새 layer에 이벤트 재연결
-      setupBlockClicks(container, state);
+  if (layer) {
+    layer.addEventListener('click', e => {
+      const block = e.target.closest('.course-block');
+      if (!block) return;
+      showCoursePopup(block, block.dataset.name, state, onDelete);
+    }, { once: true });
+  }
+
+  // 온라인 칩 클릭
+  container.querySelectorAll('.online-chip').forEach(chip => {
+    chip.style.cursor = 'pointer';
+    chip.addEventListener('click', () => {
+      showCoursePopup(chip, chip.dataset.name, state, onDelete);
     });
-  }, { once: true });
+  });
 }
 
 function semOrdinal(sem) {
@@ -1942,6 +1976,24 @@ function renderAutoResults(variants, state) {
 
     const gapText = maxGap > 90 ? `최대 공강 ${Math.round(maxGap/60*10)/10}h` : '공강 적음';
 
+    // 온라인 강의 바 (추천 카드용)
+    const onlineInVariant = v.schedule.filter(c => c.online);
+    const onlineBarHtml = onlineInVariant.length ? `
+      <div class="online-bar online-bar-mini">
+        <div class="online-bar-title">📱 온라인 강의</div>
+        <div class="online-bar-chips">${
+          onlineInVariant.map(c => {
+            const color = colorMap[c.name] || COLORS[0];
+            return `<div class="online-chip"
+              style="background:${color.bg};border-color:${color.border};color:${color.text};">
+              <span class="online-chip-name">${c.name}</span>
+              <span class="online-chip-sep">·</span>
+              <span class="online-chip-cr">${c.credits}학점</span>
+            </div>`;
+          }).join('')
+        }</div>
+      </div>` : '';
+
     return `
       <div class="result-card" data-variant="${i}">
         <div class="result-card-head">
@@ -1967,6 +2019,7 @@ function renderAutoResults(variants, state) {
             <div class="rt-layer" style="left:${timeColW}px">${blocks}</div>
           </div>
         </div>
+        ${onlineBarHtml}
 
         <!-- 과목 목록 -->
         <div class="result-course-list">

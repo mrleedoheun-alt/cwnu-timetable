@@ -1191,6 +1191,52 @@ body {
   letter-spacing: 0.05em;
 }
 
+/* ── 온라인 강의 하단 바 ── */
+.online-bar {
+  margin-top: 8px;
+  padding: 8px 12px 10px;
+  background: #f5f7fa;
+  border: 1px solid #e3e6eb;
+  border-radius: 10px;
+}
+.online-bar-mini {
+  padding: 6px 8px 8px;
+  margin-top: 6px;
+  border-radius: 8px;
+}
+.online-bar-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.online-bar-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.online-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: filter 0.1s;
+  user-select: none;
+}
+.online-chip:hover { filter: brightness(0.93); }
+.online-chip-name { font-weight: 700; }
+.online-chip-sep  { opacity: 0.5; font-size: 10px; }
+.online-chip-cr   { font-size: 11px; opacity: 0.8; }
+.online-chip-retake { font-size: 11px; }
+.online-bar-mini .online-chip { font-size: 11px; padding: 3px 8px; }
+
 /* Add button */
 .add-btn {
   flex-shrink: 0;
