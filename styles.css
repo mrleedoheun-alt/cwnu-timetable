@@ -393,7 +393,7 @@ body {
    Timetable (Everytime Style)
    ============================== */
 .timetable-card {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .timetable-container {

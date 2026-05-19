@@ -320,7 +320,10 @@ function renderTimetable(container, courses, opts = {}) {
   container.appendChild(wrap);
 
   // ── 온라인 강의 하단 바 ──
-  const onlineCourses = courses.filter(c => c.online);
+  // online:true 이거나 slots가 빈 배열(비대면/현장실습 등 시간표 없는 과목) 모두 포함
+  const onlineCourses = courses.filter(c =>
+    c.online || (Array.isArray(c.slots) && c.slots.length === 0)
+  );
   if (onlineCourses.length) {
     const bar = document.createElement('div');
     bar.className = 'online-bar' + (mini ? ' online-bar-mini' : '');
@@ -1041,7 +1044,7 @@ function renderCourseList() {
   listEl.innerHTML = filtered.map(course => {
     const cid     = courseId(course);
     const isAdded = _selected.some(s => courseId(s) === cid);
-    const slotText = course.online
+    const slotText = (course.online || !(course.slots || []).length)
       ? '📱 비대면 (시간표 없음)'
       : course.slots.map(s => `${DAY_NAMES[s.day] || '?'} ${s.start}–${s.end}`).join(' / ');
 
@@ -1977,7 +1980,9 @@ function renderAutoResults(variants, state) {
     const gapText = maxGap > 90 ? `최대 공강 ${Math.round(maxGap/60*10)/10}h` : '공강 적음';
 
     // 온라인 강의 바 (추천 카드용)
-    const onlineInVariant = v.schedule.filter(c => c.online);
+    const onlineInVariant = v.schedule.filter(c =>
+      c.online || (Array.isArray(c.slots) && c.slots.length === 0)
+    );
     const onlineBarHtml = onlineInVariant.length ? `
       <div class="online-bar online-bar-mini">
         <div class="online-bar-title">📱 온라인 강의</div>
