@@ -80,6 +80,7 @@ function uniqSlots(slots) {
   return slots.filter(s=>{const k=`${s.day}|${s.start}|${s.end}|${s.room}`;if(seen.has(k))return false;seen.add(k);return true;});
 }
 function secNum(code){const m=(code||'').match(/\((\d+)\)$/);return m?m[1]:'01';}
+function haksuNum(code){return (code||'').replace(/\s*\(\d+\)$/, '').trim();}
 function normCat(cat) {
   return({'전필':'전공필수','전선':'전공선택','전공필수':'전공필수','전공선택':'전공선택',
     '교직':'교직','자선':'자유선택','자유선택':'자유선택',
@@ -167,7 +168,7 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     const subtitle=row.forced_subtitle||extractSubtitle(row.query_title||'');
     const category=row.forced_category||normLibCat(clean(row.category));
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}`;
-    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category,subtitle,department:'',dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[],online};
+    if(!map[key]) map[key]={name:clean(row.name),type:'liberal',category,subtitle,department:'',dept_code:'',course_code:haksuNum(row.code),credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:eyears.sort(),slots:[],online};
     map[key].slots.push(...slots);
   }
   // 전공
@@ -181,7 +182,7 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     if(cat==='교직') continue;
     const type=cat==='자유선택'?'자유선택':'major';
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}||${row.dept_code||''}`;
-    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:clean(row.dept_name||row.opened_department||''),dept_code:row.dept_code||'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],slots:[]};
+    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:clean(row.dept_name||row.opened_department||''),dept_code:row.dept_code||'',course_code:haksuNum(row.code),credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],slots:[]};
     map[key].slots.push(...slots);
   }
   // extra
@@ -199,7 +200,7 @@ function buildCourses(liberalRows, majorRows, extraRows) {
     const realDept=(openedDept&&openedDept!=='교양')?openedDept:'';
     const extraOnline = type === 'liberal' && !slots.length;
     const key=`${clean(row.name)}||${clean(row.professor)}||${sec}||${row.gubun_code||''}`;
-    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:realDept,dept_code:'',credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],gubun_label:row.gubun_label||'',slots:[],...(extraOnline?{online:true}:{})};
+    if(!map[key]) map[key]={name:clean(row.name),type,category:cat,subtitle:'',department:realDept,dept_code:'',course_code:haksuNum(row.code),credits:Number(clean(row.credits))||0,professor:clean(row.professor),section:sec,eligible_years:row.eligible_years||[],gubun_label:row.gubun_label||'',slots:[],...(extraOnline?{online:true}:{})};
     map[key].slots.push(...slots);
   }
   return Object.values(map).map(c=>({...c,slots:uniqSlots(c.slots)}));

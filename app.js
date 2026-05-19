@@ -1025,6 +1025,7 @@ function renderCourseList() {
             ${yearBadge}
             ${course.professor ? `<span class="prof-text">${course.professor}</span>` : ''}
             <span class="credit-text">${course.credits}학점</span>
+            ${course.course_code ? `<span class="haksu-text">${course.course_code}</span>` : ''}
           </div>
           <div class="course-card-time">${slotText}</div>
         </div>
@@ -2168,6 +2169,7 @@ function showBlockInfoModal(courseName, courseObj) {
     </div>
     <div class="cip-name">${course.name}</div>
     <div class="cip-rows">
+      ${course.course_code ? `<div class="cip-row"><span class="cip-label">학수번호</span><span class="cip-haksu">${course.course_code}</span></div>` : ''}
       <div class="cip-row"><span class="cip-label">담당교수</span><span>${course.professor || '미정'}</span></div>
       <div class="cip-row"><span class="cip-label">학점</span><span>${course.credits}학점</span></div>
       <div class="cip-row"><span class="cip-label">분반</span><span>${course.section || '-'}</span></div>
@@ -2250,6 +2252,7 @@ function showCourseInfoPopup(courseName) {
     </div>
     <div class="cip-name">${course.name}</div>
     <div class="cip-rows">
+      ${course.course_code ? `<div class="cip-row"><span class="cip-label">학수번호</span><span class="cip-haksu">${course.course_code}</span></div>` : ''}
       <div class="cip-row"><span class="cip-label">담당교수</span><span>${course.professor || '미정'}</span></div>
       <div class="cip-row"><span class="cip-label">학점</span><span>${course.credits}학점</span></div>
       <div class="cip-row"><span class="cip-label">분반</span><span>${course.section || '-'}</span></div>

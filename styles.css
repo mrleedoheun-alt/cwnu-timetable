@@ -1172,6 +1172,25 @@ body {
   color: #4a6aaa;
 }
 
+.haksu-text {
+  font-size: 11px;
+  color: #888;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.cip-haksu {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 13px;
+  color: #555;
+  background: #f3f4f6;
+  border-radius: 5px;
+  padding: 2px 7px;
+  letter-spacing: 0.05em;
+}
+
 /* Add button */
 .add-btn {
   flex-shrink: 0;
