@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="leaflet.css" />
   <script src="leaflet.js"></script>
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e&autoload=false"></script>
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e&autoload=false"></script>
   <style>
     /* ── 미니 달력 ── */
     .cal-card {
@@ -893,29 +893,36 @@
   }
 
   function load(){
-    // 강의실 데이터는 지도와 무관하게 즉시 로드
     loadData();
 
-    // Kakao Maps 시도 → 2.5초 안에 안 되면 OpenStreetMap으로 자동 폴백
+    // ── 진단 로그 ──
+    console.log('[Kakao] typeof kakao =', typeof kakao);
+    if(typeof kakao !== 'undefined') {
+      console.log('[Kakao] kakao.maps =', typeof kakao.maps);
+      console.log('[Kakao] kakao.maps.load =', typeof kakao.maps?.load);
+    }
+
     let kakaoInitDone = false;
     const fallback = setTimeout(()=>{
       if(!kakaoInitDone){
-        console.log('Kakao Maps 타임아웃 → OpenStreetMap으로 대체');
+        console.warn('[Kakao] 타임아웃 → 도메인 미등록 or 네트워크 오류 → OpenStreetMap 폴백');
         initLeafletMap();
       }
-    }, 2500);
+    }, 3000);
 
     try {
       if(typeof kakao==='undefined') throw new Error('SDK 없음');
+      console.log('[Kakao] kakao.maps.load() 호출 중...');
       kakao.maps.load(()=>{
+        console.log('[Kakao] ✅ 콜백 성공! 카카오 지도 초기화');
         clearTimeout(fallback);
         kakaoInitDone=true;
         try { initKakaoMap(); }
-        catch(e){ console.warn('Kakao 초기화 실패:', e); initLeafletMap(); }
+        catch(e){ console.warn('[Kakao] initKakaoMap 실패:', e); initLeafletMap(); }
       });
     } catch(e){
       clearTimeout(fallback);
-      console.log('Kakao SDK 없음 → OpenStreetMap 사용');
+      console.warn('[Kakao] 예외 발생:', e.message, '→ OpenStreetMap 사용');
       initLeafletMap();
     }
   }
