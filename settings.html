@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>설정</title>
+  <title>설정 · 여기(YEOGI)</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-page="settings">
@@ -11,13 +11,18 @@
   <div class="app-shell">
     <aside class="sidebar">
       <div class="sidebar-top">
-        <div class="brand">TIME TABLE</div>
+        <div class="brand yeogi-brand">
+          <span class="brand-ko">여기</span>
+          <span class="brand-en">YEOGI</span>
+        </div>
         <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button">✕</button>
       </div>
       <nav class="side-nav">
-        <a class="side-link" href="index.html">나의 시간표</a>
-        <a class="side-link" href="generate.html">시간표 생성</a>
-        <a class="side-link active" href="settings.html">설정</a>
+        <a class="side-link" href="index.html"><span class="nav-icon">🏠</span>홈</a>
+        <a class="side-link" href="generate.html"><span class="nav-icon">📅</span>시간표 생성</a>
+        <a class="side-link" href="classroom.html"><span class="nav-icon">🏫</span>강의실 현황</a>
+        <a class="side-link" href="library.html"><span class="nav-icon">📚</span>도서관 자리</a>
+        <a class="side-link active" href="settings.html"><span class="nav-icon">⚙️</span>설정</a>
       </nav>
       <div class="side-logout">
         <button class="logout-btn" type="button">로그아웃</button>
@@ -63,3 +68,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+

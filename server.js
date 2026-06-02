@@ -483,6 +483,64 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  /* ── /api/library?room=3 또는 room=4 ── */
+  if (pathname === '/api/library') {
+    const room   = urlObj.searchParams.get('room') || '3';
+    const roomId = room === '4' ? '20120821110254851' : '20220328153700698';
+    const floor  = room === '4' ? '4' : '3';
+
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    try {
+      const body = `strRoomId=${roomId}&Cname=userseat`;
+      const libRes = await fetch('https://cwlibclicker.changwon.ac.kr/Clicker/GetSeatObjects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Referer': `https://cwlibclicker.changwon.ac.kr/Clicker/UserSeat/${roomId}`,
+        },
+        body,
+      });
+      const data = await libRes.json();
+
+      if (data.l_communication_status !== '0') throw new Error('Clicker API error');
+
+      const seats = (data._Model_lg_clicker_for_compact_object_list || []).map(s => {
+        const div    = s.l_seat_object_div || '';
+        const num    = (div.match(/clicker_s_s_no[^>]*>(\d+)<\/span>/) || div.match(/<b>(\d+)<\/b>/) || [])[1] || '?';
+        const top    = parseInt((div.match(/top:\s*(\d+)px/) || [])[1] || '0');
+        const left   = parseInt((div.match(/left:\s*(\d+)px/) || [])[1] || '0');
+        const title  = (div.match(/title="([^"]+)"/) || [])[1] || '';
+
+        const status = div.includes('clicker_seat_status_closed') || div.includes('clicker_s_b_c')
+          ? 'closed'
+          : title === '배정가능' || div.includes('clicker_s_b_n') || div.includes('clicker_s_b_pa')
+            ? 'available'
+            : 'occupied';
+
+        const type = div.includes('clicker_seat_status_notebook')   ? 'notebook'
+                   : div.includes('clicker_seat_status_handicaped') ? 'handicapped'
+                   : div.includes('clicker_s_b_pa')                 ? 'partition'
+                   : 'normal';
+
+        return { num: parseInt(num) || 0, status, type, top, left };
+      });
+
+      seats.sort((a, b) => a.num - b.num);
+
+      const available = seats.filter(s => s.status === 'available').length;
+      const occupied  = seats.filter(s => s.status === 'occupied').length;
+
+      res.writeHead(200);
+      res.end(JSON.stringify({ status: 'ok', room: floor, total: seats.length, available, occupied, seats }));
+    } catch (e) {
+      res.writeHead(502);
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   /* ── 정적 파일 ── */
   const u  = pathname;
   const fp = path.join(__dirname, u === '/' ? 'login.html' : u);

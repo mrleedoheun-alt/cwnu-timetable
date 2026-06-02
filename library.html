@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>도서관 자리 · 여기(YEOGI)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Clicker 좌석 스타일 (원본 동일) ── */
+    .clicker_s_o {
+      background: url(https://cwlibclicker.changwon.ac.kr/clicker/images/seat_object_back.png) repeat;
+      border-radius: 5px; display: block; padding: 0;
+      color: white; font-size: 10pt; font-weight: 600;
+      box-sizing: content-box; text-align: center; line-height: 30px;
+    }
+    .clicker_seat_size_normal { height: 30px; width: 30px; }
+    .clicker_s_b_n   { border: 2px solid #5D9625; }
+    .clicker_s_b_o   { border: 2px solid #942894; }
+    .clicker_s_b_c   { border: 2px solid #942894; }
+    .clicker_s_b_pa  { border: 2px solid #0033CC; }
+    .clicker_se_st_no span  { background: #85d604; background: linear-gradient(#85d604 40%, #77c004); display:block; line-height:30px; width:100%; }
+    .clicker_se_st_in span  { background: #92148d; background: linear-gradient(#f18fee 40%, #92148d); border-radius:2px; display:block; line-height:30px; width:100%; }
+    .clicker_seat_status_closed span { background: #e51337; background: linear-gradient(#f79aaa 40%, #e51337); display:block; line-height:30px; width:100%; }
+    .clicker_s_s_no { display: block; }
+
+    /* ── 지도 컨테이너 ── */
+    .map-wrap {
+      overflow: auto;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #f8f9fa;
+      max-height: 620px;
+    }
+    .map-inner {
+      position: relative;
+      background-repeat: no-repeat;
+      background-position: top left;
+    }
+    .map-inner .clicker_s_o { position: absolute; cursor: default; }
+    .map-inner .clicker_s_o:hover { opacity: .85; transform: scale(1.1); z-index: 10; }
+
+    /* ── 뷰 토글 ── */
+    .view-toggle {
+      display: flex; gap: 6px; margin-bottom: 14px;
+    }
+    .view-btn {
+      padding: 6px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--line); background: var(--card); color: var(--muted);
+      cursor: pointer; font-family: inherit; transition: all .15s;
+    }
+    .view-btn.active { background: #1a3a7a; border-color: #1a3a7a; color: #fff; }
+
+    /* ── 목록 뷰 ── */
+    .seat-grid-real {
+      display: flex; flex-wrap: wrap; gap: 5px; padding: 16px 0;
+    }
+    .seat-real {
+      width: 40px; height: 40px; border-radius: 8px;
+      border: 1.5px solid var(--line);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+      transition: transform .1s;
+    }
+    .seat-real.available { background:#dcfce7; border-color:#86efac; color:#15803d; }
+    .seat-real.occupied  { background:#fee2e2; border-color:#fca5a5; color:#dc2626; }
+    .seat-real.closed    { background:#f1f5f9; border-color:#cbd5e1; color:#94a3b8; }
+    .seat-type-badge { font-size:7px; opacity:.7; margin-top:1px; }
+
+    /* ── 기타 ── */
+    .refresh-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .refresh-btn {
+      padding: 6px 14px; border-radius: 10px; border: 1.5px solid var(--line);
+      background: var(--card); font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; color: var(--muted); transition: all .15s;
+    }
+    .refresh-btn:hover { border-color:#2563eb; color:#2563eb; }
+    .refresh-btn:disabled { opacity:.5; cursor:default; }
+    .last-updated { font-size:12px; color:var(--muted); }
+    .link-to-clicker {
+      font-size:13px; color:#2563eb; text-decoration:none; font-weight:600;
+      display:inline-flex; align-items:center; gap:4px;
+    }
+    .link-to-clicker:hover { text-decoration:underline; }
+    .filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .filter-chip {
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1.5px solid var(--line); background: var(--card); color: var(--muted);
+      cursor: pointer; transition: all .15s; font-family: inherit;
+    }
+    .filter-chip.active { background:#2563eb; border-color:#2563eb; color:#fff; }
+
+    /* ── 범례 ── */
+    .map-legend {
+      display:flex; gap:14px; flex-wrap:wrap; padding:12px 0 4px;
+      font-size:12px; align-items:center;
+    }
+    .legend-dot-clicker {
+      width:16px; height:16px; border-radius:3px; border:2px solid; display:inline-block;
+    }
+  </style>
+</head>
+<body data-page="library">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand yeogi-brand">
+          <span class="brand-ko">여기</span>
+          <span class="brand-en">YEOGI</span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button">✕</button>
+      </div>
+      <nav class="side-nav">
+        <a class="side-link" href="index.html"><span class="nav-icon">🏠</span>홈</a>
+        <a class="side-link" href="generate.html"><span class="nav-icon">📅</span>시간표 생성</a>
+        <a class="side-link" href="classroom.html"><span class="nav-icon">🏫</span>강의실 현황</a>
+        <a class="side-link active" href="library.html"><span class="nav-icon">📚</span>도서관 자리</a>
+        <a class="side-link" href="settings.html"><span class="nav-icon">⚙️</span>설정</a>
+      </nav>
+      <div class="side-logout">
+        <button class="logout-btn" type="button">로그아웃</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <div class="page-header-title">
+          <button class="hamburger-btn" id="hamburgerBtn" type="button">☰</button>
+          <div>
+            <h1>도서관 자리</h1>
+            <p class="subtext">창원대학교 중앙도서관 열람실 실시간 좌석 현황</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="live-clock">
+            <span class="live-dot"></span>
+            <span id="clockDisplay">--:--</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- 통계 -->
+      <div class="library-stats">
+        <div class="lib-stat-card green">
+          <span class="lib-stat-num" id="statFree">-</span>
+          <span class="lib-stat-label">빈 자리</span>
+        </div>
+        <div class="lib-stat-card red">
+          <span class="lib-stat-num" id="statOccupied">-</span>
+          <span class="lib-stat-label">사용 중</span>
+        </div>
+        <div class="lib-stat-card">
+          <span class="lib-stat-num" id="statTotal">-</span>
+          <span class="lib-stat-label">전체 좌석</span>
+        </div>
+      </div>
+
+      <!-- 열람실 탭 -->
+      <div class="floor-tabs">
+        <button class="floor-tab active" data-room="3" type="button">제3열람실</button>
+        <button class="floor-tab" data-room="4" type="button">제4열람실</button>
+      </div>
+
+      <!-- 새로고침 & 링크 -->
+      <div class="refresh-row">
+        <button class="refresh-btn" id="refreshBtn" type="button">🔄 새로고침</button>
+        <span class="last-updated" id="lastUpdated">로딩 중…</span>
+        <a class="link-to-clicker" id="clickerLink"
+           href="https://cwlibclicker.changwon.ac.kr/Clicker/UserSeat/20220328153700698?DeviceName=normal3열람실"
+           target="_blank" rel="noopener">📌 클리커 바로가기 ↗</a>
+      </div>
+
+      <!-- 카드 -->
+      <div class="card" style="padding:20px 24px">
+        <div class="card-head" style="margin-bottom:14px">
+          <div>
+            <h2 id="roomTitle">제3열람실</h2>
+            <span class="small-note" id="seatCountNote"></span>
+          </div>
+          <!-- 뷰 토글 -->
+          <div class="view-toggle">
+            <button class="view-btn active" id="btnMapView" type="button">🗺 좌석 지도</button>
+            <button class="view-btn" id="btnListView" type="button">📋 목록</button>
+          </div>
+        </div>
+
+        <!-- 목록 뷰 필터 (지도 뷰에서는 숨김) -->
+        <div class="filter-row" id="filterRow">
+          <button class="filter-chip active" data-type="all" type="button">전체</button>
+          <button class="filter-chip" data-type="available" type="button">빈 자리만</button>
+          <button class="filter-chip" data-type="notebook" type="button">📓 노트북석</button>
+          <button class="filter-chip" data-type="partition" type="button">🔲 칸막이석</button>
+        </div>
+
+        <!-- 콘텐츠 영역 -->
+        <div id="seatContainer">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <span>좌석 정보 불러오는 중…</span>
+          </div>
+        </div>
+
+        <!-- 범례 -->
+        <div class="map-legend" id="legend" style="display:none">
+          <span class="legend-item">
+            <span class="legend-dot-clicker" style="background:#85d604;border-color:#5D9625"></span>&nbsp;빈 자리
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot-clicker" style="background:#92148d;border-color:#942894"></span>&nbsp;사용 중
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot-clicker" style="background:#e51337;border-color:#942894"></span>&nbsp;사용불가
+          </span>
+          <span class="legend-item" style="margin-left:auto;color:var(--muted);font-size:11px">
+            파란 테두리 = 칸막이석
+          </span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+  /* ── 도서관 자리 (실시간 크롤링 + Clicker 동일 배치) ── */
+
+  const ROOMS = {
+    '3': {
+      id: '20220328153700698', name: '제3열람실',
+      link: 'https://cwlibclicker.changwon.ac.kr/Clicker/UserSeat/20220328153700698?DeviceName=normal3열람실',
+      bg: 'https://cwlibclicker.changwon.ac.kr/clicker/users/cnul/layout_reading_room_floor3F.png',
+      w: 1385, h: 778,
+    },
+    '4': {
+      id: '20120821110254851', name: '제4열람실',
+      link: 'https://cwlibclicker.changwon.ac.kr/Clicker/UserSeat/20120821110254851?DeviceName=normal4열람실',
+      bg: 'https://cwlibclicker.changwon.ac.kr/clicker/users/cnul/layout_reading_room_floor4F.png',
+      w: 1396, h: 822,
+    },
+  };
+
+  let curRoom   = '3';
+  let curFilter = 'all';
+  let curView   = 'map'; // 'map' | 'list'
+  let allSeats  = [];
+  let autoTimer = null;
+
+  /* 시계 */
+  function tick() {
+    const n = new Date(), days = ['일','월','화','수','목','금','토'];
+    document.getElementById('clockDisplay').textContent =
+      `${days[n.getDay()]}요일 ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  }
+  tick(); setInterval(tick, 30000);
+
+  /* 좌석 로드 */
+  async function loadSeats() {
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true; btn.textContent = '로딩 중…';
+    document.getElementById('lastUpdated').textContent = '불러오는 중…';
+    try {
+      const res  = await fetch(`/api/library?room=${curRoom}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      allSeats = data.seats || [];
+      document.getElementById('statFree').textContent     = data.available;
+      document.getElementById('statOccupied').textContent = data.occupied;
+      document.getElementById('statTotal').textContent    = data.total;
+      const n = new Date();
+      document.getElementById('lastUpdated').textContent =
+        `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')} 기준 · 20초 자동갱신`;
+      render();
+      document.getElementById('legend').style.display = 'flex';
+    } catch (e) {
+      document.getElementById('seatContainer').innerHTML = `
+        <div class="loading-state" style="color:#dc2626">
+          <p>⚠ 좌석 정보를 불러올 수 없습니다</p>
+          <a href="${ROOMS[curRoom].link}" target="_blank" class="link-to-clicker" style="margin-top:8px">클리커 직접 방문 ↗</a>
+        </div>`;
+      ['statFree','statOccupied','statTotal'].forEach(id => document.getElementById(id).textContent = '-');
+      document.getElementById('lastUpdated').textContent = '오류 발생';
+    } finally { btn.disabled = false; btn.textContent = '🔄 새로고침'; }
+  }
+
+  /* ── 렌더 ── */
+  function render() {
+    const info = ROOMS[curRoom];
+    document.getElementById('roomTitle').textContent = info.name;
+    document.getElementById('clickerLink').href = info.link;
+    curView === 'map' ? renderMap(info) : renderList();
+    document.getElementById('filterRow').style.display = curView === 'map' ? 'none' : 'flex';
+  }
+
+  /* 지도 뷰 */
+  function renderMap(info) {
+    document.getElementById('seatCountNote').textContent = `전체 ${allSeats.length}석`;
+
+    /* 좌석 div HTML 생성 (Clicker 원본 CSS 클래스 그대로) */
+    const divs = allSeats.map(s => {
+      const typeClass = s.type === 'notebook'     ? 'clicker_seat_status_notebook'
+                      : s.type === 'handicapped'  ? 'clicker_seat_status_handicaped'
+                      : '';
+      const borderCls = s.type === 'partition'                              ? 'clicker_s_b_pa'
+                      : (s.status === 'occupied' || s.status === 'closed') ? 'clicker_s_b_o'
+                      : 'clicker_s_b_n';
+      const stateCls  = s.status === 'available' ? 'clicker_se_st_no'
+                      : s.status === 'occupied'  ? 'clicker_se_st_in clicker_se_st_full_in'
+                      : '';
+      const closedCls = s.status === 'closed' ? 'clicker_seat_status_closed' : '';
+      const title     = `${s.num}번 · ${s.status === 'available' ? '빈 자리' : s.status === 'occupied' ? '사용 중' : '사용불가'}${s.type !== 'normal' ? ' · ' + {notebook:'노트북석',partition:'칸막이',handicapped:'장애인석'}[s.type] : ''}`;
+
+      return `<div class="clicker_s_o clicker_seat_size_normal ${typeClass} ${borderCls} ${stateCls} ${closedCls}"
+                   style="top:${s.top}px;left:${s.left}px;position:absolute;"
+                   title="${title}">
+                <span class="clicker_s_s_no" style="width:100%">${s.num}</span>
+              </div>`;
+    }).join('');
+
+    document.getElementById('seatContainer').innerHTML = `
+      <div class="map-wrap">
+        <div class="map-inner" style="width:${info.w}px;height:${info.h}px;background-image:url(${info.bg})">
+          ${divs}
+        </div>
+      </div>`;
+  }
+
+  /* 목록 뷰 */
+  function renderList() {
+    let list = allSeats;
+    if (curFilter === 'available') list = list.filter(s => s.status === 'available');
+    else if (curFilter === 'notebook')  list = list.filter(s => s.type === 'notebook');
+    else if (curFilter === 'partition') list = list.filter(s => s.type === 'partition');
+
+    document.getElementById('seatCountNote').textContent = `${list.length}석 표시 (전체 ${allSeats.length}석)`;
+
+    if (!list.length) {
+      document.getElementById('seatContainer').innerHTML = '<div class="loading-state">표시할 좌석이 없습니다.</div>';
+      return;
+    }
+    const icons = { notebook:'📓', partition:'🔲', handicapped:'♿', normal:'' };
+    document.getElementById('seatContainer').innerHTML =
+      `<div class="seat-grid-real">` +
+      list.map(s => `
+        <div class="seat-real ${s.status}" title="${s.num}번 · ${s.type}">
+          <span>${s.num}</span>
+          ${icons[s.type] ? `<span class="seat-type-badge">${icons[s.type]}</span>` : ''}
+        </div>`).join('') +
+      `</div>`;
+  }
+
+  /* 뷰 토글 */
+  document.getElementById('btnMapView').addEventListener('click', () => {
+    curView = 'map';
+    document.getElementById('btnMapView').classList.add('active');
+    document.getElementById('btnListView').classList.remove('active');
+    render();
+  });
+  document.getElementById('btnListView').addEventListener('click', () => {
+    curView = 'list';
+    document.getElementById('btnListView').classList.add('active');
+    document.getElementById('btnMapView').classList.remove('active');
+    render();
+  });
+
+  /* 열람실 탭 */
+  document.querySelectorAll('.floor-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.floor-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      curRoom = btn.dataset.room;
+      startAutoRefresh();
+    });
+  });
+
+  /* 필터 */
+  document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      curFilter = btn.dataset.type;
+      renderList();
+    });
+  });
+
+  /* 새로고침 */
+  document.getElementById('refreshBtn').addEventListener('click', loadSeats);
+
+  /* 20초 자동갱신 */
+  function startAutoRefresh() {
+    if (autoTimer) clearInterval(autoTimer);
+    loadSeats();
+    autoTimer = setInterval(loadSeats, 20000);
+  }
+
+  startAutoRefresh();
+  </script>
+</body>
+</html>

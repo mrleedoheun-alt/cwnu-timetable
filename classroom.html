@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>강의실 현황 · 여기(YEOGI)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="leaflet.css" />
+  <script src="leaflet.js"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e&autoload=false"></script>
+  <style>
+    /* ── 미니 달력 ── */
+    .cal-card {
+      background:var(--card); border-radius:var(--radius);
+      box-shadow:var(--shadow); margin-bottom:16px; overflow:hidden;
+      display:inline-flex; flex-direction:column;
+      width:100%;
+    }
+    .cal-inner {
+      display:flex; align-items:flex-start; gap:20px;
+      padding:12px 16px 12px; flex-wrap:wrap;
+    }
+    .cal-mini-wrap { flex-shrink:0; }
+    .cal-header-row {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:6px; margin-bottom:6px;
+    }
+    .cal-nav-btn {
+      background:none; border:1.5px solid var(--line); border-radius:6px;
+      width:22px; height:22px; cursor:pointer; font-size:13px;
+      display:flex; align-items:center; justify-content:center;
+      font-family:inherit; color:var(--muted); transition:all .15s; padding:0;
+    }
+    .cal-nav-btn:hover { border-color:#2563eb; color:#2563eb; }
+    .cal-month-label { font-size:12px; font-weight:700; min-width:88px; text-align:center; color:var(--text); }
+    .cal-grid {
+      display:grid; grid-template-columns:repeat(7,1fr);
+      gap:2px; width:196px;
+    }
+    .cal-dayname { font-size:9px; font-weight:700; color:var(--muted); text-align:center; padding:2px 0 3px; }
+    .cal-dayname.sat { color:#93c5fd; }
+    .cal-dayname.sun { color:#fca5a5; }
+    .cal-day {
+      width:26px; height:26px; border-radius:6px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; cursor:pointer; font-weight:500;
+      transition:all .12s; border:1.5px solid transparent; font-family:inherit;
+      background:none;
+    }
+    .cal-day:hover:not(.weekend):not(.empty) { background:#eff6ff; border-color:#93c5fd; }
+    .cal-day.today    { background:#eff6ff; border-color:#2563eb; color:#2563eb; font-weight:800; }
+    .cal-day.selected { background:#1a3a7a !important; border-color:#1a3a7a !important; color:#fff !important; font-weight:800; }
+    .cal-day.sat:not(.empty) { color:#93c5fd; }
+    .cal-day.sun:not(.empty) { color:#fca5a5; }
+    .cal-day.weekend { cursor:default; }
+    .cal-day.empty   { cursor:default; }
+
+    /* ── 시간 선택 (교시 + 슬라이더) ── */
+    .time-picker-wrap {
+      flex:1; min-width:220px;
+      border-left:1.5px solid var(--line); padding-left:16px;
+      display:flex; flex-direction:column; gap:10px; justify-content:center;
+    }
+    .time-picker-label { font-size:11px; font-weight:700; color:var(--muted); }
+
+    /* 교시 버튼 */
+    .period-row { display:flex; gap:4px; }
+    .period-btn {
+      flex:1; padding:5px 0; border-radius:7px; font-size:10px; font-weight:700;
+      border:1.5px solid var(--line); background:var(--card); color:var(--muted);
+      cursor:pointer; font-family:inherit; transition:all .12s;
+      display:flex; flex-direction:column; align-items:center; gap:1px;
+      line-height:1.2;
+    }
+    .period-btn:hover { border-color:#2563eb; color:#2563eb; background:#eff6ff; }
+    .period-btn.active { background:#1a3a7a; border-color:#1a3a7a; color:#fff; }
+    .period-btn .p-num { font-size:12px; font-weight:800; }
+    .period-btn .p-time { font-size:8px; opacity:.75; }
+
+    /* 슬라이더 */
+    .slider-wrap { display:flex; flex-direction:column; gap:4px; }
+    .slider-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); font-weight:600; }
+    .time-slider {
+      -webkit-appearance:none; appearance:none;
+      width:100%; height:4px; border-radius:4px;
+      background:var(--line); outline:none; cursor:pointer;
+      accent-color:#2563eb;
+    }
+    .time-slider::-webkit-slider-thumb {
+      -webkit-appearance:none; appearance:none;
+      width:16px; height:16px; border-radius:50%;
+      background:#2563eb; cursor:pointer;
+      box-shadow:0 0 0 3px rgba(37,99,235,.2);
+      transition:box-shadow .15s;
+    }
+    .time-slider::-webkit-slider-thumb:hover { box-shadow:0 0 0 5px rgba(37,99,235,.2); }
+    .slider-current-time {
+      text-align:center; font-size:15px; font-weight:800;
+      color:#1a3a7a; letter-spacing:.5px;
+    }
+
+    /* ── 선택 뱃지 ── */
+    .selected-date-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:#eff6ff; border:1.5px solid #93c5fd; border-radius:20px;
+      padding:4px 14px; font-size:13px; font-weight:600; color:#1d4ed8;
+      margin-bottom:14px;
+    }
+    .selected-date-badge.weekend { background:#f1f5f9; border-color:#cbd5e1; color:#64748b; }
+
+    /* ── 캠퍼스 지도 ── */
+    .map-card {
+      background:var(--card); border-radius:var(--radius);
+      box-shadow:var(--shadow); margin-bottom:16px; overflow:hidden;
+    }
+    .map-card-head {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 20px 10px;
+    }
+    .map-card-head h2 { font-size:15px; font-weight:700; }
+    #campusMap { height:440px; }
+
+
+    /* ── Leaflet 커스텀 마커 ── */
+    .campus-marker {
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:800; color:#fff; cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,.35); border:2.5px solid rgba(255,255,255,.9);
+      transition:transform .15s, box-shadow .15s;
+      width:36px; height:36px;
+    }
+    .campus-marker:hover { transform:scale(1.15); box-shadow:0 4px 14px rgba(0,0,0,.4); }
+    .campus-marker.selected {
+      border:3px solid #fff; box-shadow:0 0 0 3px #1a3a7a, 0 4px 14px rgba(0,0,0,.4);
+      transform:scale(1.2);
+    }
+    .campus-marker-label {
+      background:rgba(255,255,255,.95); border-radius:6px; padding:2px 6px;
+      font-size:10px; font-weight:700; color:#1a1a1a; white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.2); pointer-events:none;
+    }
+
+    /* ── 지도 범례 ── */
+    .map-legend-bar {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      padding:6px 14px 8px; border-top:1px solid var(--line); font-size:11px;
+    }
+    .legend-circle { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:3px; }
+
+    /* ── Accordion ── */
+    .bld-accordion { border-bottom:1px solid var(--line); }
+    .bld-accordion:last-child { border-bottom:none; }
+    .bld-accordion-head {
+      display:flex; align-items:center; gap:8px;
+      padding:9px 14px; cursor:pointer; transition:background .12s;
+      user-select:none;
+    }
+    .bld-accordion-head:hover { background:#f8fafc; }
+    .bld-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .bld-acc-name { font-size:13px; font-weight:700; flex:1; }
+    .bld-acc-stat { font-size:12px; color:var(--muted); white-space:nowrap; }
+    .bld-acc-chevron { font-size:10px; color:var(--muted); transition:transform .2s; flex-shrink:0; }
+    .bld-acc-chevron.open { transform:rotate(90deg); }
+    .bld-accordion-body { background:#fafafa; }
+
+    /* 강의실 행 (compact) */
+    .room-row-compact {
+      display:flex; align-items:center; gap:10px;
+      padding:7px 16px 7px 32px;
+      border-top:1px solid var(--line); font-size:12px;
+      transition:background .1s;
+    }
+    .room-row-compact:hover { background:#eff6ff; }
+    .room-row-num { font-weight:700; font-size:13px; min-width:64px; color:var(--text); }
+    .room-row-status { flex:1; display:flex; align-items:center; gap:5px; color:var(--muted); }
+    .room-row-status.free { color:#15803d; }
+    .room-row-status.busy { color:#dc2626; }
+    .room-row-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .room-row-next { margin-left:auto; font-size:11px; color:var(--muted); white-space:nowrap; }
+
+    /* ── 지도 + 강의실 2분할 레이아웃 ── */
+    .map-rooms-split {
+      display:flex; gap:14px; align-items:stretch; margin-bottom:20px;
+    }
+
+    /* 왼쪽: 지도 */
+    .map-panel {
+      flex:0 0 50%; min-width:0;
+      background:var(--card); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+      display:flex; flex-direction:column;
+    }
+    .map-panel-head {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px 8px; flex-shrink:0;
+    }
+    .map-panel-head h2 { font-size:13px; font-weight:700; }
+    #campusMap { flex:1; min-height:0; height:420px; }
+
+    /* 오른쪽: 강의실 패널 */
+    .rooms-panel {
+      flex:1; min-width:0;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .rooms-panel-top {
+      background:var(--card); border-radius:var(--radius);
+      box-shadow:var(--shadow); padding:10px 14px;
+      display:flex; flex-direction:column; gap:8px; flex-shrink:0;
+    }
+    .rooms-scroll {
+      flex:1; overflow-y:auto; height:390px;
+      padding-right:2px;
+    }
+    .rooms-scroll::-webkit-scrollbar { width:4px; }
+    .rooms-scroll::-webkit-scrollbar-track { background:transparent; }
+    .rooms-scroll::-webkit-scrollbar-thumb { background:#e2e8f0; border-radius:4px; }
+    /* 강의실 카드 1열 */
+    .rooms-scroll .room-grid {
+      grid-template-columns:1fr !important;
+    }
+    /* 강의실 카드 콤팩트 */
+    .rooms-scroll .room-card { padding:11px 14px; }
+    .rooms-scroll .room-name { font-size:14px; }
+    .rooms-scroll .room-course-name { font-size:13px; }
+    .rooms-scroll .room-professor, .rooms-scroll .room-time { font-size:11px; }
+    .rooms-scroll .room-next { font-size:11px; }
+    .rooms-scroll .room-empty-label { font-size:12px; }
+
+    /* 건물 선택 바 — 패널 안으로 이동 */
+    .bld-bar-mini {
+      display:none; align-items:center; gap:8px; flex-wrap:wrap;
+      background:#eff6ff; border:1.5px solid #93c5fd; border-radius:10px;
+      padding:7px 12px; font-size:12px;
+    }
+    .bld-bar-mini .bld-name { font-weight:700; color:#1a3a7a; font-size:13px; }
+    .bld-bar-mini .bld-stat { color:#2563eb; }
+    .bld-bar-mini .bld-reset-btn {
+      margin-left:auto; padding:3px 10px; border-radius:8px;
+      border:1.5px solid #93c5fd; background:var(--card); font-size:11px;
+      font-weight:600; color:#2563eb; cursor:pointer; font-family:inherit;
+    }
+    .bld-bar-mini .bld-reset-btn:hover { background:#2563eb; color:#fff; }
+  </style>
+</head>
+<body data-page="classroom">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand yeogi-brand">
+          <span class="brand-ko">여기</span>
+          <span class="brand-en">YEOGI</span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button">✕</button>
+      </div>
+      <nav class="side-nav">
+        <a class="side-link" href="index.html"><span class="nav-icon">🏠</span>홈</a>
+        <a class="side-link" href="generate.html"><span class="nav-icon">📅</span>시간표 생성</a>
+        <a class="side-link active" href="classroom.html"><span class="nav-icon">🏫</span>강의실 현황</a>
+        <a class="side-link" href="library.html"><span class="nav-icon">📚</span>도서관 자리</a>
+        <a class="side-link" href="settings.html"><span class="nav-icon">⚙️</span>설정</a>
+      </nav>
+      <div class="side-logout">
+        <button class="logout-btn" type="button">로그아웃</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="page-header">
+        <div class="page-header-title">
+          <button class="hamburger-btn" id="hamburgerBtn" type="button">☰</button>
+          <div>
+            <h1>강의실 현황</h1>
+            <p class="subtext">지도에서 건물을 클릭하거나 검색으로 강의실을 확인하세요</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="live-clock"><span class="live-dot"></span><span id="clockDisplay">--:--</span></div>
+        </div>
+      </header>
+
+      <!-- 미니 달력 카드 -->
+      <div class="cal-card">
+        <div class="cal-inner">
+          <!-- 달력 -->
+          <div class="cal-mini-wrap">
+            <div class="cal-header-row">
+              <button class="cal-nav-btn" id="calPrev" type="button">‹</button>
+              <span class="cal-month-label" id="calMonthLabel"></span>
+              <button class="cal-nav-btn" id="calNext" type="button">›</button>
+            </div>
+            <div class="cal-grid" id="calGrid">
+              <div class="cal-dayname">월</div><div class="cal-dayname">화</div>
+              <div class="cal-dayname">수</div><div class="cal-dayname">목</div>
+              <div class="cal-dayname">금</div>
+              <div class="cal-dayname sat">토</div><div class="cal-dayname sun">일</div>
+            </div>
+          </div>
+          <!-- 시간 선택 -->
+          <div class="time-picker-wrap">
+            <span class="time-picker-label">⏰ 교시 · 시간 선택</span>
+            <!-- 교시 버튼 -->
+            <div class="period-row" id="periodRow"></div>
+            <!-- 슬라이더 -->
+            <div class="slider-wrap">
+              <div class="slider-current-time" id="sliderTimeLabel">09:00</div>
+              <input type="range" class="time-slider" id="timeSlider"
+                     min="480" max="1080" step="30" value="540" />
+              <div class="slider-labels">
+                <span>08:00</span><span>10:00</span><span>12:00</span>
+                <span>14:00</span><span>16:00</span><span>18:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 선택 뱃지 -->
+      <div id="selectedDateBadge" class="selected-date-badge">📅 오늘 · 현재 시간</div>
+
+      <!-- 통계 -->
+      <div class="classroom-stats-row">
+        <div class="cls-stat"><span class="cls-stat-num" id="totalRooms">-</span><span class="cls-stat-label">전체 강의실</span></div>
+        <div class="cls-stat"><span class="cls-stat-num" id="inUseRooms" style="color:#dc2626">-</span><span class="cls-stat-label">수업 중</span></div>
+        <div class="cls-stat"><span class="cls-stat-num" id="freeRooms" style="color:#16a34a">-</span><span class="cls-stat-label">비어있음</span></div>
+      </div>
+
+      <!-- 지도 + 강의실 2분할 -->
+      <div class="map-rooms-split">
+
+        <!-- 왼쪽: 캠퍼스 지도 -->
+        <div class="map-panel">
+          <div class="map-panel-head">
+            <h2>🗺 창원대학교 캠퍼스</h2>
+            <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted)">
+              <span><span class="legend-circle" style="background:#16a34a"></span>여유</span>
+              <span><span class="legend-circle" style="background:#f59e0b"></span>혼잡</span>
+              <span><span class="legend-circle" style="background:#dc2626"></span>만석</span>
+            </div>
+          </div>
+          <div id="campusMap"></div>
+          <div class="map-legend-bar" style="font-size:10px;padding:5px 12px 7px">
+            <span>마커 클릭 → 해당 건물 강의실 표시</span>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 강의실 패널 -->
+        <div class="rooms-panel">
+          <!-- 건물 선택 바 + 검색 -->
+          <div class="rooms-panel-top">
+            <!-- 건물 선택 표시 -->
+            <div class="bld-bar-mini" id="buildingSelectedBar">
+              <span class="bld-name" id="bldSelName"></span>
+              <span class="bld-stat" id="bldSelStat"></span>
+              <button class="bld-reset-btn" id="bldResetBtn" type="button">× 전체</button>
+            </div>
+            <!-- 검색 -->
+            <div class="classroom-search" style="margin:0">
+              <input type="text" id="roomSearch" placeholder="강의실·과목명·교수명 검색…" />
+            </div>
+          </div>
+          <!-- 강의실 카드 (스크롤) -->
+          <div class="rooms-scroll" id="roomsContainer">
+            <div class="loading-state"><div class="spinner"></div><span>불러오는 중…</span></div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+  /* ══════════════════════════════════════════════
+     강의실 현황 — 캠퍼스 지도 + 달력
+  ══════════════════════════════════════════════ */
+
+  const PERIOD_MAP = {
+    '0A':['08:00','08:30'],'0B':['08:30','09:00'],
+    '1A':['09:00','09:30'],'1B':['09:30','10:00'],
+    '2A':['10:00','10:30'],'2B':['10:30','11:00'],
+    '3A':['11:00','11:30'],'3B':['11:30','12:00'],
+    '4A':['12:00','12:30'],'4B':['12:30','13:00'],
+    '5A':['13:00','13:30'],'5B':['13:30','14:00'],
+    '6A':['14:00','14:30'],'6B':['14:30','15:00'],
+    '7A':['15:00','15:30'],'7B':['15:30','16:00'],
+    '8A':['16:00','16:30'],'8B':['16:30','17:00'],
+    '9A':['17:00','17:30'],'9B':['17:30','18:00'],
+    'A':['09:00','09:30'],'B':['09:30','10:00'],
+    'C':['10:00','10:30'],'D':['10:30','11:00'],
+    'E':['11:00','11:30'],'F':['11:30','12:00'],
+  };
+  const DAY_KO = {'월':0,'화':1,'수':2,'목':3,'금':4};
+  const MONTH_KO = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+  function toMin(t) { const [h,m]=t.split(':').map(Number); return h*60+m; }
+
+  /* ── 선택 상태 ── */
+  const now = new Date();
+  let selectedDate = new Date(now);
+  let selectedMin  = now.getHours()*60 + Math.floor(now.getMinutes()/30)*30;
+  let calYear  = now.getFullYear();
+  let calMonth = now.getMonth();
+
+  /* ── 달력 ── */
+  function renderCalendar() {
+    document.getElementById('calMonthLabel').textContent = `${calYear}년 ${MONTH_KO[calMonth]}`;
+    const grid = document.getElementById('calGrid');
+    grid.querySelectorAll('.cal-day').forEach(e=>e.remove());
+    const firstDow = new Date(calYear,calMonth,1).getDay();
+    const offset   = firstDow===0 ? 6 : firstDow-1;
+    const days     = new Date(calYear,calMonth+1,0).getDate();
+    const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+    const selStr   = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+    for(let i=0;i<offset;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e);}
+    for(let d=1;d<=days;d++){
+      const dow = new Date(calYear,calMonth,d).getDay();
+      const isWE = dow===0||dow===6;
+      const btn  = document.createElement('button');
+      btn.type='button'; btn.textContent=d;
+      btn.className='cal-day'+(isWE?(dow===6?' weekend sat':' weekend sun'):'')+
+        (`${calYear}-${calMonth}-${d}`===todayStr?' today':'')+
+        (`${calYear}-${calMonth}-${d}`===selStr?' selected':'');
+      if(!isWE) btn.addEventListener('click',()=>{
+        selectedDate=new Date(calYear,calMonth,d);
+        renderCalendar(); applySelection();
+      });
+      grid.appendChild(btn);
+    }
+  }
+
+  /* ── 교시 정의 ── */
+  const PERIODS = [
+    {n:1, label:'1교시', min:540},  // 09:00
+    {n:2, label:'2교시', min:600},  // 10:00
+    {n:3, label:'3교시', min:660},  // 11:00
+    {n:4, label:'4교시', min:720},  // 12:00
+    {n:5, label:'5교시', min:780},  // 13:00
+    {n:6, label:'6교시', min:840},  // 14:00
+    {n:7, label:'7교시', min:900},  // 15:00
+    {n:8, label:'8교시', min:960},  // 16:00
+    {n:9, label:'9교시', min:1020}, // 17:00
+  ];
+
+  function minToHHMM(m) {
+    return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+  }
+
+  function buildTimePicker() {
+    const row = document.getElementById('periodRow');
+    for (const p of PERIODS) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'period-btn' + (p.min === selectedMin ? ' active' : '');
+      btn.dataset.min = p.min;
+      btn.innerHTML = `<span class="p-num">${p.n}</span><span class="p-time">${minToHHMM(p.min)}</span>`;
+      btn.title = `${p.label} (${minToHHMM(p.min)})`;
+      btn.addEventListener('click', () => {
+        setTime(p.min);
+        applySelection();
+      });
+      row.appendChild(btn);
+    }
+  }
+
+  function setTime(min) {
+    selectedMin = min;
+    // 슬라이더 동기화
+    document.getElementById('timeSlider').value = min;
+    document.getElementById('sliderTimeLabel').textContent = minToHHMM(min);
+    // 교시 버튼 active 갱신
+    document.querySelectorAll('.period-btn').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.min) === min);
+    });
+  }
+
+  /* 슬라이더 이벤트 */
+  document.getElementById('timeSlider').addEventListener('input', function() {
+    setTime(Number(this.value));
+    applySelection();
+  });
+
+  function renderTimePicker() { /* 하위호환용 빈 함수 */ }
+
+  /* ── 날짜 뱃지 ── */
+  function updateBadge(){
+    const dow=selectedDate.getDay();
+    const isWE=dow===0||dow===6;
+    const dayKo=['일','월','화','수','목','금','토'][dow];
+    const h=String(Math.floor(selectedMin/60)).padStart(2,'0');
+    const m=String(selectedMin%60).padStart(2,'0');
+    const badge=document.getElementById('selectedDateBadge');
+    badge.className='selected-date-badge'+(isWE?' weekend':'');
+    badge.innerHTML=isWE
+      ?`📅 ${selectedDate.getFullYear()}년 ${selectedDate.getMonth()+1}월 ${selectedDate.getDate()}일 (${dayKo}) — 주말은 수업이 없습니다`
+      :`📅 ${selectedDate.getFullYear()}년 ${selectedDate.getMonth()+1}월 ${selectedDate.getDate()}일 (${dayKo}) · ${h}:${m} 기준`;
+  }
+
+  /* ── 건물 유틸 ── */
+  function parseRaw(raw){
+    if(!raw) return[];
+    const results=[],lastRoom={};
+    for(const seg of raw.split(',').map(s=>s.trim()).filter(Boolean)){
+      const m=seg.match(/^([월화수목금])(\d{1,2}[AB]|[A-F])(?:\(([^)]+)\))?$/);
+      if(!m) continue;
+      const day=DAY_KO[m[1]],pair=PERIOD_MAP[m[2]];
+      if(day===undefined||!pair) continue;
+      const room=m[3]||lastRoom[day]||'';
+      if(m[3]) lastRoom[day]=m[3];
+      if(room) results.push({day,start:pair[0],end:pair[1],room});
+    }
+    return results;
+  }
+
+  function extractBuilding(room){
+    if(!room) return'기타';
+    room = room.replace(/-\d+$/, ''); // "52305-1" → "52305"
+    for(const p of ['T98','N98','BAC2','BAC','B21']){ if(room.startsWith(p)) return p+'관'; }
+    for(const p of ['사천캠퍼스','전산','인문홀','공기원','공실관','사림강당','학군단','테니스장','CWNU']){
+      if(room.startsWith(p)) return p;
+    }
+    const nm=room.match(/^(\d+)$/);
+    if(nm){ const c=nm[1]; return c.length>3?c.slice(0,-3)+'관':c+'관'; }
+    const km=room.match(/^([가-힣]+)\d+$/); // "사천208" → "사천캠퍼스"
+    if(km){ const p=km[1]; return p==='사천'?'사천캠퍼스':p; }
+    return room.replace(/\d+$/,'')||'기타';
+  }
+
+  /* building key → buildings.json key */
+  const KOREAN_BKEYS = new Set(['전산','인문홀','공기원','공실관','사림강당','사천캠퍼스','학군단','테니스장']);
+  function toGeoKey(bKey){
+    if(KOREAN_BKEYS.has(bKey)) return bKey;
+    return bKey.endsWith('관')?bKey.slice(0,-1):bKey;
+  }
+
+  const BNAMES={
+    'T98관':'T98관','N98관':'N98관','BAC관':'BAC관','BAC2관':'BAC2관','B21관':'B21관',
+    '11관':'제1공학관','22관':'제2공학관','55관':'제5공학관',
+    '61관':'제6-1공학관','62관':'제6-2공학관','63관':'제6-3공학관',
+    '85관':'인문사회관','86관':'자연과학관','98관':'98관',
+    '전산':'전산관','인문홀':'인문홀','공기원':'공기원','공실관':'공동실험실습관',
+  };
+  function bName(key){return BNAMES[key]||key;}
+
+  /* ── 상태 ── */
+  let coursesCache=null, buildingsGeo={};
+  let allRooms=[], curBuilding='all', searchQ='';
+  let kakaoMap=null, leafletMap=null, markerLayers={};
+
+  /* ── Kakao 지도 초기화 ── */
+  function initKakaoMap(){
+    const container=document.getElementById('campusMap');
+    kakaoMap=new kakao.maps.Map(container,{
+      center:new kakao.maps.LatLng(35.2437,128.6951), level:4,
+    });
+    if(allRooms.length>0) updateMapMarkers();
+  }
+
+  /* ── Leaflet(OpenStreetMap) 폴백 초기화 ── */
+  function initLeafletMap(){
+    leafletMap=L.map('campusMap',{center:[35.2437,128.6951],zoom:16});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      attribution:'© <a href="https://openstreetmap.org">OSM</a>',maxZoom:19
+    }).addTo(leafletMap);
+    if(allRooms.length>0) updateMapMarkers();
+  }
+
+  function initMap(){ /* 하위호환 */ }
+
+  /* 마커 색상 */
+  function markerColor(freeCount,total){
+    if(total===0) return'#94a3b8';
+    const r=freeCount/total;
+    return r>0.6?'#16a34a':r>0.3?'#f59e0b':'#dc2626';
+  }
+
+  /* 건물별 그룹핑 */
+  function groupByBuilding(){
+    const map={};
+    for(const r of allRooms){ if(!map[r.building]) map[r.building]=[]; map[r.building].push(r); }
+    return map;
+  }
+
+  /* ── 마커 업데이트 (Kakao / Leaflet 공통) ── */
+  function updateMapMarkers(){
+    if(!kakaoMap && !leafletMap) return;
+
+    // 기존 마커 제거
+    Object.values(markerLayers).forEach(m=>{
+      if(kakaoMap) m.setMap?.(null);
+      else m.remove?.();
+    });
+    markerLayers={};
+
+    const byBuilding=groupByBuilding();
+
+    for(const [bKey,rooms] of Object.entries(byBuilding)){
+      const geo=buildingsGeo[toGeoKey(bKey)];
+      if(!geo?.lat||!geo?.lng) continue;
+
+      const freeCount=rooms.filter(r=>r.free).length;
+      const total=rooms.length;
+      const color=markerColor(freeCount,total);
+      const isSelected=bKey===curBuilding;
+      const code=toGeoKey(bKey);
+      const label=code.length<=4?code:code.slice(0,4);
+
+      const el=document.createElement('div');
+      el.className=`campus-marker${isSelected?' selected':''}`;
+      el.style.background=color;
+      el.innerHTML=`<span style="font-size:9px;font-weight:800;line-height:1">${label}</span>`;
+      el.title=`${bName(bKey)} — 빈 강의실 ${freeCount}/${total}`;
+      el.addEventListener('click',()=>window.__selectBld(bKey));
+
+      if(kakaoMap){
+        const ov=new kakao.maps.CustomOverlay({
+          position:new kakao.maps.LatLng(geo.lat,geo.lng),
+          content:el, yAnchor:0.5, xAnchor:0.5, zIndex:isSelected?10:1,
+        });
+        ov.setMap(kakaoMap);
+        markerLayers[bKey]=ov;
+      } else {
+        const mk=L.marker([geo.lat,geo.lng],{
+          icon:L.divIcon({html:el,iconSize:[36,36],iconAnchor:[18,18],className:''}),
+          zIndexOffset:isSelected?1000:0,
+        }).addTo(leafletMap);
+        mk.bindTooltip(`<b>${bName(bKey)}</b><br>빈 ${freeCount}/${total}`,{direction:'top',offset:[0,-20]});
+        markerLayers[bKey]=mk;
+      }
+    }
+  }
+
+  /* ── 건물 선택 ── */
+  function selectBuilding(bKey){
+    curBuilding=bKey;
+    const rooms=allRooms.filter(r=>r.building===bKey);
+    const freeCount=rooms.filter(r=>r.free).length;
+    const bar=document.getElementById('buildingSelectedBar');
+    bar.style.display='flex';
+    document.getElementById('bldSelName').textContent=`${bName(bKey)} (${toGeoKey(bKey)})`;
+    document.getElementById('bldSelStat').textContent=`빈 ${freeCount} / 전체 ${rooms.length}`;
+    searchQ=''; document.getElementById('roomSearch').value='';
+    updateMapMarkers(); render(); updateStats();
+    // 지도 해당 건물로 이동
+    const geo=buildingsGeo[toGeoKey(bKey)];
+    if(geo?.lat){
+      if(kakaoMap) kakaoMap.panTo(new kakao.maps.LatLng(geo.lat,geo.lng));
+      else if(leafletMap) leafletMap.panTo([geo.lat,geo.lng]);
+    }
+  }
+
+  function resetBuilding(){
+    curBuilding='all';
+    document.getElementById('buildingSelectedBar').style.display='none';
+    updateMapMarkers(); render(); updateStats();
+  }
+
+  window.__selectBld = selectBuilding;
+
+  /* ── 강의실 계산 ── */
+  function applySelection(){
+    updateBadge();
+    if(!coursesCache) return;
+    const dow=selectedDate.getDay();
+    const dayIdx=(dow===0||dow===6)?-1:dow-1;
+    const tMin=selectedMin;
+    if(dayIdx<0){ allRooms=[]; updateMapMarkers(); buildRoomCards(); return; }
+    if(coursesCache[0]?.slots!==undefined) buildFromApi(coursesCache,dayIdx,tMin);
+    else buildFromRaw(coursesCache,dayIdx,tMin);
+  }
+
+  function buildFromApi(courses,dayIdx,tMin){
+    const map={};
+    for(const c of courses){
+      if(!c.slots) continue;
+      for(const s of c.slots){
+        if(!s.room) continue;
+        if(!map[s.room]) map[s.room]={room:s.room,building:extractBuilding(s.room),slots:[]};
+        if(s.day===dayIdx) map[s.room].slots.push({start:s.start,end:s.end,name:c.name,prof:c.professor||''});
+      }
+    }
+    finalize(map,dayIdx,tMin);
+  }
+
+  function buildFromRaw(rawList,dayIdx,tMin){
+    const map={};
+    for(const c of rawList){
+      const cname=c.course_name||c.name||'';
+      if(!c.schedule_room||!cname||cname==='과목명') continue;
+      for(const s of parseRaw(c.schedule_room)){
+        if(!s.room) continue;
+        if(!map[s.room]) map[s.room]={room:s.room,building:extractBuilding(s.room),slots:[]};
+        if(s.day===dayIdx) map[s.room].slots.push({start:s.start,end:s.end,name:cname,prof:c.professor||''});
+      }
+    }
+    finalize(map,dayIdx,tMin);
+  }
+
+  function finalize(map,dayIdx,tMin){
+    allRooms=Object.values(map).map(r=>{
+      const sorted=r.slots.sort((a,b)=>toMin(a.start)-toMin(b.start));
+      const cur=sorted.find(s=>toMin(s.start)<=tMin&&tMin<toMin(s.end));
+      const next=sorted.find(s=>toMin(s.start)>tMin);
+      return{room:r.room,building:r.building,free:!cur,
+        curName:cur?.name||null,curProf:cur?.prof||null,curStart:cur?.start||null,curEnd:cur?.end||null,
+        nextName:next?.name||null,nextStart:next?.start||null};
+    });
+    allRooms.sort((a,b)=>a.free!==b.free?(a.free?1:-1):a.room.localeCompare(b.room,'ko'));
+    updateMapMarkers();
+    buildRoomCards();
+  }
+
+  function buildRoomCards(){
+    // 건물 선택이 유효한지 확인
+    if(curBuilding!=='all'&&!allRooms.some(r=>r.building===curBuilding)) resetBuilding();
+    else if(curBuilding!=='all'){
+      const rooms=allRooms.filter(r=>r.building===curBuilding);
+      const freeCount=rooms.filter(r=>r.free).length;
+      document.getElementById('bldSelStat').textContent=`빈 강의실 ${freeCount}개 / 전체 ${rooms.length}개`;
+    }
+    render(); updateStats();
+  }
+
+  function filtered(){
+    let list=curBuilding==='all'?allRooms:allRooms.filter(r=>r.building===curBuilding);
+    if(searchQ){
+      const q=searchQ.toLowerCase();
+      list=list.filter(r=>
+        r.room.toLowerCase().includes(q)||
+        (r.curName||'').toLowerCase().includes(q)||
+        (r.curProf||'').toLowerCase().includes(q)||
+        (r.nextName||'').toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }
+
+  function render(){
+    const list=filtered();
+    const el=document.getElementById('roomsContainer');
+    if(!list.length){
+      const dow=selectedDate.getDay();
+      const msg=(dow===0||dow===6)?'주말에는 정규 수업이 없습니다.':'해당하는 강의실이 없습니다.';
+      el.innerHTML=`<div class="loading-state">${msg}</div>`;
+      return;
+    }
+
+    // 건물 선택 or 검색 중 → 카드형
+    if(curBuilding!=='all'||searchQ){
+      el.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">${list.map(roomCard).join('')}</div>`;
+      return;
+    }
+
+    // 전체 보기 → 건물별 아코디언
+    const byBld={};
+    for(const r of list){ if(!byBld[r.building]) byBld[r.building]=[]; byBld[r.building].push(r); }
+    const sorted=Object.entries(byBld).sort((a,b)=>{
+      const af=a[1].filter(r=>r.free).length/a[1].length;
+      const bf=b[1].filter(r=>r.free).length/b[1].length;
+      return af-bf; // 여유 적은 건물 먼저
+    });
+
+    el.innerHTML=`<div style="border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)">
+      ${sorted.map(([bKey,rooms])=>{
+        const free=rooms.filter(r=>r.free).length;
+        const total=rooms.length;
+        const color=markerColor(free,total);
+        const safeKey=bKey.replace(/[^a-zA-Z0-9가-힣]/g,'_');
+        return`<div class="bld-accordion">
+          <div class="bld-accordion-head" onclick="window.__toggleAcc('${safeKey}')">
+            <span class="bld-dot" style="background:${color}"></span>
+            <span class="bld-acc-name">${bName(bKey)}</span>
+            <span class="bld-acc-stat">
+              <span style="color:#16a34a;font-weight:700">${free}</span>
+              <span style="color:var(--muted)">/${total}</span>
+            </span>
+            <span class="bld-acc-chevron" id="acc-chev-${safeKey}">▶</span>
+          </div>
+          <div class="bld-accordion-body" id="acc-body-${safeKey}" style="display:none">
+            ${rooms.map(roomRow).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+    // 건물 등록 (key 매핑 저장)
+    for(const [bKey] of sorted){
+      const safeKey=bKey.replace(/[^a-zA-Z0-9가-힣]/g,'_');
+      window[`__bld_${safeKey}`]=bKey;
+    }
+  }
+
+  function roomRow(r){
+    const isFree=r.free;
+    const statusText=isFree
+      ?'빈 자리'
+      :`${r.curName||'수업 중'} · ${r.curStart}~${r.curEnd}`;
+    const nextText=r.nextName?`<span class="room-row-next">다음 ${r.nextStart}</span>`:'';
+    return`<div class="room-row-compact">
+      <span class="room-row-num">${r.room}</span>
+      <span class="room-row-status ${isFree?'free':'busy'}">
+        <span class="room-row-dot" style="background:${isFree?'#16a34a':'#dc2626'}"></span>
+        ${statusText}
+      </span>
+      ${nextText}
+    </div>`;
+  }
+
+  function roomCard(r){
+    const badge=r.free
+      ?`<span class="status-free"><span class="status-dot-green"></span>비어있음</span>`
+      :`<span class="status-in-use"><span class="status-dot-red"></span>수업 중</span>`;
+    const body=r.free
+      ?`<div class="room-empty-label">이 시간 수업 없음</div>`
+      :`<div class="room-course-name">${r.curName}</div>
+        <div class="room-professor">${r.curProf}</div>
+        <div class="room-time">⏱ ${r.curStart} ~ ${r.curEnd}</div>`;
+    const next=r.nextName?`<div class="room-next">다음 수업 ${r.nextStart} · ${r.nextName}</div>`:'';
+    return`<div class="room-card ${r.free?'free':'in-use'}">
+      <div class="room-card-header"><span class="room-name">${r.room}</span>${badge}</div>
+      ${body}${next}
+    </div>`;
+  }
+
+  /* 아코디언 토글 (safeKey → bKey 역매핑 포함) */
+  function toggleAccordion(safeKey){
+    const body=document.getElementById('acc-body-'+safeKey);
+    const chev=document.getElementById('acc-chev-'+safeKey);
+    if(!body) return;
+    const open=body.style.display!=='none';
+    body.style.display=open?'none':'block';
+    chev.classList.toggle('open',!open);
+  }
+  window.__toggleAcc=toggleAccordion;
+
+  function updateStats(){
+    const list=filtered();
+    const inUse=list.filter(r=>!r.free).length;
+    document.getElementById('totalRooms').textContent=list.length;
+    document.getElementById('inUseRooms').textContent=inUse;
+    document.getElementById('freeRooms').textContent=list.length-inUse;
+  }
+
+  /* ── 시계 ── */
+  function tick(){
+    const n=new Date(),days=['일','월','화','수','목','금','토'];
+    document.getElementById('clockDisplay').textContent=
+      `${days[n.getDay()]}요일 ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  }
+  tick(); setInterval(tick,30000);
+
+  /* ── 달력 네비 ── */
+  document.getElementById('calPrev').addEventListener('click',()=>{
+    calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar();
+  });
+  document.getElementById('calNext').addEventListener('click',()=>{
+    calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar();
+  });
+
+
+  /* ── 건물 초기화 버튼 ── */
+  document.getElementById('bldResetBtn').addEventListener('click',resetBuilding);
+
+  /* ── 검색 ── */
+  document.getElementById('roomSearch').addEventListener('input',e=>{
+    searchQ=e.target.value.trim();
+    // 검색 시 건물 필터 유지
+    render(); updateStats();
+  });
+
+  /* ── 데이터 로드 ── */
+  async function loadData(){
+    try{
+      const r=await fetch('/data/buildings.json');
+      buildingsGeo=await r.json();
+    }catch(e){console.warn('buildings.json 로드 실패',e);}
+
+    try{
+      const r=await fetch('/api/courses?year=2026&semester=1학기');
+      if(!r.ok) throw new Error();
+      const courses=await r.json();
+      if(Array.isArray(courses)&&courses.length>0){
+        coursesCache=courses; applySelection(); return;
+      }
+    }catch{}
+    try{
+      const r2=await fetch('/courses_all.json');
+      coursesCache=await r2.json(); applySelection();
+    }catch{
+      document.getElementById('roomsContainer').innerHTML=
+        '<div class="loading-state" style="color:#dc2626">⚠ 데이터를 불러올 수 없습니다. 서버(node server.js)를 실행해주세요.</div>';
+    }
+  }
+
+  function load(){
+    // 강의실 데이터는 지도와 무관하게 즉시 로드
+    loadData();
+
+    // Kakao Maps 시도 → 2.5초 안에 안 되면 OpenStreetMap으로 자동 폴백
+    let kakaoInitDone = false;
+    const fallback = setTimeout(()=>{
+      if(!kakaoInitDone){
+        console.log('Kakao Maps 타임아웃 → OpenStreetMap으로 대체');
+        initLeafletMap();
+      }
+    }, 2500);
+
+    try {
+      if(typeof kakao==='undefined') throw new Error('SDK 없음');
+      kakao.maps.load(()=>{
+        clearTimeout(fallback);
+        kakaoInitDone=true;
+        try { initKakaoMap(); }
+        catch(e){ console.warn('Kakao 초기화 실패:', e); initLeafletMap(); }
+      });
+    } catch(e){
+      clearTimeout(fallback);
+      console.log('Kakao SDK 없음 → OpenStreetMap 사용');
+      initLeafletMap();
+    }
+  }
+
+  /* ── 초기화 ── */
+  renderCalendar();
+  buildTimePicker();
+  // 슬라이더 초기값 = 현재 선택 시간
+  document.getElementById('timeSlider').value = selectedMin;
+  document.getElementById('sliderTimeLabel').textContent = minToHHMM(selectedMin);
+  updateBadge();
+  load();
+  </script>
+</body>
+</html>

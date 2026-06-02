@@ -3493,3 +3493,99 @@ body {
   .auth-card    { padding: 20px 16px; }
   .auth-wrap    { gap: 20px; }
 }
+
+/* ==============================
+   YEOGI 브랜딩 & 신규 기능 스타일
+   ============================== */
+
+.yeogi-brand { display:flex; flex-direction:column; line-height:1.1; }
+.brand-ko { font-size:22px; font-weight:900; color:#1a3a7a; letter-spacing:-0.5px; }
+.brand-en { font-size:11px; font-weight:700; color:#2563eb; letter-spacing:3px; margin-top:1px; }
+
+.status-in-use { display:inline-flex; align-items:center; gap:5px; background:#fee2e2; color:#dc2626; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700; }
+.status-free   { display:inline-flex; align-items:center; gap:5px; background:#dcfce7; color:#16a34a; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700; }
+.status-dot-red   { width:7px; height:7px; border-radius:50%; background:#dc2626; display:inline-block; }
+.status-dot-green { width:7px; height:7px; border-radius:50%; background:#16a34a; display:inline-block; }
+
+.live-clock { font-size:13px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:6px; }
+.live-dot { width:8px; height:8px; border-radius:50%; background:#16a34a; animation:blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.building-tabs { display:flex; gap:8px; flex-wrap:wrap; padding:0 0 16px; }
+.building-tab { padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; border:1.5px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer; transition:all .15s; white-space:nowrap; }
+.building-tab:hover { border-color:#2563eb; color:#2563eb; }
+.building-tab.active { background:#2563eb; border-color:#2563eb; color:#fff; }
+
+.classroom-stats-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+.cls-stat { background:var(--card); border-radius:12px; padding:14px 20px; box-shadow:var(--shadow); min-width:100px; }
+.cls-stat-num { font-size:24px; font-weight:900; color:var(--text); display:block; }
+.cls-stat-label { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; display:block; }
+
+.classroom-search { display:flex; gap:10px; margin-bottom:16px; }
+.classroom-search input { flex:1; padding:10px 16px; border-radius:12px; border:1.5px solid var(--line); font-size:14px; outline:none; transition:border-color .15s; font-family:inherit; }
+.classroom-search input:focus { border-color:#2563eb; }
+
+.room-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; padding-bottom:20px; }
+.room-card { background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border-left:4px solid transparent; transition:transform .15s; }
+.room-card:hover { transform:translateY(-2px); }
+.room-card.in-use { border-left-color:#dc2626; }
+.room-card.free   { border-left-color:#16a34a; }
+.room-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.room-name { font-size:16px; font-weight:700; }
+.room-building-label { font-size:11px; color:var(--muted); margin-bottom:6px; }
+.room-course-name { font-size:14px; font-weight:600; color:var(--text); margin-top:4px; }
+.room-professor { font-size:12px; color:var(--muted); margin-top:2px; }
+.room-time { font-size:12px; color:#2563eb; margin-top:4px; font-weight:600; }
+.room-empty-label { font-size:13px; color:var(--muted); margin-top:4px; }
+.room-next { font-size:12px; color:var(--muted); margin-top:8px; padding-top:8px; border-top:1px solid var(--line); }
+
+.loading-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; gap:14px; color:var(--muted); font-size:14px; }
+.spinner { width:36px; height:36px; border:3px solid var(--line); border-top-color:#2563eb; border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to{ transform:rotate(360deg) } }
+
+.nav-icon { margin-right:4px; }
+
+.library-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+.lib-stat-card { background:var(--card); border-radius:var(--radius); padding:16px; text-align:center; box-shadow:var(--shadow); }
+.lib-stat-num { font-size:28px; font-weight:900; color:var(--text); display:block; }
+.lib-stat-label { font-size:12px; color:var(--muted); margin-top:4px; display:block; }
+.lib-stat-card.green .lib-stat-num { color:#16a34a; }
+.lib-stat-card.red   .lib-stat-num { color:#dc2626; }
+
+.floor-tabs { display:flex; gap:8px; margin-bottom:20px; }
+.floor-tab { padding:8px 22px; border-radius:20px; font-size:14px; font-weight:600; border:1.5px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer; transition:all .15s; font-family:inherit; }
+.floor-tab.active { background:#1a3a7a; border-color:#1a3a7a; color:#fff; }
+
+.seat-section { margin-bottom:28px; }
+.seat-section-title { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:.5px; }
+.seat-grid { display:grid; gap:7px; grid-template-columns:repeat(var(--cols,8), minmax(0,1fr)); }
+.seat { aspect-ratio:1; border-radius:8px; border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; cursor:pointer; transition:all .15s; background:var(--card); color:var(--muted); }
+.seat:hover { transform:scale(1.08); }
+.seat.available { background:#dcfce7; border-color:#86efac; color:#15803d; }
+.seat.occupied  { background:#fee2e2; border-color:#fca5a5; color:#dc2626; cursor:default; }
+.seat.occupied:hover { transform:none; }
+.seat.mine      { background:#dbeafe; border-color:#93c5fd; color:#1d4ed8; }
+.seat.selected  { background:#1a3a7a; border-color:#1a3a7a; color:#fff; }
+
+.seat-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid var(--line); }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+.legend-dot { width:14px; height:14px; border-radius:4px; border:1.5px solid; }
+.legend-dot.available { background:#dcfce7; border-color:#86efac; }
+.legend-dot.occupied  { background:#fee2e2; border-color:#fca5a5; }
+.legend-dot.mine      { background:#dbeafe; border-color:#93c5fd; }
+
+.reserve-bar { background:#1a3a7a; border-radius:var(--radius); padding:18px 22px; color:#fff; margin-top:20px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+.reserve-bar h3 { font-size:15px; font-weight:700; }
+.reserve-bar p  { font-size:13px; opacity:.8; margin-top:3px; }
+.reserve-btn { background:#fff; color:#1a3a7a; border:none; border-radius:12px; padding:10px 22px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+.reserve-btn:hover { background:#e0e7ff; }
+.cancel-reserve-btn { background:#dc2626; color:#fff; border:none; border-radius:12px; padding:10px 22px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+
+.yeogi-quick-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:16px; }
+.yeogi-quick-card { background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); text-decoration:none; color:var(--text); display:flex; flex-direction:column; gap:6px; border:1.5px solid var(--line); transition:all .15s; }
+.yeogi-quick-card:hover { transform:translateY(-2px); border-color:#2563eb; }
+.yeogi-quick-icon  { font-size:26px; }
+.yeogi-quick-title { font-size:14px; font-weight:700; }
+.yeogi-quick-desc  { font-size:12px; color:var(--muted); }
+.yeogi-quick-badge { font-size:11px; font-weight:700; color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:8px; width:fit-content; }
+.yeogi-quick-badge.red { color:#dc2626; background:#fee2e2; }
