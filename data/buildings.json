@@ -1,47 +1,508 @@
 {
-  "comment": "창원대학교 건물 좌표. Kakao Local로 확인된 항목은 verified:true, 수동 추정 항목은 approximate:true",
-
-  "11":  { "lat": 35.2425693502625,  "lng": 128.696996982084,  "verified": true,  "name": "제1공학관" },
-  "22":  { "lat": 35.2416823272549,  "lng": 128.699324914958,  "verified": true,  "name": "제2공학관" },
-  "55":  { "lat": 35.2414624536889,  "lng": 128.695726012148,  "verified": true,  "name": "제5공학관" },
-  "61":  { "lat": 35.24511063062944, "lng": 128.69610738124314,"verified": true,  "name": "제6공학관1동" },
-  "62":  { "lat": 35.2414420653223,  "lng": 128.697694111885,  "verified": true,  "name": "제6공학관2동" },
-  "63":  { "lat": 35.2411753725792,  "lng": 128.698716751084,  "verified": true,  "name": "제6공학관3동" },
-  "85":  { "lat": 35.2443776229246,  "lng": 128.692719574045,  "verified": true,  "name": "인문사회관" },
-  "86":  { "lat": 35.2477236069147,  "lng": 128.694859981242,  "verified": true,  "name": "자연과학관" },
-  "98":  { "lat": 35.2419735552414,  "lng": 128.694238281031,  "verified": true,  "name": "98관" },
-  "BAC": { "lat": 35.2451895549127,  "lng": 128.693690000978,  "verified": true,  "name": "BAC관" },
-  "인문홀": { "lat": 35.2465457864479, "lng": 128.69260205814,  "verified": true,  "name": "인문홀" },
-  "사천": { "lat": 35.063046714109504,"lng": 128.0494021523297,"verified": true,  "name": "사천캠퍼스" },
-
-  "B21": { "lat": 35.2447500,        "lng": 128.6941000,       "approximate": true, "name": "B21관" },
-  "4":   { "lat": 35.2430000,        "lng": 128.6955000,       "approximate": true, "name": "4관" },
-  "6":   { "lat": 35.2434000,        "lng": 128.6962000,       "approximate": true, "name": "6관" },
-  "8":   { "lat": 35.2428000,        "lng": 128.6972000,       "approximate": true, "name": "8관" },
-  "32":  { "lat": 35.2439000,        "lng": 128.6938000,       "approximate": true, "name": "32관" },
-  "33":  { "lat": 35.2436000,        "lng": 128.6942000,       "approximate": true, "name": "33관" },
-  "34":  { "lat": 35.2433000,        "lng": 128.6946000,       "approximate": true, "name": "34관" },
-  "35":  { "lat": 35.2430000,        "lng": 128.6948000,       "approximate": true, "name": "35관" },
-  "50":  { "lat": 35.2418000,        "lng": 128.6952000,       "approximate": true, "name": "50관" },
-  "52":  { "lat": 35.2424000,        "lng": 128.6960000,       "approximate": true, "name": "52관" },
-  "53":  { "lat": 35.2421000,        "lng": 128.6960000,       "approximate": true, "name": "53관" },
-  "54":  { "lat": 35.2418000,        "lng": 128.6960000,       "approximate": true, "name": "54관" },
-  "64":  { "lat": 35.2446000,        "lng": 128.6978000,       "approximate": true, "name": "64관" },
-  "81":  { "lat": 35.2460000,        "lng": 128.6930000,       "approximate": true, "name": "81관" },
-  "99":  { "lat": 35.2422000,        "lng": 128.6950000,       "approximate": true, "name": "99관" },
-  "T98": { "lat": 35.2421000,        "lng": 128.6944000,       "approximate": true, "name": "T98관" },
-  "N98": { "lat": 35.2418000,        "lng": 128.6940000,       "approximate": true, "name": "N98관" },
-  "BAC2":{ "lat": 35.2453000,        "lng": 128.6939000,       "approximate": true, "name": "BAC2관" },
-  "공기원": { "lat": 35.2456000,     "lng": 128.6955000,       "approximate": true, "name": "공기원" },
-  "사림강당": { "lat": 35.2454000,   "lng": 128.6933000,       "approximate": true, "name": "사림강당" },
-  "공실관": { "lat": 35.2442000,     "lng": 128.6947000,       "approximate": true, "name": "공동실험실습관" },
-  "전산": { "lat": 35.2437000,       "lng": 128.6954000,       "approximate": true, "name": "전산관" },
-  "CWNU이룸홀": { "lat": 35.2457000, "lng": 128.6947000,       "approximate": true, "name": "CWNU이룸홀" },
-  "골프장": { "lat": 35.2440000,     "lng": 128.6916000,       "approximate": true, "name": "골프장" },
-  "대운동장": { "lat": 35.2462000,   "lng": 128.6944000,       "approximate": true, "name": "대운동장" },
-  "풋살장": { "lat": 35.2465000,     "lng": 128.6951000,       "approximate": true, "name": "풋살장" },
-  "수영장": { "lat": 35.2443000,     "lng": 128.6920000,       "approximate": true, "name": "수영장" },
-  "테니스장": { "lat": 35.2448000,   "lng": 128.6913000,       "approximate": true, "name": "테니스장" },
-  "학군단": { "lat": 35.2470000,     "lng": 128.6938000,       "approximate": true, "name": "학군단" },
-  "사천캠퍼스": { "lat": 35.063046714109504, "lng": 128.0494021523297, "verified": true, "name": "사천캠퍼스" }
+  "1": {
+    "lat": 35.245598,
+    "lng": 128.691891,
+    "name": "대학본부(1호관)",
+    "official": true
+  },
+  "2": {
+    "lat": 35.246127,
+    "lng": 128.690856,
+    "name": "도서관(2호관)",
+    "official": true
+  },
+  "3": {
+    "lat": 35.245188,
+    "lng": 128.693719,
+    "name": "BAC(3호관)",
+    "official": true
+  },
+  "4": {
+    "lat": 35.247175,
+    "lng": 128.694679,
+    "approximate": true,
+    "name": "인공지능특화센터(4호관)",
+    "official": true
+  },
+  "5": {
+    "lat": 35.246258,
+    "lng": 128.693968,
+    "name": "MOSS(봉림관)(5호관)",
+    "official": true
+  },
+  "6": {
+    "lat": 35.242254,
+    "lng": 128.695186,
+    "approximate": true,
+    "name": "COSS(사림관)(6호관)",
+    "official": true
+  },
+  "7": {
+    "lat": 35.243329,
+    "lng": 128.696951,
+    "name": "공동기기원(7호관)",
+    "official": true
+  },
+  "8": {
+    "lat": 35.244394,
+    "lng": 128.692681,
+    "approximate": true,
+    "name": "체육관(8호관)",
+    "official": true
+  },
+  "9": {
+    "lat": 35.248344,
+    "lng": 128.694908,
+    "name": "체육교육관(9호관)",
+    "official": true
+  },
+  "11": {
+    "lat": 35.246491,
+    "lng": 128.692143,
+    "name": "인문대학(11호관)",
+    "corrected": true,
+    "official": true
+  },
+  "21": {
+    "lat": 35.247658,
+    "lng": 128.690774,
+    "name": "경영대학(21호관)",
+    "corrected": true,
+    "official": true
+  },
+  "22": {
+    "lat": 35.247496,
+    "lng": 128.692148,
+    "name": "사회과학대학(22호관)",
+    "corrected": true,
+    "official": true
+  },
+  "31": {
+    "lat": 35.244375,
+    "lng": 128.695453,
+    "name": "자연대1호관(31호관)",
+    "official": true
+  },
+  "32": {
+    "lat": 35.245431,
+    "lng": 128.694997,
+    "name": "자연대2호관(32호관)",
+    "corrected": true,
+    "official": true
+  },
+  "33": {
+    "lat": 35.244395,
+    "lng": 128.693351,
+    "name": "자연대3호관(33호관)",
+    "corrected": true,
+    "official": true
+  },
+  "34": {
+    "lat": 35.246011,
+    "lng": 128.694821,
+    "name": "자연대4호관(34호관)",
+    "corrected": true,
+    "official": true
+  },
+  "35": {
+    "lat": 35.243665,
+    "lng": 128.695075,
+    "name": "자연대5호관(바이오연구동)(35호관)",
+    "corrected": true,
+    "official": true
+  },
+  "50": {
+    "lat": 35.242041,
+    "lng": 128.698209,
+    "name": "공대실험1동(50호관)",
+    "corrected": true,
+    "official": true
+  },
+  "51": {
+    "lat": 35.242538,
+    "lng": 128.697187,
+    "name": "공대1호관(51호관)",
+    "corrected": true,
+    "official": true
+  },
+  "52": {
+    "lat": 35.241669,
+    "lng": 128.699354,
+    "name": "공대2호관(52호관)",
+    "corrected": true,
+    "official": true
+  },
+  "53": {
+    "lat": 35.241447,
+    "lng": 128.697748,
+    "name": "공대3호관(53호관)",
+    "corrected": true,
+    "official": true
+  },
+  "54": {
+    "lat": 35.241198,
+    "lng": 128.698759,
+    "name": "공대4호관(54호관)",
+    "corrected": true,
+    "official": true
+  },
+  "55": {
+    "lat": 35.241441,
+    "lng": 128.695791,
+    "name": "공대5호관(55호관)",
+    "corrected": true,
+    "official": true
+  },
+  "56": {
+    "lat": 35.241784,
+    "lng": 128.700098,
+    "name": "공대실험2동(해양플랜트실험동)(56호관)",
+    "official": true
+  },
+  "61": {
+    "lat": 35.245191,
+    "lng": 128.696283,
+    "name": "예술대1호관(61호관)",
+    "corrected": true,
+    "official": true
+  },
+  "62": {
+    "lat": 35.244701,
+    "lng": 128.696747,
+    "name": "예술대2호관(62호관)",
+    "corrected": true,
+    "official": true
+  },
+  "63": {
+    "lat": 35.244179,
+    "lng": 128.696297,
+    "name": "예술대3호관(63호관)",
+    "corrected": true,
+    "official": true
+  },
+  "64": {
+    "lat": 35.245571,
+    "lng": 128.695755,
+    "name": "예술대실습관(64호관)",
+    "corrected": true,
+    "official": true
+  },
+  "70": {
+    "lat": 35.248342,
+    "lng": 128.687984,
+    "name": "생활복지동(70호관)",
+    "official": true
+  },
+  "71": {
+    "lat": 35.247987,
+    "lng": 128.688489,
+    "name": "학생생활관1동(71호관)",
+    "official": true
+  },
+  "72": {
+    "lat": 35.248251,
+    "lng": 128.687072,
+    "name": "학생생활관2동(72호관)",
+    "official": true
+  },
+  "73": {
+    "lat": 35.248661,
+    "lng": 128.687322,
+    "name": "학생생활관3동(73호관)",
+    "official": true
+  },
+  "74": {
+    "lat": 35.248315,
+    "lng": 128.688651,
+    "name": "학생생활관4동(74호관)",
+    "official": true
+  },
+  "75": {
+    "lat": 35.249088,
+    "lng": 128.687411,
+    "name": "학생생활관5동(75호관)",
+    "official": true
+  },
+  "76": {
+    "lat": 35.249522,
+    "lng": 128.687603,
+    "name": "학생생활관6동(76호관)",
+    "official": true
+  },
+  "77": {
+    "lat": 35.249654,
+    "lng": 128.688885,
+    "name": "학생생활관7동(77호관)",
+    "official": true
+  },
+  "81": {
+    "lat": 35.242926,
+    "lng": 128.697983,
+    "name": "산학협동관1동(81호관)",
+    "corrected": true,
+    "official": true
+  },
+  "82": {
+    "lat": 35.242571,
+    "lng": 128.698696,
+    "name": "산학협동관2동(82호관)",
+    "official": true
+  },
+  "83": {
+    "lat": 35.242198,
+    "lng": 128.699411,
+    "name": "산학협동관3동(83호관)",
+    "official": true
+  },
+  "84": {
+    "lat": 35.242179,
+    "lng": 128.69941,
+    "name": "산학협동관4동(초전도응용연구동)(84호관)",
+    "official": true
+  },
+  "85": {
+    "lat": 35.240947,
+    "lng": 128.697353,
+    "name": "종합교육관(85호관)",
+    "corrected": true,
+    "official": true
+  },
+  "86": {
+    "lat": 35.247829,
+    "lng": 128.694783,
+    "name": "국제교류교육원(86호관)",
+    "corrected": true,
+    "official": true
+  },
+  "87": {
+    "lat": 35.245603,
+    "lng": 128.694106,
+    "name": "두레관(87호관)",
+    "official": true
+  },
+  "88": {
+    "lat": 35.243437,
+    "lng": 128.692879,
+    "name": "운동장본부석(88호관)",
+    "official": true
+  },
+  "90": {
+    "lat": 35.243576,
+    "lng": 128.691705,
+    "name": "정문수위실(90호관)",
+    "official": true
+  },
+  "91": {
+    "lat": 35.248393,
+    "lng": 128.692782,
+    "name": "테니스장관리동(91호관)",
+    "official": true
+  },
+  "92": {
+    "lat": 35.245417,
+    "lng": 128.690506,
+    "name": "제1동력실(92호관)",
+    "official": true
+  },
+  "94": {
+    "lat": 35.245041,
+    "lng": 128.690305,
+    "name": "목공실(94호관)",
+    "official": true
+  },
+  "95": {
+    "lat": 35.242621,
+    "lng": 128.694174,
+    "name": "운동장동아리방(95호관)",
+    "official": true
+  },
+  "96": {
+    "lat": 35.243337,
+    "lng": 128.697988,
+    "name": "로봇연구실험동(96호관)",
+    "official": true
+  },
+  "97": {
+    "lat": 35.247722,
+    "lng": 128.693846,
+    "name": "직장어린이집(97호관)",
+    "official": true
+  },
+  "98": {
+    "lat": 35.242059,
+    "lng": 128.694411,
+    "name": "글로벌평생학습관(98호관)",
+    "corrected": true,
+    "official": true
+  },
+  "99": {
+    "lat": 35.24223,
+    "lng": 128.69482,
+    "name": "99호관",
+    "corrected": true
+  },
+  "comment": "창원대학교 공식 스마트캠퍼스 캠퍼스지도(https://app.changwon.ac.kr/campus/campus_005.do)의 data-lat/data-lng 값을 기준으로 보정한 건물 좌표입니다.",
+  "BAC": {
+    "lat": 35.245188,
+    "lng": 128.693719,
+    "name": "BAC(3호관)",
+    "official": true,
+    "officialAlias": true
+  },
+  "인문홀": {
+    "lat": 35.2465457864479,
+    "lng": 128.69260205814,
+    "verified": true,
+    "name": "인문홀"
+  },
+  "사천": {
+    "lat": 35.063046714109504,
+    "lng": 128.0494021523297,
+    "verified": true,
+    "name": "사천캠퍼스"
+  },
+  "B21": {
+    "lat": 35.247658,
+    "lng": 128.690774,
+    "name": "경영대학(21호관)",
+    "corrected": true,
+    "official": true,
+    "officialAlias": true
+  },
+  "T98": {
+    "lat": 35.242059,
+    "lng": 128.694411,
+    "name": "글로벌평생학습관(공과대학)(98호관)",
+    "corrected": true,
+    "official": true,
+    "officialAlias": true
+  },
+  "N98": {
+    "lat": 35.242059,
+    "lng": 128.694411,
+    "name": "글로벌평생학습관(자연과학대학)(98호관)",
+    "corrected": true,
+    "official": true,
+    "officialAlias": true
+  },
+  "BAC2": {
+    "lat": 35.245188,
+    "lng": 128.693719,
+    "name": "BAC(3호관)",
+    "official": true,
+    "officialAlias": true
+  },
+  "공기원": {
+    "lat": 35.2456,
+    "lng": 128.6955,
+    "approximate": true,
+    "name": "공기원"
+  },
+  "사림강당": {
+    "lat": 35.2454,
+    "lng": 128.6933,
+    "approximate": true,
+    "name": "사림강당"
+  },
+  "공실관": {
+    "lat": 35.2442,
+    "lng": 128.6947,
+    "approximate": true,
+    "name": "공동실험실습관"
+  },
+  "전산": {
+    "lat": 35.2437,
+    "lng": 128.6954,
+    "approximate": true,
+    "name": "전산관"
+  },
+  "CWNU이룸홀": {
+    "lat": 35.245603,
+    "lng": 128.694106,
+    "name": "두레관/CWNU이룸홀",
+    "official": true,
+    "officialAlias": true
+  },
+  "골프장": {
+    "lat": 35.244,
+    "lng": 128.6916,
+    "approximate": true,
+    "name": "골프장"
+  },
+  "대운동장": {
+    "lat": 35.2462,
+    "lng": 128.6944,
+    "approximate": true,
+    "name": "대운동장"
+  },
+  "풋살장": {
+    "lat": 35.2465,
+    "lng": 128.6951,
+    "approximate": true,
+    "name": "풋살장"
+  },
+  "수영장": {
+    "lat": 35.2443,
+    "lng": 128.692,
+    "approximate": true,
+    "name": "수영장"
+  },
+  "테니스장": {
+    "lat": 35.248393,
+    "lng": 128.692782,
+    "name": "테니스장관리동(91호관)",
+    "official": true,
+    "officialAlias": true
+  },
+  "학군단": {
+    "lat": 35.248734,
+    "lng": 128.693113,
+    "approximate": true,
+    "name": "학군단(4호관)",
+    "official": true,
+    "officialAlias": true
+  },
+  "사천캠퍼스": {
+    "lat": 35.063046714109504,
+    "lng": 128.0494021523297,
+    "verified": true,
+    "name": "사천캠퍼스"
+  },
+  "???": {
+    "lat": 35.247,
+    "lng": 128.6938,
+    "name": "???",
+    "corrected": true
+  },
+  "??": {
+    "lat": 35.24355,
+    "lng": 128.69536,
+    "name": "???",
+    "corrected": true
+  },
+  "????": {
+    "lat": 35.2448,
+    "lng": 128.6913,
+    "name": "????",
+    "corrected": true
+  },
+  "CWNU": {
+    "lat": 35.245603,
+    "lng": 128.694106,
+    "name": "두레관/CWNU이룸홀",
+    "official": true,
+    "officialAlias": true
+  },
+  "CWNU???": {
+    "lat": 35.2457,
+    "lng": 128.6947,
+    "name": "CWNU???",
+    "corrected": true
+  },
+  "?????": {
+    "lat": 35.063046714109504,
+    "lng": 128.0494021523297,
+    "name": "?????",
+    "verified": true
+  }
 }

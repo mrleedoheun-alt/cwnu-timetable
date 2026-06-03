@@ -509,38 +509,93 @@ const server = http.createServer(async (req, res) => {
       const seats = (data._Model_lg_clicker_for_compact_object_list || []).map(s => {
         const div    = s.l_seat_object_div || '';
         const num    = (div.match(/clicker_s_s_no[^>]*>(\d+)<\/span>/) || div.match(/<b>(\d+)<\/b>/) || [])[1] || '?';
-        const top    = parseInt((div.match(/top:\s*(\d+)px/) || [])[1] || '0');
-        const left   = parseInt((div.match(/left:\s*(\d+)px/) || [])[1] || '0');
+        const top    = parseInt((div.match(/top:\s*(\d+)px/) || [])[1] || '0', 10);
+        const left   = parseInt((div.match(/left:\s*(\d+)px/) || [])[1] || '0', 10);
         const title  = (div.match(/title="([^"]+)"/) || [])[1] || '';
+        const className = (div.match(/class="([^"]+)"/) || [])[1] || '';
+        const classes = className.split(/\s+/).filter(Boolean);
+        const has = token => div.includes(token) || classes.includes(token);
 
-        const status = div.includes('clicker_seat_status_closed') || div.includes('clicker_s_b_c')
-          ? 'closed'
-          : title === '배정가능' || div.includes('clicker_s_b_n') || div.includes('clicker_s_b_pa')
-            ? 'available'
-            : 'occupied';
+        let status = 'occupied';
+        if (has('clicker_seat_status_closed') || has('clicker_s_b_c') || /closed|disable|unavailable/i.test(className) || /불가|사용중지|폐쇄/.test(title)) status = 'unavailable';
+        else if (has('clicker_se_st_booking') || /booking|reserve/i.test(className) || /예약|배정중|신청/.test(title)) status = 'reserved';
+        else if (has('clicker_se_st_need_confirm') || /gate|confirm|need_confirm/i.test(className) || /게이트|인증|확인/.test(title)) status = 'pending';
+        else if (has('clicker_se_st_in') || has('clicker_se_st_full_in') || has('clicker_s_b_o') || /occupied|using|full/i.test(className) || /사용중|이용중/.test(title)) status = 'occupied';
+        else if (title === '배정가능' || has('clicker_se_st_no') || has('clicker_s_b_n') || has('clicker_s_b_pa')) status = 'available';
+        else status = 'available';
 
-        const type = div.includes('clicker_seat_status_notebook')   ? 'notebook'
-                   : div.includes('clicker_seat_status_handicaped') ? 'handicapped'
-                   : div.includes('clicker_s_b_pa')                 ? 'partition'
-                   : 'normal';
+        let type = 'normal';
+        if (has('clicker_se_st_no_kiosk') || has('clicker_seat_status_no_kiosk') || /smart.?phone|no_kiosk|kiosk/i.test(className) || /Smart\s*Phone|스마트폰/i.test(title)) type = 'smartPhone';
+        else if (has('clicker_seat_status_handicaped') || has('clicker_seat_status_handicapped') || /handicap|disabled/i.test(className) || /장애/i.test(title)) type = 'handicapped';
+        else if (has('clicker_seat_status_notebook') || /notebook|laptop/i.test(className) || /노트북/i.test(title)) type = 'notebook';
+        else if (has('clicker_s_b_pa') || /partition/i.test(className) || /칸막/i.test(title)) type = 'partition';
 
-        return { num: parseInt(num) || 0, status, type, top, left };
+        const category = status === 'unavailable' || status === 'closed' ? 'unavailable'
+          : status === 'occupied' ? 'occupied'
+          : status === 'reserved' ? 'reserved'
+          : status === 'pending' ? 'pending'
+          : type === 'smartPhone' ? 'smartPhone'
+          : type === 'handicapped' ? 'handicapped'
+          : type === 'notebook' ? 'notebook'
+          : type === 'partition' ? 'partition'
+          : 'normal';
+
+        return { num: parseInt(num, 10) || 0, status, type, category, top, left, title, classes };
       });
 
       seats.sort((a, b) => a.num - b.num);
 
       const available = seats.filter(s => s.status === 'available').length;
       const occupied  = seats.filter(s => s.status === 'occupied').length;
+      const reserved  = seats.filter(s => s.status === 'reserved').length;
+      const closed    = seats.filter(s => s.status === 'closed' || s.status === 'unavailable').length;
+      const categories = seats.reduce((acc, s) => { acc[s.category] = (acc[s.category] || 0) + 1; return acc; }, {});
 
       res.writeHead(200);
-      res.end(JSON.stringify({ status: 'ok', room: floor, total: seats.length, available, occupied, seats }));
+      res.end(JSON.stringify({ status: 'ok', room: floor, total: seats.length, available, occupied, reserved, closed, categories, seats }));
     } catch (e) {
-      res.writeHead(502);
-      res.end(JSON.stringify({ error: e.message }));
+      if (!res.headersSent) {
+        res.writeHead(502);
+        res.end(JSON.stringify({ error: e.message }));
+      } else {
+        console.error('[library] response failed after headers:', e.message);
+        res.end();
+      }
     }
     return;
   }
 
+  /* ── Kakao Maps SDK proxy: 브라우저 확장/환경이 dapi.kakao.com을 막을 때 same-origin으로 우회 ── */
+  if (pathname === '/api/kakao-maps-sdk') {
+    const appkey = urlObj.searchParams.get('appkey') || process.env.KAKAO_JS_KEY || 'c92a1f184fb09dbf5ad4b080d204360e';
+    try {
+      const sdkUrl = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(appkey)}`;
+      const sdkRes = await fetch(sdkUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 YEOGI local dev proxy',
+        },
+      });
+      if (!sdkRes.ok) throw new Error(`Kakao SDK HTTP ${sdkRes.status}`);
+            let js = await sdkRes.text();
+      js = js.replace(
+        '/\\/(beta-)?dapi\\.kakao\\.com\\/v2\\/maps\\/sdk\\.js\\b/.test(i.src)',
+        '(/\\/(beta-)?dapi\\.kakao\\.com\\/v2\\/maps\\/sdk\\.js\\b/.test(i.src)||/\\/api\\/kakao-maps-sdk\\b/.test(i.src))'
+      );
+      res.writeHead(200, {
+        'Content-Type': 'application/javascript; charset=utf-8',
+        'Cache-Control': 'no-store, max-age=0, must-revalidate',
+        'Access-Control-Allow-Origin': '*',
+      });
+      res.end(js);
+    } catch (e) {
+      res.writeHead(502, {
+        'Content-Type': 'application/javascript; charset=utf-8',
+        'Cache-Control': 'no-store, max-age=0, must-revalidate',
+      });
+      res.end(`console.error(${JSON.stringify('[Kakao Proxy] ' + e.message)});`);
+    }
+    return;
+  }
   /* ── 정적 파일 ── */
   const u  = pathname;
   const fp = path.join(__dirname, u === '/' ? 'login.html' : u);
@@ -554,7 +609,7 @@ const server = http.createServer(async (req, res) => {
   const ext = path.extname(fp).slice(1);
   res.writeHead(200, {
     'Content-Type':  MIME[ext] || 'text/plain',
-    'Cache-Control': 'no-cache',
+    'Cache-Control': 'no-store, max-age=0, must-revalidate',
   });
   fs.createReadStream(fp).pipe(res);
 });

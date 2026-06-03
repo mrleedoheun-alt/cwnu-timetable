@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    Constants & Storage Keys
    ============================================================ */
 const USERS_KEY    = 'tt_users_v1';
@@ -595,6 +595,7 @@ function showCoursePopup(block, courseName, state, onDelete) {
     <button class="popup-retake-btn${isRetake ? ' active' : ''}" type="button">
       🔄 ${isRetake ? '재수강 취소' : '재수강 필요'}
     </button>
+    <button class="popup-detail-btn" type="button">지도/상세 보기</button>
     <button class="popup-del-btn" type="button">시간표에서 삭제</button>
   `;
 
@@ -605,6 +606,16 @@ function showCoursePopup(block, courseName, state, onDelete) {
   popup.style.left = `${rect.left  + scrollX}px`;
   document.body.appendChild(popup);
   _popup = popup;
+
+  popup.querySelector('.popup-detail-btn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closePopup();
+    showBlockInfoModal(courseName, course);
+    setTimeout(() => {
+      const actions = document.querySelector('.cip-block-modal .cip-actions');
+      if (actions) actions.style.display = 'none';
+    }, 0);
+  });
 
   popup.querySelector('.popup-retake-btn').addEventListener('click', (e) => {
     e.stopPropagation();
@@ -2277,28 +2288,36 @@ function showBlockInfoModal(courseName, courseObj) {
     btn.textContent = nowIn ? '✓ 담김 — 클릭 시 해제' : '＋ 담기';
   });
 
-  // Leaflet 지도 (건물 위치)
+  // Kakao 지도 (건물 위치)
   if (hasMap) {
-    setTimeout(() => {
+    setTimeout(async () => {
       const el = document.getElementById('cipMapEl');
-      if (!el || typeof L === 'undefined') return;
-      const firstCoord = BUILDING_COORDS[blds[0]];
-      const map = L.map(el).setView([firstCoord.lat, firstCoord.lng], 17);
-      L.tileLayer(OSM_TILE, { attribution: OSM_ATTR, maxZoom: 19 }).addTo(map);
-      map.invalidateSize();
-      const markers = blds.map(bld => {
-        const c = BUILDING_COORDS[bld];
-        return L.marker([c.lat, c.lng])
-          .bindPopup(`<b>${c.name}</b>`, { closeButton: false, autoClose: false, closeOnClick: false })
-          .addTo(map)
-          .openPopup();
-      });
-      if (blds.length > 1) {
-        map.fitBounds(blds.map(b => [BUILDING_COORDS[b].lat, BUILDING_COORDS[b].lng]), { padding: [40, 40], maxZoom: 17 });
+      if (!el) return;
+      try {
+        await loadKakaoMapsForGenerate();
+        const firstCoord = BUILDING_COORDS[blds[0]];
+        const map = new kakao.maps.Map(el, {
+          center: new kakao.maps.LatLng(firstCoord.lat, firstCoord.lng),
+          level: 3,
+        });
+
+        const bounds = new kakao.maps.LatLngBounds();
+        blds.forEach(bld => {
+          const c = BUILDING_COORDS[bld];
+          const pos = new kakao.maps.LatLng(c.lat, c.lng);
+          bounds.extend(pos);
+          const marker = new kakao.maps.Marker({ position: pos, map });
+          const info = new kakao.maps.InfoWindow({
+            content: `<div style="padding:6px 9px;font-size:12px;font-weight:700;white-space:nowrap">${c.name}</div>`,
+          });
+          info.open(map, marker);
+        });
+        if (blds.length > 1) map.setBounds(bounds, 40, 40, 40, 40);
+        else setTimeout(() => map.relayout(), 80);
+      } catch (e) {
+        console.warn('[Kakao][generate] 지도 초기화 실패:', e.message);
+        el.innerHTML = `<div class="map-error"><strong>지도 로드 실패</strong><span>${e.message}</span></div>`;
       }
-      const cleanup = () => map.remove();
-      backdrop.addEventListener('click', cleanup, { once: true });
-      modal.querySelector('.cip-close').addEventListener('click', cleanup, { once: true });
     }, 120);
   }
 }
@@ -3432,42 +3451,397 @@ document.addEventListener('DOMContentLoaded', init);
    위치 기반 이동 정보 모듈
    ============================================================ */
 
-/* ── 창원대 건물 좌표 테이블 ── */
+/* ── 창원대 건물 좌표 테이블: 공식 스마트캠퍼스 캠퍼스지도 기준 ── */
 const BUILDING_COORDS = {
-  '11':  { lat: 35.2463093, lng: 128.6921212, name: '11호관' },
-  '22':  { lat: 35.2474355, lng: 128.6921226, name: '22호관' },
-  '32':  { lat: 35.2454557, lng: 128.6950178, name: '32호관' },
-  '33':  { lat: 35.2443687, lng: 128.6932992, name: '33호관' },
-  '34':  { lat: 35.2459461, lng: 128.6948307, name: '34호관' },
-  '35':  { lat: 35.2448000, lng: 128.6943000, name: '35호관' },
-  '41':  { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
-  '4동': { lat: 35.2443812, lng: 128.6926772, name: '41호관' },
-  '50':  { lat: 35.2419925, lng: 128.6982163, name: '50호관' },
-  '52':  { lat: 35.2416249, lng: 128.6993138, name: '52호관' },
-  '53':  { lat: 35.2413921, lng: 128.6977360, name: '53호관' },
-  '54':  { lat: 35.2411474, lng: 128.6987354, name: '54호관' },
-  '55':  { lat: 35.2413997, lng: 128.6958770, name: '55호관' },
-  '61':  { lat: 35.2451384, lng: 128.6962653, name: '61호관' },
-  '62':  { lat: 35.2446674, lng: 128.6966943, name: '62호관' },
-  '63':  { lat: 35.2441996, lng: 128.6962994, name: '63호관' },
-  '64':  { lat: 35.2456716, lng: 128.6958435, name: '64호관' },
-  '81':  { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
-  '8동': { lat: 35.2428419, lng: 128.6979290, name: '81호관' },
-  '85':  { lat: 35.2408562, lng: 128.6973639, name: '85호관' },
-  '86':  { lat: 35.2477478, lng: 128.6947957, name: '86호관' },
-  '98':  { lat: 35.2419937, lng: 128.6942744, name: '98호관' },
-  'B21': { lat: 35.2447500, lng: 128.6941000, name: 'B21호관' },
-  'N98': { lat: 35.2418000, lng: 128.6940000, name: 'N98호관' },
-  'T98': { lat: 35.2421000, lng: 128.6944000, name: 'T98호관' },
+  1: {
+    lat: 35.245598,
+    lng: 128.691891,
+    name: "대학본부(1호관)"
+  },
+  2: {
+    lat: 35.246127,
+    lng: 128.690856,
+    name: "도서관(2호관)"
+  },
+  3: {
+    lat: 35.245188,
+    lng: 128.693719,
+    name: "BAC(3호관)"
+  },
+  4: {
+    lat: 35.247175,
+    lng: 128.694679,
+    name: "인공지능특화센터(4호관)"
+  },
+  5: {
+    lat: 35.246258,
+    lng: 128.693968,
+    name: "MOSS(봉림관)(5호관)"
+  },
+  6: {
+    lat: 35.242254,
+    lng: 128.695186,
+    name: "COSS(사림관)(6호관)"
+  },
+  7: {
+    lat: 35.243329,
+    lng: 128.696951,
+    name: "공동기기원(7호관)"
+  },
+  8: {
+    lat: 35.244394,
+    lng: 128.692681,
+    name: "체육관(8호관)"
+  },
+  9: {
+    lat: 35.248344,
+    lng: 128.694908,
+    name: "체육교육관(9호관)"
+  },
+  11: {
+    lat: 35.246491,
+    lng: 128.692143,
+    name: "인문대학(11호관)"
+  },
+  21: {
+    lat: 35.247658,
+    lng: 128.690774,
+    name: "경영대학(21호관)"
+  },
+  22: {
+    lat: 35.247496,
+    lng: 128.692148,
+    name: "사회과학대학(22호관)"
+  },
+  31: {
+    lat: 35.244375,
+    lng: 128.695453,
+    name: "자연대1호관(31호관)"
+  },
+  32: {
+    lat: 35.245431,
+    lng: 128.694997,
+    name: "자연대2호관(32호관)"
+  },
+  33: {
+    lat: 35.244395,
+    lng: 128.693351,
+    name: "자연대3호관(33호관)"
+  },
+  34: {
+    lat: 35.246011,
+    lng: 128.694821,
+    name: "자연대4호관(34호관)"
+  },
+  35: {
+    lat: 35.243665,
+    lng: 128.695075,
+    name: "자연대5호관(바이오연구동)(35호관)"
+  },
+  50: {
+    lat: 35.242041,
+    lng: 128.698209,
+    name: "공대실험1동(50호관)"
+  },
+  51: {
+    lat: 35.242538,
+    lng: 128.697187,
+    name: "공대1호관(51호관)"
+  },
+  52: {
+    lat: 35.241669,
+    lng: 128.699354,
+    name: "공대2호관(52호관)"
+  },
+  53: {
+    lat: 35.241447,
+    lng: 128.697748,
+    name: "공대3호관(53호관)"
+  },
+  54: {
+    lat: 35.241198,
+    lng: 128.698759,
+    name: "공대4호관(54호관)"
+  },
+  55: {
+    lat: 35.241441,
+    lng: 128.695791,
+    name: "공대5호관(55호관)"
+  },
+  56: {
+    lat: 35.241784,
+    lng: 128.700098,
+    name: "공대실험2동(해양플랜트실험동)(56호관)"
+  },
+  61: {
+    lat: 35.245191,
+    lng: 128.696283,
+    name: "예술대1호관(61호관)"
+  },
+  62: {
+    lat: 35.244701,
+    lng: 128.696747,
+    name: "예술대2호관(62호관)"
+  },
+  63: {
+    lat: 35.244179,
+    lng: 128.696297,
+    name: "예술대3호관(63호관)"
+  },
+  64: {
+    lat: 35.245571,
+    lng: 128.695755,
+    name: "예술대실습관(64호관)"
+  },
+  70: {
+    lat: 35.248342,
+    lng: 128.687984,
+    name: "생활복지동(70호관)"
+  },
+  71: {
+    lat: 35.247987,
+    lng: 128.688489,
+    name: "학생생활관1동(71호관)"
+  },
+  72: {
+    lat: 35.248251,
+    lng: 128.687072,
+    name: "학생생활관2동(72호관)"
+  },
+  73: {
+    lat: 35.248661,
+    lng: 128.687322,
+    name: "학생생활관3동(73호관)"
+  },
+  74: {
+    lat: 35.248315,
+    lng: 128.688651,
+    name: "학생생활관4동(74호관)"
+  },
+  75: {
+    lat: 35.249088,
+    lng: 128.687411,
+    name: "학생생활관5동(75호관)"
+  },
+  76: {
+    lat: 35.249522,
+    lng: 128.687603,
+    name: "학생생활관6동(76호관)"
+  },
+  77: {
+    lat: 35.249654,
+    lng: 128.688885,
+    name: "학생생활관7동(77호관)"
+  },
+  81: {
+    lat: 35.242926,
+    lng: 128.697983,
+    name: "산학협동관1동(81호관)"
+  },
+  82: {
+    lat: 35.242571,
+    lng: 128.698696,
+    name: "산학협동관2동(82호관)"
+  },
+  83: {
+    lat: 35.242198,
+    lng: 128.699411,
+    name: "산학협동관3동(83호관)"
+  },
+  84: {
+    lat: 35.242179,
+    lng: 128.69941,
+    name: "산학협동관4동(초전도응용연구동)(84호관)"
+  },
+  85: {
+    lat: 35.240947,
+    lng: 128.697353,
+    name: "종합교육관(85호관)"
+  },
+  86: {
+    lat: 35.247829,
+    lng: 128.694783,
+    name: "국제교류교육원(86호관)"
+  },
+  87: {
+    lat: 35.245603,
+    lng: 128.694106,
+    name: "두레관(87호관)"
+  },
+  88: {
+    lat: 35.243437,
+    lng: 128.692879,
+    name: "운동장본부석(88호관)"
+  },
+  90: {
+    lat: 35.243576,
+    lng: 128.691705,
+    name: "정문수위실(90호관)"
+  },
+  91: {
+    lat: 35.248393,
+    lng: 128.692782,
+    name: "테니스장관리동(91호관)"
+  },
+  92: {
+    lat: 35.245417,
+    lng: 128.690506,
+    name: "제1동력실(92호관)"
+  },
+  94: {
+    lat: 35.245041,
+    lng: 128.690305,
+    name: "목공실(94호관)"
+  },
+  95: {
+    lat: 35.242621,
+    lng: 128.694174,
+    name: "운동장동아리방(95호관)"
+  },
+  96: {
+    lat: 35.243337,
+    lng: 128.697988,
+    name: "로봇연구실험동(96호관)"
+  },
+  97: {
+    lat: 35.247722,
+    lng: 128.693846,
+    name: "직장어린이집(97호관)"
+  },
+  98: {
+    lat: 35.242059,
+    lng: 128.694411,
+    name: "글로벌평생학습관(98호관)"
+  },
+  BAC: {
+    lat: 35.245188,
+    lng: 128.693719,
+    name: "BAC(3호관)"
+  },
+  BAC2: {
+    lat: 35.245188,
+    lng: 128.693719,
+    name: "BAC(3호관)"
+  },
+  B21: {
+    lat: 35.247658,
+    lng: 128.690774,
+    name: "경영대학(21호관)"
+  },
+  T98: {
+    lat: 35.242059,
+    lng: 128.694411,
+    name: "글로벌평생학습관(공과대학)(98호관)"
+  },
+  N98: {
+    lat: 35.242059,
+    lng: 128.694411,
+    name: "글로벌평생학습관(자연과학대학)(98호관)"
+  },
+  CWNU: {
+    lat: 35.245603,
+    lng: 128.694106,
+    name: "두레관/CWNU이룸홀"
+  },
+  CWNU이룸홀: {
+    lat: 35.245603,
+    lng: 128.694106,
+    name: "두레관/CWNU이룸홀"
+  },
+  학군단: {
+    lat: 35.248734,
+    lng: 128.693113,
+    name: "학군단(4호관)"
+  },
+  테니스장: {
+    lat: 35.248393,
+    lng: 128.692782,
+    name: "테니스장관리동(91호관)"
+  },
+  공기원: {
+    lat: 35.2456,
+    lng: 128.6955,
+    name: "공기원"
+  },
+  공실관: {
+    lat: 35.2442,
+    lng: 128.6947,
+    name: "공동실험실습관"
+  },
+  전산: {
+    lat: 35.2437,
+    lng: 128.6954,
+    name: "전산관"
+  },
+  인문홀: {
+    lat: 35.2465457864479,
+    lng: 128.69260205814,
+    name: "인문홀"
+  },
+  사림강당: {
+    lat: 35.2454,
+    lng: 128.6933,
+    name: "사림강당"
+  }
 };
+
+/* ── 카카오맵 SDK 로더 (server.js의 same-origin proxy 사용) ── */
+const KAKAO_APP_KEY = 'c92a1f184fb09dbf5ad4b080d204360e';
+let _kakaoMapsPromise = null;
+function loadKakaoMapsForGenerate() {
+  if (window.kakao?.maps?.Map && window.kakao?.maps?.LatLng) return Promise.resolve('already-loaded');
+  if (_kakaoMapsPromise) return _kakaoMapsPromise;
+  _kakaoMapsPromise = new Promise((resolve, reject) => {
+    const previous = document.getElementById('kakaoMapSdk');
+    if (previous) previous.remove();
+    const script = document.createElement('script');
+    script.id = 'kakaoMapSdk';
+    script.type = 'text/javascript';
+    script.src = `/api/kakao-maps-sdk?appkey=${KAKAO_APP_KEY}&autoload=false&v=generate_20260603`;
+    script.onload = () => {
+      if (!window.kakao?.maps) { reject(new Error('Kakao Maps SDK 로드 실패')); return; }
+      if (typeof window.kakao.maps.load === 'function') {
+        window.kakao.maps.load(() => {
+          if (window.kakao?.maps?.Map && window.kakao?.maps?.LatLng) resolve('loaded');
+          else reject(new Error('Kakao Map 생성자가 준비되지 않았습니다.'));
+        });
+        return;
+      }
+      if (window.kakao.maps.Map && window.kakao.maps.LatLng) resolve('loaded');
+      else reject(new Error('Kakao Maps SDK 초기화 실패'));
+    };
+    script.onerror = () => reject(new Error('Kakao Maps SDK 프록시 로드 실패'));
+    document.head.appendChild(script);
+  });
+  return _kakaoMapsPromise;
+}
 
 /* ── 강의실 코드 → 건물 번호 추출 ── */
 function getRoomBuilding(room) {
   if (!room || room === '99999') return null;
-  const m5   = room.match(/^(\d{2})\d{3}(-\d)?$/);   if (m5)   return m5[1];
-  const mPfx = room.match(/^([A-Z]+\d+)\d{3}(-\d)?$/); if (mPfx) return mPfx[1];
-  const m4   = room.match(/^(\d)\d{3}(-\d)?$/);       if (m4)   return m4[1] + '동';
-  return null;
+  room = String(room).replace(/-\d+$/, '');
+
+  for (const p of ['T98','N98','BAC2','BAC','B21']) {
+    if (room.startsWith(p)) return p;
+  }
+  if (room.startsWith('CWNU')) return 'CWNU';
+  if (room.startsWith('공기원')) return '공기원';
+  if (room.startsWith('공실관')) return '공실관';
+  if (room.startsWith('전산')) return '전산';
+  if (room.startsWith('인문홀')) return '인문홀';
+  if (room.startsWith('사림강당')) return '사림강당';
+  if (room.startsWith('학군단')) return '학군단';
+  if (room.startsWith('테니스장')) return '테니스장';
+
+  const digits = room.match(/^(\d+)$/);
+  if (!digits) return null;
+  const code = digits[1];
+  if (code.length >= 5) return code.slice(0, -3);
+  if (code.length === 4) {
+    const first = code.slice(0, 1);
+    return BUILDING_COORDS[first] ? first : null;
+  }
+  return BUILDING_COORDS[code] ? code : null;
 }
 
 /* ── Haversine 직선거리 (m) ── */
@@ -3514,6 +3888,7 @@ function getConsecutivePairs(schedule) {
 }
 
 
-/* ── 지도 상수 (OSM / Leaflet, showBlockInfoModal 에서 사용) ── */
+/* ── 지도 상수 (이전 Leaflet 폴백용, 현재 과목 모달은 Kakao Maps 사용) ── */
 const OSM_TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const OSM_ATTR = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+

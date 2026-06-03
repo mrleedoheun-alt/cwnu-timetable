@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="leaflet.css" />
   <script src="leaflet.js"></script>
-  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c92a1f184fb09dbf5ad4b080d204360e&autoload=false"></script>
   <style>
     /* ── 미니 달력 ── */
     .cal-card {
@@ -130,6 +129,8 @@
       width:36px; height:36px;
     }
     .campus-marker:hover { transform:scale(1.15); box-shadow:0 4px 14px rgba(0,0,0,.4); }
+    .campus-marker.no-classroom { filter:saturate(.75); cursor:default; }
+
     .campus-marker.selected {
       border:3px solid #fff; box-shadow:0 0 0 3px #1a3a7a, 0 4px 14px rgba(0,0,0,.4);
       transform:scale(1.2);
@@ -240,6 +241,39 @@
       font-weight:600; color:#2563eb; cursor:pointer; font-family:inherit;
     }
     .bld-bar-mini .bld-reset-btn:hover { background:#2563eb; color:#fff; }
+
+    /* ── 강의실 상세 일정 모달 ── */
+    .room-detail-backdrop {
+      position:fixed; inset:0; z-index:2000; background:rgba(15,23,42,.42);
+      display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .room-detail-modal {
+      width:min(760px, 96vw); max-height:88vh; overflow:hidden;
+      background:var(--card); border-radius:16px; box-shadow:0 20px 60px rgba(15,23,42,.25);
+      display:flex; flex-direction:column;
+    }
+    .room-detail-head {
+      padding:16px 18px 12px; border-bottom:1px solid var(--line);
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .room-detail-title { font-size:20px; font-weight:900; color:var(--text); }
+    .room-detail-sub { font-size:12px; color:var(--muted); margin-top:3px; }
+    .room-detail-close { border:0; background:transparent; font-size:18px; cursor:pointer; color:var(--muted); padding:4px; }
+    .room-detail-body { padding:14px 18px 18px; overflow:auto; }
+    .room-detail-grid { display:grid; grid-template-columns:1fr 260px; gap:14px; align-items:start; }
+    .room-week-table { width:100%; border-collapse:collapse; font-size:12px; overflow:hidden; border-radius:10px; }
+    .room-week-table th { background:#f8fafc; color:var(--muted); font-size:11px; padding:8px; text-align:left; border-bottom:1px solid var(--line); }
+    .room-week-table td { padding:8px; border-bottom:1px solid var(--line); vertical-align:top; }
+    .room-week-table tr.current-slot td { background:#eff6ff; }
+    .room-week-day { width:42px; font-weight:800; color:#1a3a7a; }
+    .room-week-time { width:96px; font-weight:700; color:var(--text); white-space:nowrap; }
+    .room-week-course { font-weight:700; color:var(--text); }
+    .room-week-prof { font-size:11px; color:var(--muted); margin-top:2px; }
+    .room-detail-map { height:210px; border-radius:12px; overflow:hidden; background:#e8eef8; }
+    .room-detail-info { padding:10px 12px; border:1px solid var(--line); border-radius:12px; margin-top:10px; font-size:12px; color:var(--muted); }
+    .room-clickable { cursor:pointer; }
+    .room-clickable:hover { outline:2px solid rgba(37,99,235,.18); }
+    @media (max-width: 760px) { .room-detail-grid { grid-template-columns:1fr; } .room-detail-map { height:190px; } }
   </style>
 </head>
 <body data-page="classroom">
@@ -335,12 +369,12 @@
             <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted)">
               <span><span class="legend-circle" style="background:#16a34a"></span>여유</span>
               <span><span class="legend-circle" style="background:#f59e0b"></span>혼잡</span>
-              <span><span class="legend-circle" style="background:#dc2626"></span>만석</span>
+              <span><span class="legend-circle" style="background:#dc2626"></span>만석</span><span><span class="legend-circle" style="background:#94a3b8"></span>강의정보 없음</span>
             </div>
           </div>
           <div id="campusMap"></div>
           <div class="map-legend-bar" style="font-size:10px;padding:5px 12px 7px">
-            <span>마커 클릭 → 해당 건물 강의실 표시</span>
+            <span>공식 캠퍼스맵 건물만 표시 · 색상 마커 클릭 → 해당 건물 강의실 표시</span>
           </div>
         </div>
 
@@ -371,6 +405,21 @@
 
   <script src="app.js"></script>
   <script>
+  console.log('[YEOGI] classroom.html version 2026-06-03-kakao-dynamic-loader');
+  window.addEventListener('error', e=>{
+    console.error('[YEOGI] classroom uncaught error', e.error || e.message);
+    setTimeout(()=>{
+      const el=document.getElementById('roomsContainer');
+      if(el && el.querySelector('.spinner')) el.innerHTML=`<div class="loading-state" style="color:#dc2626">⚠ 화면 처리 중 오류가 발생했습니다.<br><small>${e.message}</small></div>`;
+    },0);
+  });
+  window.addEventListener('unhandledrejection', e=>{
+    console.error('[YEOGI] classroom unhandled rejection', e.reason);
+    const msg=e.reason?.message || String(e.reason || '알 수 없는 오류');
+    const el=document.getElementById('roomsContainer');
+    if(el && el.querySelector('.spinner')) el.innerHTML=`<div class="loading-state" style="color:#dc2626">⚠ 데이터 처리 중 오류가 발생했습니다.<br><small>${msg}</small></div>`;
+  });
+
   /* ══════════════════════════════════════════════
      강의실 현황 — 캠퍼스 지도 + 달력
   ══════════════════════════════════════════════ */
@@ -526,19 +575,36 @@
     return room.replace(/\d+$/,'')||'기타';
   }
 
-  /* building key → buildings.json key */
-  const KOREAN_BKEYS = new Set(['전산','인문홀','공기원','공실관','사림강당','사천캠퍼스','학군단','테니스장']);
+  /* building key → 공식 캠퍼스맵 buildings.json key */
+  const BUILDING_ALIAS_TO_OFFICIAL = {
+    'BAC관':'3','BAC2관':'3','BAC':'3','BAC2':'3',
+    'B21관':'21','B21':'21',
+    'T98관':'98','N98관':'98','T98':'98','N98':'98',
+    'CWNU':'87','CWNU이룸홀':'87',
+    '공기원':'7','공실관':'7','전산':'6',
+    '학군단':'4','테니스장':'91',
+    '사천':'사천캠퍼스'
+  };
+  const KOREAN_BKEYS = new Set(['전산','인문홀','공기원','공실관','사림강당','사천캠퍼스','학군단','테니스장','CWNU']);
   function toGeoKey(bKey){
+    if(BUILDING_ALIAS_TO_OFFICIAL[bKey]) return BUILDING_ALIAS_TO_OFFICIAL[bKey];
     if(KOREAN_BKEYS.has(bKey)) return bKey;
-    return bKey.endsWith('관')?bKey.slice(0,-1):bKey;
+    const raw = bKey.endsWith('관') ? bKey.slice(0,-1) : bKey;
+    return BUILDING_ALIAS_TO_OFFICIAL[raw] || raw;
   }
 
   const BNAMES={
-    'T98관':'T98관','N98관':'N98관','BAC관':'BAC관','BAC2관':'BAC2관','B21관':'B21관',
-    '11관':'제1공학관','22관':'제2공학관','55관':'제5공학관',
-    '61관':'제6-1공학관','62관':'제6-2공학관','63관':'제6-3공학관',
-    '85관':'인문사회관','86관':'자연과학관','98관':'98관',
-    '전산':'전산관','인문홀':'인문홀','공기원':'공기원','공실관':'공동실험실습관',
+    'BAC관':'BAC(3호관)','BAC2관':'BAC(3호관)','B21관':'경영대학(21호관)',
+    'T98관':'글로벌평생학습관(공과대학)(98호관)','N98관':'글로벌평생학습관(자연과학대학)(98호관)',
+    '4관':'인공지능특화센터(4호관)','6관':'COSS(사림관)(6호관)','8관':'체육관(8호관)',
+    '11관':'인문대학(11호관)','21관':'경영대학(21호관)','22관':'사회과학대학(22호관)',
+    '31관':'자연대1호관(31호관)','32관':'자연대2호관(32호관)','33관':'자연대3호관(33호관)','34관':'자연대4호관(34호관)','35관':'자연대5호관(바이오연구동)(35호관)',
+    '50관':'공대실험1동(50호관)','51관':'공대1호관(51호관)','52관':'공대2호관(52호관)','53관':'공대3호관(53호관)','54관':'공대4호관(54호관)','55관':'공대5호관(55호관)','56관':'공대실험2동(해양플랜트실험동)(56호관)',
+    '61관':'예술대1호관(61호관)','62관':'예술대2호관(62호관)','63관':'예술대3호관(63호관)','64관':'예술대실습관(64호관)',
+    '81관':'산학협동관1동(81호관)','82관':'산학협동관2동(82호관)','83관':'산학협동관3동(83호관)','84관':'산학협동관4동(초전도응용연구동)(84호관)',
+    '85관':'종합교육관(85호관)','86관':'국제교류교육원(86호관)','87관':'두레관(87호관)','98관':'글로벌평생학습관(98호관)','99관':'99호관',
+    '전산':'전산관','인문홀':'인문홀','공기원':'공동기기원(7호관)','공실관':'공동실험실습관','CWNU':'두레관/CWNU이룸홀',
+    '학군단':'학군단(4호관)','테니스장':'테니스장관리동(91호관)'
   };
   function bName(key){return BNAMES[key]||key;}
 
@@ -546,18 +612,102 @@
   let coursesCache=null, buildingsGeo={};
   let allRooms=[], curBuilding='all', searchQ='';
   let kakaoMap=null, leafletMap=null, markerLayers={};
+  const CLASSROOM_KAKAO_APP_KEY='c92a1f184fb09dbf5ad4b080d204360e';
+  let mapProvider='none';
 
-  /* ── Kakao 지도 초기화 ── */
+  function setRoomsMessage(message, tone='muted'){
+    const el=document.getElementById('roomsContainer');
+    if(!el) return;
+    const color=tone==='error'?'#dc2626':tone==='info'?'#2563eb':'var(--muted)';
+    el.innerHTML=`<div class="loading-state" style="color:${color}">${message}</div>`;
+  }
+
+  function fetchJsonWithTimeout(url, timeoutMs=12000){
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(), timeoutMs);
+    return fetch(url,{cache:'no-store',signal:ctrl.signal})
+      .then(async r=>{
+        const text=await r.text();
+        let data=null;
+        try{ data=text?JSON.parse(text):null; }
+        catch(e){ throw new Error(`${url} JSON 파싱 실패`); }
+        return {ok:r.ok,status:r.status,data};
+      })
+      .finally(()=>clearTimeout(timer));
+  }
+
+  function useCourses(courses, sourceLabel){
+    if(!Array.isArray(courses) || courses.length===0) throw new Error(`${sourceLabel} 강의 데이터가 비어 있습니다.`);
+    coursesCache=courses;
+    try{
+      applySelection();
+      console.log('[YEOGI] classroom courses loaded', sourceLabel, courses.length, 'rooms', allRooms.length);
+    }catch(e){
+      console.error('[YEOGI] classroom render failed', e);
+      setRoomsMessage(`⚠ 강의실 렌더링 중 오류가 발생했습니다.<br><small>${e.message}</small>`, 'error');
+    }
+  }
+
+  /* ── Kakao 지도 초기화: 공식 가이드의 지도 생성 방식 ── */
   function initKakaoMap(){
     const container=document.getElementById('campusMap');
-    kakaoMap=new kakao.maps.Map(container,{
-      center:new kakao.maps.LatLng(35.2437,128.6951), level:4,
-    });
+    const options={
+      center:new kakao.maps.LatLng(35.2437,128.6951),
+      level:4,
+    };
+    kakaoMap=new kakao.maps.Map(container,options);
+    mapProvider='kakao';
+    console.log('[Kakao] 지도 객체 생성 완료');
     if(allRooms.length>0) updateMapMarkers();
+  }
+
+  function waitForKakaoMapConstructor(resolve,reject){
+    const started=Date.now();
+    const check=()=>{
+      if(window.kakao?.maps?.Map) return resolve('map-ready');
+      if(Date.now()-started>6000) return reject(new Error('SDK는 로드됐지만 kakao.maps.Map 준비가 지연됩니다. t1.daumcdn.net 추가 스크립트 차단 여부를 확인하세요.'));
+      setTimeout(check,100);
+    };
+    check();
+  }
+
+  function loadKakaoSdk(){
+    if(window.kakao?.maps?.Map) return Promise.resolve('already-loaded');
+    return new Promise((resolve,reject)=>{
+      const previous=document.getElementById('kakaoMapSdk');
+      if(previous) previous.remove();
+      const script=document.createElement('script');
+      script.id='kakaoMapSdk';
+      script.type='text/javascript';
+      script.src=`/api/kakao-maps-sdk?appkey=${CLASSROOM_KAKAO_APP_KEY}&autoload=false&v=yeogi_20260603_autoload_false`;
+      script.onload=()=>{
+        console.log('[Kakao] sdk.js onload via same-origin proxy');
+        if(!window.kakao?.maps) {
+          reject(new Error('sdk.js는 로드됐지만 window.kakao.maps가 없습니다. JavaScript 키/지도 API 활성화/도메인 등록을 확인하세요.'));
+          return;
+        }
+        if(typeof window.kakao.maps.load === 'function') {
+          window.kakao.maps.load(()=>{
+            if(window.kakao?.maps?.Map && window.kakao?.maps?.LatLng) resolve('loaded-after-kakao-load');
+            else reject(new Error('kakao.maps.load 콜백 후에도 Map/LatLng 생성자가 없습니다.'));
+          });
+          return;
+        }
+        if(window.kakao.maps.Map && window.kakao.maps.LatLng) {
+          resolve('loaded');
+          return;
+        }
+        waitForKakaoMapConstructor(resolve,reject);
+      };
+      script.onerror=()=>reject(new Error('same-origin SDK 프록시 스크립트 로드 실패'));
+      document.head.appendChild(script);
+    });
   }
 
   /* ── Leaflet(OpenStreetMap) 폴백 초기화 ── */
   function initLeafletMap(){
+    if(leafletMap) return;
+    mapProvider='leaflet';
     leafletMap=L.map('campusMap',{center:[35.2437,128.6951],zoom:16});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
       attribution:'© <a href="https://openstreetmap.org">OSM</a>',maxZoom:19
@@ -581,11 +731,63 @@
     return map;
   }
 
+  function displayBuildingName(bKey, geo){
+    return BNAMES[bKey] || BNAMES[`${bKey}관`] || geo?.name || bKey;
+  }
+
+  const OFFICIAL_CAMPUS_KEYS = new Set([
+    '1','2','3','4','5','6','7','8','9','11','21','22','31','32','33','34','35',
+    '50','51','52','53','54','55','56','61','62','63','64',
+    '70','71','72','73','74','75','76','77','81','82','83','84','85','86','87','88','90','91','92','94','95','96','97','98'
+  ]);
+
+  function officialMarkerKeys(){
+    const keys=[];
+    for(const key of OFFICIAL_CAMPUS_KEYS){
+      const geo=buildingsGeo[key];
+      if(geo?.lat&&geo?.lng) keys.push(key);
+    }
+    return keys.sort((a,b)=>String(a).localeCompare(String(b),'ko',{numeric:true}));
+  }
+
+  function makeMapMarker({key, geo, rooms=[]}){
+    const freeCount=rooms.filter(r=>r.free).length;
+    const total=rooms.length;
+    const hasClassrooms=total>0;
+    const color=hasClassrooms ? markerColor(freeCount,total) : '#94a3b8';
+    const isSelected=key===curBuilding || `${key}관`===curBuilding;
+    const label=String(key).length<=4 ? String(key) : String(key).slice(0,4);
+    const name=displayBuildingName(key,geo);
+
+    const el=document.createElement('div');
+    el.className=`campus-marker${isSelected?' selected':''}${hasClassrooms?'':' no-classroom'}`;
+    el.style.background=color;
+    el.style.opacity=hasClassrooms?'1':'.72';
+    el.innerHTML=`<span style="font-size:9px;font-weight:800;line-height:1">${label}</span>`;
+    el.title=hasClassrooms ? `${name} — 빈 강의실 ${freeCount}/${total}` : `${name} — 강의 데이터 없음`;
+    if(hasClassrooms) el.addEventListener('click',()=>window.__selectBld(rooms[0].building));
+
+    if(kakaoMap){
+      const ov=new kakao.maps.CustomOverlay({
+        position:new kakao.maps.LatLng(geo.lat,geo.lng),
+        content:el, yAnchor:0.5, xAnchor:0.5, zIndex:isSelected?10:(hasClassrooms?2:1),
+      });
+      ov.setMap(kakaoMap);
+      markerLayers[key]=ov;
+    } else {
+      const mk=L.marker([geo.lat,geo.lng],{
+        icon:L.divIcon({html:el,iconSize:[36,36],iconAnchor:[18,18],className:''}),
+        zIndexOffset:isSelected?1000:(hasClassrooms?100:0),
+      }).addTo(leafletMap);
+      mk.bindTooltip(hasClassrooms?`<b>${name}</b><br>빈 ${freeCount}/${total}`:`<b>${name}</b><br>강의 데이터 없음`,{direction:'top',offset:[0,-20]});
+      markerLayers[key]=mk;
+    }
+  }
+
   /* ── 마커 업데이트 (Kakao / Leaflet 공통) ── */
   function updateMapMarkers(){
     if(!kakaoMap && !leafletMap) return;
 
-    // 기존 마커 제거
     Object.values(markerLayers).forEach(m=>{
       if(kakaoMap) m.setMap?.(null);
       else m.remove?.();
@@ -593,41 +795,22 @@
     markerLayers={};
 
     const byBuilding=groupByBuilding();
-
+    const roomGroupsByGeo={};
     for(const [bKey,rooms] of Object.entries(byBuilding)){
-      const geo=buildingsGeo[toGeoKey(bKey)];
-      if(!geo?.lat||!geo?.lng) continue;
-
-      const freeCount=rooms.filter(r=>r.free).length;
-      const total=rooms.length;
-      const color=markerColor(freeCount,total);
-      const isSelected=bKey===curBuilding;
-      const code=toGeoKey(bKey);
-      const label=code.length<=4?code:code.slice(0,4);
-
-      const el=document.createElement('div');
-      el.className=`campus-marker${isSelected?' selected':''}`;
-      el.style.background=color;
-      el.innerHTML=`<span style="font-size:9px;font-weight:800;line-height:1">${label}</span>`;
-      el.title=`${bName(bKey)} — 빈 강의실 ${freeCount}/${total}`;
-      el.addEventListener('click',()=>window.__selectBld(bKey));
-
-      if(kakaoMap){
-        const ov=new kakao.maps.CustomOverlay({
-          position:new kakao.maps.LatLng(geo.lat,geo.lng),
-          content:el, yAnchor:0.5, xAnchor:0.5, zIndex:isSelected?10:1,
-        });
-        ov.setMap(kakaoMap);
-        markerLayers[bKey]=ov;
-      } else {
-        const mk=L.marker([geo.lat,geo.lng],{
-          icon:L.divIcon({html:el,iconSize:[36,36],iconAnchor:[18,18],className:''}),
-          zIndexOffset:isSelected?1000:0,
-        }).addTo(leafletMap);
-        mk.bindTooltip(`<b>${bName(bKey)}</b><br>빈 ${freeCount}/${total}`,{direction:'top',offset:[0,-20]});
-        markerLayers[bKey]=mk;
-      }
+      const geoKey=toGeoKey(bKey);
+      if(!roomGroupsByGeo[geoKey]) roomGroupsByGeo[geoKey]=[];
+      roomGroupsByGeo[geoKey].push(...rooms);
     }
+
+    const drawn=new Set();
+    for(const key of officialMarkerKeys()){
+      const geo=buildingsGeo[key];
+      const rooms=roomGroupsByGeo[key] || [];
+      makeMapMarker({key,geo,rooms});
+      drawn.add(key);
+    }
+
+    // 공식 캠퍼스맵에 없는 별칭/추정 건물은 지도에 추가하지 않는다.
   }
 
   /* ── 건물 선택 ── */
@@ -796,7 +979,7 @@
       ?'빈 자리'
       :`${r.curName||'수업 중'} · ${r.curStart}~${r.curEnd}`;
     const nextText=r.nextName?`<span class="room-row-next">다음 ${r.nextStart}</span>`:'';
-    return`<div class="room-row-compact">
+    return`<div class="room-row-compact room-clickable" onclick="window.__showRoomSchedule(${JSON.stringify(r.room)})" title="강의실 주간 일정 보기">
       <span class="room-row-num">${r.room}</span>
       <span class="room-row-status ${isFree?'free':'busy'}">
         <span class="room-row-dot" style="background:${isFree?'#16a34a':'#dc2626'}"></span>
@@ -816,7 +999,7 @@
         <div class="room-professor">${r.curProf}</div>
         <div class="room-time">⏱ ${r.curStart} ~ ${r.curEnd}</div>`;
     const next=r.nextName?`<div class="room-next">다음 수업 ${r.nextStart} · ${r.nextName}</div>`:'';
-    return`<div class="room-card ${r.free?'free':'in-use'}">
+    return`<div class="room-card room-clickable ${r.free?'free':'in-use'}" onclick="window.__showRoomSchedule(${JSON.stringify(r.room)})" title="강의실 주간 일정 보기">
       <div class="room-card-header"><span class="room-name">${r.room}</span>${badge}</div>
       ${body}${next}
     </div>`;
@@ -832,6 +1015,70 @@
     chev.classList.toggle('open',!open);
   }
   window.__toggleAcc=toggleAccordion;
+
+  function getCourseSlotsForRoom(room){
+    if(!coursesCache || !room) return [];
+    const rows=[];
+    const pushSlot=(slot, courseName, prof)=>{
+      if(slot.room!==room) return;
+      rows.push({day:slot.day,start:slot.start,end:slot.end,name:courseName||'과목명 없음',prof:prof||''});
+    };
+    if(coursesCache[0]?.slots!==undefined){
+      for(const c of coursesCache){ for(const s of c.slots||[]) pushSlot(s,c.name,c.professor); }
+    }else{
+      for(const c of coursesCache){ const cname=c.course_name||c.name||''; for(const s of parseRaw(c.schedule_room||'')) pushSlot(s,cname,c.professor); }
+    }
+    const seen=new Set();
+    return rows.filter(r=>{const key=r.day+'|'+r.start+'|'+r.end+'|'+r.name+'|'+r.prof; if(seen.has(key)) return false; seen.add(key); return true;})
+      .sort((a,b)=>a.day!==b.day?a.day-b.day:toMin(a.start)-toMin(b.start));
+  }
+
+  function currentSlotClass(s){
+    const dow=selectedDate.getDay();
+    const dayIdx=(dow===0||dow===6)?-1:dow-1;
+    return s.day===dayIdx && toMin(s.start)<=selectedMin && selectedMin<toMin(s.end) ? ' class=\"current-slot\"' : '';
+  }
+
+  function renderRoomScheduleRows(slots){
+    const days=['월','화','수','목','금'];
+    if(!slots.length) return '<tr><td colspan=\"3\" style=\"text-align:center;color:var(--muted);padding:28px\">이 강의실의 정규 수업 일정이 없습니다.</td></tr>';
+    return slots.map(s=>'<tr'+currentSlotClass(s)+'><td class=\"room-week-day\">'+(days[s.day]||'?')+'</td><td class=\"room-week-time\">'+s.start+'~'+s.end+'</td><td><div class=\"room-week-course\">'+s.name+'</div>'+(s.prof?'<div class=\"room-week-prof\">'+s.prof+'</div>':'')+'</td></tr>').join('');
+  }
+
+  function showRoomSchedule(room){
+    const building=extractBuilding(room);
+    const geoKey=toGeoKey(building);
+    const geo=buildingsGeo[geoKey];
+    const slots=getCourseSlotsForRoom(room);
+    const backdrop=document.createElement('div');
+    backdrop.className='room-detail-backdrop';
+    const modal=document.createElement('div');
+    modal.className='room-detail-modal';
+    const mapHtml=geo?.lat?'<div id=\"roomDetailMap\" class=\"room-detail-map\"></div>':'<div class=\"room-detail-map map-error\"><strong>위치 정보 없음</strong><span>공식 캠퍼스맵에 연결되지 않았습니다.</span></div>';
+    const coordHtml=geo?.lat?'공식 좌표: '+geo.lat+', '+geo.lng:'좌표 없음';
+    modal.innerHTML='<div class=\"room-detail-head\"><div><div class=\"room-detail-title\">'+room+'</div><div class=\"room-detail-sub\">'+bName(building)+' · 주간 강의실 일정</div></div><button class=\"room-detail-close\" type=\"button\">✕</button></div><div class=\"room-detail-body\"><div class=\"room-detail-grid\"><div><table class=\"room-week-table\"><thead><tr><th>요일</th><th>시간</th><th>수업</th></tr></thead><tbody>'+renderRoomScheduleRows(slots)+'</tbody></table></div><div>'+mapHtml+'<div class=\"room-detail-info\"><strong>'+(geo?.name||bName(building))+'</strong><br>'+coordHtml+'<br>일정 '+slots.length+'개</div></div></div></div>';
+    document.body.appendChild(backdrop);
+    backdrop.appendChild(modal);
+    const close=()=>backdrop.remove();
+    backdrop.addEventListener('click',e=>{ if(e.target===backdrop) close(); });
+    modal.querySelector('.room-detail-close').addEventListener('click',close);
+    if(geo?.lat){
+      setTimeout(async()=>{
+        const el=document.getElementById('roomDetailMap');
+        if(!el) return;
+        try{
+          await loadKakaoSdk();
+          const pos=new kakao.maps.LatLng(geo.lat,geo.lng);
+          const map=new kakao.maps.Map(el,{center:pos,level:3});
+          const marker=new kakao.maps.Marker({position:pos,map});
+          const info=new kakao.maps.InfoWindow({content:'<div style=\"padding:6px 9px;font-size:12px;font-weight:700;white-space:nowrap\">'+(geo.name||room)+'</div>'});
+          info.open(map,marker);
+          setTimeout(()=>map.relayout(),80);
+        }catch(e){ el.innerHTML='<div class=\"map-error\"><strong>지도 로드 실패</strong><span>'+e.message+'</span></div>'; }
+      },80);
+    }
+  }
+  window.__showRoomSchedule=showRoomSchedule;
 
   function updateStats(){
     const list=filtered();
@@ -870,61 +1117,70 @@
 
   /* ── 데이터 로드 ── */
   async function loadData(){
-    try{
-      const r=await fetch('/data/buildings.json');
-      buildingsGeo=await r.json();
-    }catch(e){console.warn('buildings.json 로드 실패',e);}
+    setRoomsMessage('<div class="spinner"></div><span>강의 데이터를 불러오는 중...</span>', 'info');
 
     try{
-      const r=await fetch('/api/courses?year=2026&semester=1학기');
-      if(!r.ok) throw new Error();
-      const courses=await r.json();
-      if(Array.isArray(courses)&&courses.length>0){
-        coursesCache=courses; applySelection(); return;
+      const r=await fetchJsonWithTimeout('/data/buildings.json?source=official-campus-20260603', 8000);
+      if(r.ok && r.data){
+        buildingsGeo=r.data;
+        window.__YEOGI_BUILDINGS=buildingsGeo;
+        console.log('[YEOGI] official campus buildings loaded', buildingsGeo['22'], buildingsGeo['52'], buildingsGeo['85']);
       }
-    }catch{}
-    try{
-      const r2=await fetch('/courses_all.json');
-      coursesCache=await r2.json(); applySelection();
-    }catch{
-      document.getElementById('roomsContainer').innerHTML=
-        '<div class="loading-state" style="color:#dc2626">⚠ 데이터를 불러올 수 없습니다. 서버(node server.js)를 실행해주세요.</div>';
+    }catch(e){
+      console.warn('buildings.json 로드 실패',e);
     }
+
+    const localFallbacks=[
+      ['/data/courses_2026_1.json','local cache courses_2026_1'],
+      ['/data/courses.json','local cache courses'],
+      ['/courses_all.json','legacy courses_all']
+    ];
+
+    try{
+      const api=await fetchJsonWithTimeout('/api/courses?year=2026&semester='+encodeURIComponent('1학기')+'&_='+Date.now(), 12000);
+      if(api.ok && Array.isArray(api.data) && api.data.length>0){
+        useCourses(api.data,'api/courses');
+        return;
+      }
+      if(api.status===202 || api.data?.status==='crawling'){
+        console.warn('[YEOGI] courses API is crawling, using local cache first');
+      }else{
+        console.warn('[YEOGI] courses API returned non-array', api.status, api.data);
+      }
+    }catch(e){
+      console.warn('[YEOGI] courses API failed, using local cache', e.message);
+    }
+
+    for(const [url,label] of localFallbacks){
+      try{
+        const local=await fetchJsonWithTimeout(url+'?_='+Date.now(), 10000);
+        if(local.ok && Array.isArray(local.data) && local.data.length>0){
+          useCourses(local.data,label);
+          return;
+        }
+      }catch(e){
+        console.warn('[YEOGI] local course fallback failed', url, e.message);
+      }
+    }
+
+    setRoomsMessage('⚠ 강의 데이터를 불러올 수 없습니다.<br><small>서버를 재시작하거나 data/courses_2026_1.json 파일을 확인해주세요.</small>', 'error');
+    updateStats();
   }
 
-  function load(){
-    loadData();
-
-    // ── 진단 로그 ──
-    console.log('[Kakao] typeof kakao =', typeof kakao);
-    if(typeof kakao !== 'undefined') {
-      console.log('[Kakao] kakao.maps =', typeof kakao.maps);
-      console.log('[Kakao] kakao.maps.load =', typeof kakao.maps?.load);
-    }
-
-    let kakaoInitDone = false;
-    const fallback = setTimeout(()=>{
-      if(!kakaoInitDone){
-        console.warn('[Kakao] 타임아웃 → 도메인 미등록 or 네트워크 오류 → OpenStreetMap 폴백');
-        initLeafletMap();
-      }
-    }, 3000);
-
-    try {
-      if(typeof kakao==='undefined') throw new Error('SDK 없음');
-      console.log('[Kakao] kakao.maps.load() 호출 중...');
-      kakao.maps.load(()=>{
-        console.log('[Kakao] ✅ 콜백 성공! 카카오 지도 초기화');
-        clearTimeout(fallback);
-        kakaoInitDone=true;
-        try { initKakaoMap(); }
-        catch(e){ console.warn('[Kakao] initKakaoMap 실패:', e); initLeafletMap(); }
-      });
-    } catch(e){
-      clearTimeout(fallback);
-      console.warn('[Kakao] 예외 발생:', e.message, '→ OpenStreetMap 사용');
-      initLeafletMap();
-    }
+  async function load(){
+    await Promise.allSettled([
+      loadData(),
+      (async()=>{
+        try{
+          const result=await loadKakaoSdk();
+          console.log('[Kakao] SDK 준비 완료:', result);
+          initKakaoMap();
+        }catch(e){
+          console.warn('[Kakao] 초기화 실패:', e.message, '→ OpenStreetMap 폴백');
+          initLeafletMap();
+        }
+      })()
+    ]);
   }
 
   /* ── 초기화 ── */
@@ -938,3 +1194,18 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
