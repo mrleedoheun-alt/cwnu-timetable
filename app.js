@@ -1595,6 +1595,19 @@ function setupBottomNav() {
   document.body.appendChild(nav);
 }
 
+function setupHeaderLogout() {
+  if (document.querySelector('.top-logout-btn')) return;
+  const header = document.querySelector('.page-header');
+  if (!header) return;
+  const btn = document.createElement('button');
+  btn.className = 'top-logout-btn logout-btn';
+  btn.type = 'button';
+  btn.title = '로그아웃';
+  btn.setAttribute('aria-label', '로그아웃');
+  btn.innerHTML = '<span class="top-logout-icon">↪</span><span class="top-logout-label">로그아웃</span>';
+  header.appendChild(btn);
+}
+
 /* ============================================================
    Helpers
    ============================================================ */
@@ -3781,9 +3794,10 @@ async function init() {
 
   if (!getSession()) { location.href = 'login.html'; return; }
 
-  setupLogout();
   setupSidebarToggle();
   setupBottomNav();
+  setupHeaderLogout();
+  setupLogout();
   let state = loadState();
   try {
     const profile = await socialProfile(state.studentId);

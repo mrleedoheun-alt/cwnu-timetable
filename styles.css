@@ -196,6 +196,13 @@ body {
   min-height: 100vh;
 }
 
+.sidebar,
+.sidebar-overlay,
+.hamburger-btn,
+.sidebar-close-btn {
+  display: none !important;
+}
+
 .sidebar {
   width: var(--sidebar-w);
   background: #fff;
@@ -274,15 +281,48 @@ body {
   background: #fff0f0;
 }
 
+.top-logout-btn {
+  width: auto;
+  min-width: 48px;
+  height: 48px;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 1px solid #ececec;
+  border-radius: 16px;
+  background: #fff;
+  color: #ef4444;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 900;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.top-logout-btn:hover {
+  background: #fff5f5;
+}
+
+.top-logout-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.top-logout-label {
+  font-size: 12px;
+  line-height: 1;
+}
+
 .content {
-  margin-left: var(--sidebar-w);
+  margin-left: 0;
   flex: 1;
   padding: 32px 36px;
   min-width: 0;
 }
 
 .content.narrow {
-  max-width: calc(var(--sidebar-w) + 760px);
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 /* ==============================
@@ -872,8 +912,61 @@ body[data-page="index"] .course-meta {
   opacity: 0.9;
 }
 
+body:not([data-page="login"]) {
+  padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+}
+
 .mobile-tabbar {
-  display: none;
+  position: fixed;
+  left: 50%;
+  right: auto;
+  bottom: 0;
+  z-index: 180;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  width: min(720px, 100%);
+  min-height: 78px;
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e7e7e7;
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -12px 28px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(16px);
+  transform: translateX(-50%);
+}
+
+.mobile-tab {
+  min-width: 0;
+  border-radius: 16px;
+  color: #9ca3af;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-weight: 900;
+}
+
+.mobile-tab-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.mobile-tab-label {
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.mobile-tab.active {
+  color: #111827;
+  background: #f4f4f5;
+}
+
+.mobile-tab:active {
+  transform: scale(0.96);
 }
 
 /* ==============================
@@ -4158,12 +4251,17 @@ body[data-page="index"] .course-meta {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 0;
+    width: 100%;
     min-height: 78px;
     padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
     background: rgba(255, 255, 255, 0.94);
     border-top: 1px solid #e7e7e7;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
     box-shadow: 0 -12px 28px rgba(15, 23, 42, 0.1);
     backdrop-filter: blur(16px);
+    transform: none;
   }
 
   .mobile-tab {
@@ -4239,6 +4337,20 @@ body[data-page="index"] .course-meta {
 
   .home-icon-label {
     font-size: 10px;
+  }
+
+  .top-logout-btn {
+    order: 2;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 15px;
+    margin-left: 0;
+  }
+
+  .top-logout-label {
+    display: none;
   }
 
   body[data-page="index"] .header-actions {
