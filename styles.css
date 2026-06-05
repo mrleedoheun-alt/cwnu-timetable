@@ -781,50 +781,50 @@ body[data-page="index"] .friend-back-btn {
 
 body[data-page="index"] .timetable-container {
   overflow-x: auto;
-  border: 1px solid #2f2f32;
+  border: 1px solid #e5e7eb;
   border-radius: 18px;
-  background: #111;
+  background: #fff;
 }
 
 body[data-page="index"] .et-wrap {
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: #111;
+  background: #fff;
 }
 
 body[data-page="index"] .et-top {
-  background: #111;
-  border-bottom: 1px solid #303033;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 body[data-page="index"] .et-top .corner,
 body[data-page="index"] .et-top .day {
-  color: #c8c8c8;
+  color: #71717a;
   font-weight: 900;
-  border-color: #303033;
+  border-color: #e5e7eb;
 }
 
 body[data-page="index"] .et-grid {
-  background: #111;
+  background: #fff;
 }
 
 body[data-page="index"] .time-label {
-  background: #111;
-  color: #a1a1aa;
-  border-color: #303033;
+  background: #fff;
+  color: #9ca3af;
+  border-color: #e5e7eb;
   font-weight: 800;
 }
 
 body[data-page="index"] .day-cell {
-  background: #111;
-  border-color: #303033;
+  background: #fff;
+  border-color: #edf0f3;
 }
 
 body[data-page="index"] .course-block {
-  border-radius: 0;
-  border-width: 0;
-  outline: 1px solid rgba(17, 17, 17, 0.6);
+  border-radius: 4px;
+  border-width: 1px;
+  outline: none;
   padding: 5px 7px;
   box-shadow: none;
 }

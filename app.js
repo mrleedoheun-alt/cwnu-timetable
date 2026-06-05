@@ -635,12 +635,12 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
   };
 
   const renderLoading = () => {
-    list.innerHTML = '<div class="friend-empty">친구 목록을 불러오는 중입니다.</div>';
+    list.innerHTML = '<div class="friend-empty">불러오는 중</div>';
   };
 
   const renderFriends = (friends) => {
     if (!friends.length) {
-      list.innerHTML = '<div class="friend-empty">학번으로 친구를 추가하면 공유된 시간표를 볼 수 있습니다.</div>';
+      list.innerHTML = '<div class="friend-empty">친구 없음</div>';
       return;
     }
 
@@ -705,7 +705,7 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
       const data = await socialFriends(state.studentId, state.year, state.semester);
       renderFriends(data.friends || []);
     } catch (e) {
-      list.innerHTML = '<div class="friend-empty">친구 기능을 불러오지 못했습니다.</div>';
+      list.innerHTML = '<div class="friend-empty">연결 실패</div>';
       setMsg(e.message || '서버 연결을 확인해 주세요.', 'error');
     }
   }
