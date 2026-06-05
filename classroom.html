@@ -608,6 +608,25 @@
   };
   function bName(key){return BNAMES[key]||key;}
 
+  function buildingSortNumber(bKey){
+    const geoKey=String(toGeoKey(bKey)||bKey||'');
+    const numeric=geoKey.match(/\d+/)||String(bKey||'').match(/\d+/);
+    return numeric ? Number(numeric[0]) : 9999;
+  }
+
+  function buildingCompare(a,b){
+    const na=buildingSortNumber(a);
+    const nb=buildingSortNumber(b);
+    if(na!==nb) return na-nb;
+    return String(a).localeCompare(String(b),'ko',{numeric:true});
+  }
+
+  function roomCompare(a,b){
+    const byBuilding=buildingCompare(a.building,b.building);
+    if(byBuilding) return byBuilding;
+    return String(a.room).localeCompare(String(b.room),'ko',{numeric:true});
+  }
+
   /* ── 상태 ── */
   let coursesCache=null, buildingsGeo={};
   let allRooms=[], curBuilding='all', searchQ='';
@@ -888,7 +907,7 @@
         curName:cur?.name||null,curProf:cur?.prof||null,curStart:cur?.start||null,curEnd:cur?.end||null,
         nextName:next?.name||null,nextStart:next?.start||null};
     });
-    allRooms.sort((a,b)=>a.free!==b.free?(a.free?1:-1):a.room.localeCompare(b.room,'ko'));
+    allRooms.sort(roomCompare);
     updateMapMarkers();
     buildRoomCards();
   }
@@ -937,11 +956,7 @@
     // 전체 보기 → 건물별 아코디언
     const byBld={};
     for(const r of list){ if(!byBld[r.building]) byBld[r.building]=[]; byBld[r.building].push(r); }
-    const sorted=Object.entries(byBld).sort((a,b)=>{
-      const af=a[1].filter(r=>r.free).length/a[1].length;
-      const bf=b[1].filter(r=>r.free).length/b[1].length;
-      return af-bf; // 여유 적은 건물 먼저
-    });
+    const sorted=Object.entries(byBld).sort((a,b)=>buildingCompare(a[0],b[0]));
 
     el.innerHTML=`<div style="border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)">
       ${sorted.map(([bKey,rooms])=>{
@@ -950,14 +965,16 @@
         const color=markerColor(free,total);
         const safeKey=bKey.replace(/[^a-zA-Z0-9가-힣]/g,'_');
         return`<div class="bld-accordion">
-          <div class="bld-accordion-head" onclick="window.__toggleAcc('${safeKey}')">
+          <div class="bld-accordion-head" onclick="window.__selectBldBySafe('${safeKey}')" title="지도에서 ${bName(bKey)} 위치 보기">
             <span class="bld-dot" style="background:${color}"></span>
             <span class="bld-acc-name">${bName(bKey)}</span>
             <span class="bld-acc-stat">
               <span style="color:#16a34a;font-weight:700">${free}</span>
               <span style="color:var(--muted)">/${total}</span>
             </span>
-            <span class="bld-acc-chevron" id="acc-chev-${safeKey}">▶</span>
+            <button class="bld-acc-toggle" type="button" onclick="event.stopPropagation();window.__toggleAcc('${safeKey}')" aria-label="${bName(bKey)} 강의실 펼치기">
+              <span class="bld-acc-chevron" id="acc-chev-${safeKey}">▶</span>
+            </button>
           </div>
           <div class="bld-accordion-body" id="acc-body-${safeKey}" style="display:none">
             ${rooms.map(roomRow).join('')}
@@ -1015,6 +1032,12 @@
     chev.classList.toggle('open',!open);
   }
   window.__toggleAcc=toggleAccordion;
+
+  function selectBuildingBySafe(safeKey){
+    const bKey=window[`__bld_${safeKey}`];
+    if(bKey) selectBuilding(bKey);
+  }
+  window.__selectBldBySafe=selectBuildingBySafe;
 
   function getCourseSlotsForRoom(room){
     if(!coursesCache || !room) return [];
