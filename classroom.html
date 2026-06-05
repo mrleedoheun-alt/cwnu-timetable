@@ -846,8 +846,32 @@
     // 지도 해당 건물로 이동
     const geo=buildingsGeo[toGeoKey(bKey)];
     if(geo?.lat){
-      if(kakaoMap) kakaoMap.panTo(new kakao.maps.LatLng(geo.lat,geo.lng));
-      else if(leafletMap) leafletMap.panTo([geo.lat,geo.lng]);
+      focusCampusMap(geo.lat, geo.lng);
+    }
+  }
+
+  function focusCampusMap(lat,lng){
+    if(kakaoMap){
+      const level=typeof kakaoMap.getLevel==='function' ? kakaoMap.getLevel() : 4;
+      const pos=new kakao.maps.LatLng(lat,lng);
+      kakaoMap.relayout?.();
+      kakaoMap.setLevel?.(level);
+      kakaoMap.setCenter(pos);
+      requestAnimationFrame(()=>{
+        kakaoMap.relayout?.();
+        kakaoMap.setLevel?.(level);
+        kakaoMap.setCenter(pos);
+      });
+      return;
+    }
+    if(leafletMap){
+      const zoom=leafletMap.getZoom();
+      leafletMap.invalidateSize({pan:false});
+      leafletMap.setView([lat,lng], zoom, {animate:false});
+      requestAnimationFrame(()=>{
+        leafletMap.invalidateSize({pan:false});
+        leafletMap.setView([lat,lng], zoom, {animate:false});
+      });
     }
   }
 
