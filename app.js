@@ -599,6 +599,10 @@ function setupIndexPage(state) {
   const renderOwnTimetable = () => {
     if (title) title.textContent = '시간표 1';
     if (termLabel) termLabel.textContent = `${state.year || new Date().getFullYear()}년 ${state.semester || '1학기'}`;
+    document.getElementById('friendViewBanner')?.classList.add('hidden');
+    const friendViewName = document.getElementById('friendViewName');
+    if (friendViewName) friendViewName.textContent = '';
+    document.querySelectorAll('.friend-item.selected').forEach(el => el.classList.remove('selected'));
     renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
     setupBlockClicks(container, state);
   };
@@ -632,6 +636,10 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
   const list = document.getElementById('friendsList');
   const container = document.getElementById('timetableContainer');
   const title = document.getElementById('timetableTitle');
+  const termLabel = document.getElementById('timetableTerm');
+  const banner = document.getElementById('friendViewBanner');
+  const bannerName = document.getElementById('friendViewName');
+  const bannerClose = document.getElementById('friendViewCloseBtn');
   if (!input || !addBtn || !list) return;
 
   const setMsg = (text, tone = '') => {
@@ -639,6 +647,16 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
     msg.textContent = text || '';
     msg.dataset.tone = tone;
   };
+
+  const closeFriendView = () => {
+    banner?.classList.add('hidden');
+    if (bannerName) bannerName.textContent = '';
+    list.querySelectorAll('.friend-item.selected').forEach(el => el.classList.remove('selected'));
+    renderOwnTimetable();
+    setMsg('', '');
+  };
+
+  bannerClose?.addEventListener('click', closeFriendView);
 
   const renderLoading = () => {
     list.innerHTML = '<div class="friend-empty">불러오는 중</div>';
@@ -688,22 +706,18 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
 
       item.querySelector('.friend-view-btn')?.addEventListener('click', () => {
         const courses = friend?.sharedCourses || [];
-        if (title) title.textContent = `${friendId}`;
-        if (termLabel) termLabel.textContent = `${state.year}년 ${state.semester} 친구 시간표`;
-        renderTimetable(container, courses, { retakeCourses: [] });
-        setMsg(`${friendId}님의 ${state.year} ${state.semester} 시간표를 보고 있습니다.`, 'ok');
-        if (!list.querySelector('.friend-back-btn')) {
-          const back = document.createElement('button');
-          back.className = 'friend-back-btn primary-btn';
-          back.type = 'button';
-          back.textContent = '내 시간표로 돌아가기';
-          back.addEventListener('click', () => {
-            renderOwnTimetable();
-            setMsg('', '');
-            back.remove();
-          });
-          list.prepend(back);
+        if (!courses.length) {
+          setMsg('이 학기에 공유된 시간표가 없습니다.', 'error');
+          return;
         }
+        list.querySelectorAll('.friend-item.selected').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        if (title) title.textContent = '친구 시간표';
+        if (termLabel) termLabel.textContent = `${state.year}년 ${state.semester}`;
+        if (bannerName) bannerName.textContent = `${friendId} · ${friend?.department || '학과 미입력'}`;
+        banner?.classList.remove('hidden');
+        renderTimetable(container, courses, { retakeCourses: [] });
+        setMsg(`${friendId}`, 'ok');
       });
 
       item.querySelector('.friend-accept-btn')?.addEventListener('click', async () => {
@@ -729,6 +743,7 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
       item.querySelector('.friend-remove-btn')?.addEventListener('click', async () => {
         try {
           await socialRemoveFriend(state.studentId, friendId);
+          if (item.classList.contains('selected')) closeFriendView();
           setMsg('친구 목록에서 삭제했습니다.', 'ok');
           await loadFriends();
         } catch (e) {

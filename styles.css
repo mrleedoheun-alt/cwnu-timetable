@@ -523,6 +523,47 @@ body {
   line-height: 1.5;
 }
 
+.friend-view-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -4px 0 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+.friend-view-banner.hidden {
+  display: none;
+}
+
+.friend-view-eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  color: #60a5fa;
+  margin-bottom: 2px;
+}
+
+.friend-view-banner strong {
+  font-size: 14px;
+  color: #1e3a8a;
+}
+
+.friend-view-banner button {
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
 .ghost-btn {
   border: 1.5px solid var(--line);
   border-radius: 8px;
@@ -765,6 +806,15 @@ body[data-page="index"] .friend-item {
   background: transparent;
 }
 
+body[data-page="index"] .friend-item.selected {
+  margin: 0 -8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom-color: transparent;
+  border-radius: 14px;
+  background: #eff6ff;
+}
+
 body[data-page="index"] .friend-main strong {
   font-size: 18px;
   letter-spacing: 0;
@@ -848,6 +898,10 @@ body[data-page="index"] .friend-back-btn {
   width: 100%;
   margin: 8px 0 10px;
   border-radius: 14px;
+}
+
+body[data-page="index"] .friend-view-banner {
+  margin-top: 0;
 }
 
 body[data-page="index"] .timetable-container {
