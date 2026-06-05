@@ -373,6 +373,7 @@
             </div>
           </div>
           <div id="campusMap"></div>
+          <div id="mapFocusBadge" class="map-focus-badge hidden"></div>
           <div class="map-legend-bar" style="font-size:10px;padding:5px 12px 7px">
             <span>공식 캠퍼스맵 건물만 표시 · 색상 마커 클릭 → 해당 건물 강의실 표시</span>
           </div>
@@ -843,11 +844,29 @@
     document.getElementById('bldSelStat').textContent=`빈 ${freeCount} / 전체 ${rooms.length}`;
     searchQ=''; document.getElementById('roomSearch').value='';
     updateMapMarkers(); render(); updateStats();
+    flashMapFocus(bKey, freeCount, rooms.length);
     // 지도 해당 건물로 이동
     const geo=buildingsGeo[toGeoKey(bKey)];
     if(geo?.lat){
       focusCampusMap(geo.lat, geo.lng);
     }
+  }
+
+  function flashMapFocus(bKey, freeCount, total){
+    const panel=document.querySelector('.map-panel');
+    const badge=document.getElementById('mapFocusBadge');
+    if(!panel||!badge) return;
+    badge.innerHTML=`<strong>${bName(bKey)}</strong><span>선택됨 · 빈 ${freeCount} / 전체 ${total}</span>`;
+    badge.classList.remove('hidden','pop');
+    panel.classList.remove('map-focus-pop');
+    void badge.offsetWidth;
+    badge.classList.add('pop');
+    panel.classList.add('map-focus-pop');
+    clearTimeout(window.__mapFocusTimer);
+    window.__mapFocusTimer=setTimeout(()=>{
+      badge.classList.remove('pop');
+      panel.classList.remove('map-focus-pop');
+    }, 900);
   }
 
   function focusCampusMap(lat,lng){
@@ -878,6 +897,7 @@
   function resetBuilding(){
     curBuilding='all';
     document.getElementById('buildingSelectedBar').style.display='none';
+    document.getElementById('mapFocusBadge')?.classList.add('hidden');
     updateMapMarkers(); render(); updateStats();
   }
 
