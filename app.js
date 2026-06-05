@@ -1534,6 +1534,28 @@ function setupSidebarToggle() {
   document.querySelectorAll('.side-link').forEach(a => a.addEventListener('click', close));
 }
 
+function setupBottomNav() {
+  if (document.querySelector('.mobile-tabbar')) return;
+  const page = document.body.dataset.page || '';
+  const items = [
+    { page: 'index', href: 'index.html', icon: '⌂', label: '홈' },
+    { page: 'generate', href: 'generate.html', icon: '▦', label: '시간표' },
+    { page: 'classroom', href: 'classroom.html', icon: '⌖', label: '강의실' },
+    { page: 'library', href: 'library.html', icon: '▣', label: '도서관' },
+    { page: 'settings', href: 'settings.html', icon: '⚙', label: '설정' },
+  ];
+  const nav = document.createElement('nav');
+  nav.className = 'mobile-tabbar';
+  nav.setAttribute('aria-label', '주요 메뉴');
+  nav.innerHTML = items.map(item => `
+    <a class="mobile-tab${item.page === page ? ' active' : ''}" href="${item.href}">
+      <span class="mobile-tab-icon">${item.icon}</span>
+      <span class="mobile-tab-label">${item.label}</span>
+    </a>
+  `).join('');
+  document.body.appendChild(nav);
+}
+
 /* ============================================================
    Helpers
    ============================================================ */
@@ -3722,6 +3744,7 @@ async function init() {
 
   setupLogout();
   setupSidebarToggle();
+  setupBottomNav();
   let state = loadState();
   try {
     const profile = await socialProfile(state.studentId);
