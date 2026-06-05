@@ -1619,7 +1619,7 @@ function setupHeaderLogout() {
   btn.type = 'button';
   btn.title = '로그아웃';
   btn.setAttribute('aria-label', '로그아웃');
-  btn.innerHTML = '<span class="top-logout-icon">↪</span><span class="top-logout-label">로그아웃</span>';
+  btn.innerHTML = '<span class="top-logout-icon">⏻</span><span class="top-logout-label">로그아웃</span>';
   header.appendChild(btn);
 }
 

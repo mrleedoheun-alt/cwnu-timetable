@@ -5191,3 +5191,42 @@ body[data-page="settings"] .card {
     padding-bottom: 8px;
   }
 }
+
+/* Make logout visually explicit */
+.top-logout-btn {
+  width: auto;
+  min-width: 94px;
+  height: 40px;
+  padding: 0 13px;
+  border-radius: 999px;
+  color: #dc2626;
+  background: #fff;
+}
+
+.top-logout-btn:hover {
+  background: #fff1f2;
+}
+
+.top-logout-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.top-logout-label {
+  display: inline !important;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 520px) {
+  .top-logout-btn {
+    min-width: 82px;
+    height: 38px;
+    padding: 0 10px;
+  }
+
+  .top-logout-label {
+    font-size: 11px;
+  }
+}
