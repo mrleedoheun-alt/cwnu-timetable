@@ -543,22 +543,23 @@ body[data-page="index"] .header-actions {
 .home-top-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-left: auto;
 }
 
 .home-icon-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
+  min-width: 68px;
+  height: 54px;
+  border-radius: 18px;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
   background: #fff;
   border: 1px solid #ececec;
   color: #171717;
   text-decoration: none;
-  font-size: 24px;
   font-weight: 900;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
@@ -566,6 +567,18 @@ body[data-page="index"] .header-actions {
 .home-icon-btn:hover {
   transform: translateY(-1px);
   background: #f8fafc;
+}
+
+.home-icon-mark {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.home-icon-label {
+  font-size: 11px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 body[data-page="index"] .field.compact {
@@ -4211,14 +4224,21 @@ body[data-page="index"] .course-meta {
   .home-top-actions {
     order: 2;
     margin-left: 0;
-    gap: 8px;
+    gap: 6px;
   }
 
   .home-icon-btn {
-    width: 42px;
-    height: 42px;
+    min-width: 58px;
+    height: 48px;
     border-radius: 15px;
-    font-size: 23px;
+  }
+
+  .home-icon-mark {
+    font-size: 19px;
+  }
+
+  .home-icon-label {
+    font-size: 10px;
   }
 
   body[data-page="index"] .header-actions {
