@@ -5088,3 +5088,106 @@ body[data-page="classroom"] .map-legend-bar {
     border-radius: 16px;
   }
 }
+
+/* Final one-screen enforcement for non-generator pages */
+body[data-page="index"],
+body[data-page="classroom"],
+body[data-page="library"],
+body[data-page="settings"] {
+  height: 100dvh !important;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+
+body[data-page="index"] .app-shell,
+body[data-page="classroom"] .app-shell,
+body[data-page="library"] .app-shell,
+body[data-page="settings"] .app-shell {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body[data-page="index"] .content,
+body[data-page="classroom"] .content,
+body[data-page="library"] .content,
+body[data-page="settings"] .content {
+  height: calc(100dvh - 84px);
+  max-height: calc(100dvh - 84px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 18px;
+  padding-bottom: 10px;
+}
+
+body[data-page="index"] .page-header,
+body[data-page="classroom"] .page-header,
+body[data-page="library"] .page-header,
+body[data-page="settings"] .page-header {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+
+body[data-page="index"] .board-grid,
+body[data-page="classroom"] .map-rooms-split,
+body[data-page="library"] .library-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body[data-page="index"] .timetable-card,
+body[data-page="index"] .friend-card,
+body[data-page="classroom"] .map-panel,
+body[data-page="classroom"] .rooms-panel {
+  min-height: 0;
+  height: auto;
+}
+
+body[data-page="index"] .timetable-card,
+body[data-page="library"] .library-card {
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-page="index"] .timetable-container,
+body[data-page="index"] .friend-list,
+body[data-page="classroom"] .rooms-scroll,
+body[data-page="library"] #seatContainer {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+body[data-page="classroom"] #campusMap {
+  flex: 1 1 auto;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+body[data-page="library"] .map-fit-frame {
+  height: 100%;
+  min-height: 0;
+}
+
+body[data-page="settings"] .content {
+  justify-content: center;
+}
+
+body[data-page="settings"] .card {
+  max-height: calc(100dvh - 170px);
+  overflow: auto;
+}
+
+@media (max-width: 920px) {
+  body[data-page="index"] .content,
+  body[data-page="classroom"] .content,
+  body[data-page="library"] .content,
+  body[data-page="settings"] .content {
+    height: calc(100dvh - 78px);
+    max-height: calc(100dvh - 78px);
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
+}
