@@ -67,6 +67,8 @@ function publicUser(u) {
     department: u.department || '',
     shareTimetable: !!u.shareTimetable,
     friends: Array.isArray(u.friends) ? u.friends : [],
+    friendRequestsSent: Array.isArray(u.friendRequestsSent) ? u.friendRequestsSent : [],
+    friendRequestsReceived: Array.isArray(u.friendRequestsReceived) ? u.friendRequestsReceived : [],
     createdAt: u.createdAt || '',
     updatedAt: u.updatedAt || '',
   };
@@ -104,6 +106,8 @@ function getSocialUserOrSend(res, db, sid) {
     return null;
   }
   if (!Array.isArray(user.friends)) user.friends = [];
+  if (!Array.isArray(user.friendRequestsSent)) user.friendRequestsSent = [];
+  if (!Array.isArray(user.friendRequestsReceived)) user.friendRequestsReceived = [];
   if (!user.state) user.state = {};
   return user;
 }
@@ -476,7 +480,7 @@ const server = http.createServer(async (req, res) => {
       const now = new Date().toISOString();
       db.users[studentId] = {
         studentId, department, passwordHash: hashPassword(password),
-        shareTimetable: false, friends: [], state: body.state || {}, createdAt: now, updatedAt: now,
+        shareTimetable: false, friends: [], friendRequestsSent: [], friendRequestsReceived: [], state: body.state || {}, createdAt: now, updatedAt: now,
       };
       writeSocial(db);
       return sendJson(res, 200, { ok: true, user: publicUser(db.users[studentId]), state: db.users[studentId].state });
@@ -535,6 +539,8 @@ const server = http.createServer(async (req, res) => {
         delete db.users[oldStudentId];
         for (const u of Object.values(db.users)) {
           u.friends = (u.friends || []).map(id => id === oldStudentId ? studentId : id);
+          u.friendRequestsSent = (u.friendRequestsSent || []).map(id => id === oldStudentId ? studentId : id);
+          u.friendRequestsReceived = (u.friendRequestsReceived || []).map(id => id === oldStudentId ? studentId : id);
         }
       }
       const user = getSocialUserOrSend(res, db, studentId);
@@ -557,7 +563,7 @@ const server = http.createServer(async (req, res) => {
         const now = new Date().toISOString();
         user = db.users[studentId] = {
           studentId, department: body.state?.department || '', passwordHash: '',
-          shareTimetable: false, friends: [], state: {}, createdAt: now, updatedAt: now,
+          shareTimetable: false, friends: [], friendRequestsSent: [], friendRequestsReceived: [], state: {}, createdAt: now, updatedAt: now,
         };
       }
       user.state = body.state || {};
@@ -579,10 +585,57 @@ const server = http.createServer(async (req, res) => {
       if (!user) return;
       const friend = getSocialUserOrSend(res, db, friendId);
       if (!friend) return;
-      if (!user.friends.includes(friendId)) user.friends.push(friendId);
+      if (user.friends.includes(friendId)) return sendJson(res, 200, { ok: true, status: 'accepted', friend: publicUser(friend), friends: user.friends });
+      if (user.friendRequestsReceived.includes(friendId)) return sendJson(res, 409, { error: '이미 받은 요청이 있습니다. 요청을 수락해 주세요.' });
+      if (!user.friendRequestsSent.includes(friendId)) user.friendRequestsSent.push(friendId);
+      if (!friend.friendRequestsReceived.includes(studentId)) friend.friendRequestsReceived.push(studentId);
       user.updatedAt = new Date().toISOString();
+      friend.updatedAt = user.updatedAt;
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, status: 'pending', friend: publicUser(friend), friends: user.friends });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/friends/accept' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const friendId = String(body.friendId || '').trim();
+      const db = readSocial();
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      const friend = getSocialUserOrSend(res, db, friendId);
+      if (!friend) return;
+      if (!user.friendRequestsReceived.includes(friendId)) return sendJson(res, 404, { error: '받은 친구 요청이 없습니다.' });
+      user.friendRequestsReceived = user.friendRequestsReceived.filter(id => id !== friendId);
+      friend.friendRequestsSent = friend.friendRequestsSent.filter(id => id !== studentId);
+      if (!user.friends.includes(friendId)) user.friends.push(friendId);
+      if (!friend.friends.includes(studentId)) friend.friends.push(studentId);
+      const now = new Date().toISOString();
+      user.updatedAt = now;
+      friend.updatedAt = now;
       writeSocial(db);
       return sendJson(res, 200, { ok: true, friend: publicUser(friend), friends: user.friends });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/friends/reject' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const friendId = String(body.friendId || '').trim();
+      const db = readSocial();
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      const friend = getSocialUserOrSend(res, db, friendId);
+      if (!friend) return;
+      user.friendRequestsReceived = user.friendRequestsReceived.filter(id => id !== friendId);
+      friend.friendRequestsSent = friend.friendRequestsSent.filter(id => id !== studentId);
+      const now = new Date().toISOString();
+      user.updatedAt = now;
+      friend.updatedAt = now;
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true });
     } catch (e) { return sendJson(res, 500, { error: e.message }); }
   }
 
@@ -595,6 +648,16 @@ const server = http.createServer(async (req, res) => {
       const user = getSocialUserOrSend(res, db, studentId);
       if (!user) return;
       user.friends = user.friends.filter(id => id !== friendId);
+      user.friendRequestsSent = user.friendRequestsSent.filter(id => id !== friendId);
+      user.friendRequestsReceived = user.friendRequestsReceived.filter(id => id !== friendId);
+      const friend = db.users[friendId];
+      if (friend) {
+        getSocialUserOrSend(res, db, friendId);
+        friend.friends = friend.friends.filter(id => id !== studentId);
+        friend.friendRequestsSent = friend.friendRequestsSent.filter(id => id !== studentId);
+        friend.friendRequestsReceived = friend.friendRequestsReceived.filter(id => id !== studentId);
+        friend.updatedAt = new Date().toISOString();
+      }
       user.updatedAt = new Date().toISOString();
       writeSocial(db);
       return sendJson(res, 200, { ok: true, friends: user.friends });
@@ -614,9 +677,13 @@ const server = http.createServer(async (req, res) => {
       if (!friend) return null;
       const state = friend.state || {};
       const courses = friend.shareTimetable && key ? (state.timetables?.[key] || state.courses || []) : [];
-      return { ...publicUser(friend), sharedCourses: courses, canViewTimetable: !!friend.shareTimetable };
+      return { ...publicUser(friend), status: 'accepted', sharedCourses: courses, canViewTimetable: !!friend.shareTimetable };
     }).filter(Boolean);
-    return sendJson(res, 200, { ok: true, friends });
+    const incoming = (user.friendRequestsReceived || []).map(id => db.users[id]).filter(Boolean)
+      .map(u => ({ ...publicUser(u), status: 'incoming', sharedCourses: [], canViewTimetable: false }));
+    const outgoing = (user.friendRequestsSent || []).map(id => db.users[id]).filter(Boolean)
+      .map(u => ({ ...publicUser(u), status: 'outgoing', sharedCourses: [], canViewTimetable: false }));
+    return sendJson(res, 200, { ok: true, friends, incoming, outgoing });
   }
   /* ── /api/courses?year=YYYY&semester=1학기 ── */
   if (pathname === '/api/courses') {

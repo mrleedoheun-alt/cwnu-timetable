@@ -451,6 +451,16 @@ body {
   background: #fee2e2;
 }
 
+.friend-status.incoming {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.friend-status.pending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
 .friend-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -725,6 +735,14 @@ body[data-page="index"] .friend-status.open {
 
 body[data-page="index"] .friend-status.closed {
   color: #8e8e93;
+}
+
+body[data-page="index"] .friend-status.incoming {
+  color: #2563eb;
+}
+
+body[data-page="index"] .friend-status.pending {
+  color: #a16207;
 }
 
 body[data-page="index"] .friend-actions {

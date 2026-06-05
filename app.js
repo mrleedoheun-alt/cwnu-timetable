@@ -116,6 +116,12 @@ async function socialAddFriend(studentId, friendStudentId) {
 async function socialRemoveFriend(studentId, friendStudentId) {
   return apiJson('/api/social/friends/remove', { method: 'POST', body: JSON.stringify({ studentId, friendId: friendStudentId }) });
 }
+async function socialAcceptFriend(studentId, friendStudentId) {
+  return apiJson('/api/social/friends/accept', { method: 'POST', body: JSON.stringify({ studentId, friendId: friendStudentId }) });
+}
+async function socialRejectFriend(studentId, friendStudentId) {
+  return apiJson('/api/social/friends/reject', { method: 'POST', body: JSON.stringify({ studentId, friendId: friendStudentId }) });
+}
 async function socialFriends(studentId, year, semester) {
   const qs = new URLSearchParams({ studentId, year: year || '', semester: semester || '' });
   return apiJson(`/api/social/friends?${qs.toString()}`);
@@ -638,26 +644,39 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
     list.innerHTML = '<div class="friend-empty">불러오는 중</div>';
   };
 
-  const renderFriends = (friends) => {
-    if (!friends.length) {
+  const renderFriends = ({ friends = [], incoming = [], outgoing = [] }) => {
+    const all = [
+      ...incoming.map(friend => ({ ...friend, status: 'incoming' })),
+      ...friends.map(friend => ({ ...friend, status: 'accepted' })),
+      ...outgoing.map(friend => ({ ...friend, status: 'outgoing' })),
+    ];
+    if (!all.length) {
       list.innerHTML = '<div class="friend-empty">친구 없음</div>';
       return;
     }
 
-    list.innerHTML = friends.map(friend => {
-      const canView = !!friend.canViewTimetable;
-      const status = canView ? '공유 가능' : '비공개';
-      const statusClass = canView ? 'open' : 'closed';
+    list.innerHTML = all.map(friend => {
+      const canView = friend.status === 'accepted' && !!friend.canViewTimetable;
+      const statusText = friend.status === 'incoming'
+        ? '요청 받음'
+        : friend.status === 'outgoing'
+          ? '수락 대기'
+          : canView ? '공유 가능' : '비공개';
+      const statusClass = friend.status === 'incoming' ? 'incoming'
+        : friend.status === 'outgoing' ? 'pending'
+        : canView ? 'open' : 'closed';
       return `
-        <div class="friend-item" data-friend-id="${friend.studentId}">
+        <div class="friend-item" data-friend-id="${friend.studentId}" data-status="${friend.status}">
           <div class="friend-main">
             <strong>${esc(friend.studentId)}</strong>
             <span>${esc(friend.department || '학과 미입력')}</span>
           </div>
-          <span class="friend-status ${statusClass}">${status}</span>
+          <span class="friend-status ${statusClass}">${statusText}</span>
           <div class="friend-actions">
-            ${canView ? '<button class="friend-view-btn secondary-btn" type="button">보기</button>' : ''}
-            <button class="friend-remove-btn ghost-btn" type="button">삭제</button>
+            ${friend.status === 'incoming' ? '<button class="friend-accept-btn secondary-btn" type="button">수락</button><button class="friend-reject-btn ghost-btn" type="button">거절</button>' : ''}
+            ${friend.status === 'outgoing' ? '<button class="friend-remove-btn ghost-btn" type="button">취소</button>' : ''}
+            ${friend.status === 'accepted' && canView ? '<button class="friend-view-btn secondary-btn" type="button">보기</button>' : ''}
+            ${friend.status === 'accepted' ? '<button class="friend-remove-btn ghost-btn" type="button">삭제</button>' : ''}
           </div>
         </div>
       `;
@@ -665,7 +684,7 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
 
     list.querySelectorAll('.friend-item').forEach(item => {
       const friendId = item.dataset.friendId;
-      const friend = friends.find(f => f.studentId === friendId);
+      const friend = all.find(f => f.studentId === friendId);
 
       item.querySelector('.friend-view-btn')?.addEventListener('click', () => {
         const courses = friend?.sharedCourses || [];
@@ -687,6 +706,26 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
         }
       });
 
+      item.querySelector('.friend-accept-btn')?.addEventListener('click', async () => {
+        try {
+          await socialAcceptFriend(state.studentId, friendId);
+          setMsg('친구 요청을 수락했습니다.', 'ok');
+          await loadFriends();
+        } catch (e) {
+          setMsg(e.message || '친구 요청 수락에 실패했습니다.', 'error');
+        }
+      });
+
+      item.querySelector('.friend-reject-btn')?.addEventListener('click', async () => {
+        try {
+          await socialRejectFriend(state.studentId, friendId);
+          setMsg('친구 요청을 거절했습니다.', 'ok');
+          await loadFriends();
+        } catch (e) {
+          setMsg(e.message || '친구 요청 거절에 실패했습니다.', 'error');
+        }
+      });
+
       item.querySelector('.friend-remove-btn')?.addEventListener('click', async () => {
         try {
           await socialRemoveFriend(state.studentId, friendId);
@@ -703,7 +742,7 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
     renderLoading();
     try {
       const data = await socialFriends(state.studentId, state.year, state.semester);
-      renderFriends(data.friends || []);
+      renderFriends(data);
     } catch (e) {
       list.innerHTML = '<div class="friend-empty">연결 실패</div>';
       setMsg(e.message || '서버 연결을 확인해 주세요.', 'error');
@@ -722,10 +761,10 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
       try {
         await socialAddFriend(state.studentId, friendId);
         input.value = '';
-        setMsg('친구를 추가했습니다.', 'ok');
+        setMsg('친구 요청을 보냈습니다.', 'ok');
         await loadFriends();
       } catch (e) {
-        setMsg(e.message || '친구 추가에 실패했습니다.', 'error');
+        setMsg(e.message || '친구 요청에 실패했습니다.', 'error');
       }
     });
   }
