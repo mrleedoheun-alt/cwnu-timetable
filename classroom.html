@@ -775,15 +775,17 @@
     const total=rooms.length;
     const hasClassrooms=total>0;
     const color=hasClassrooms ? markerColor(freeCount,total) : '#94a3b8';
-    const isSelected=key===curBuilding || `${key}관`===curBuilding;
+    const isSelected=key===curBuilding || `${key}관`===curBuilding || key===toGeoKey(curBuilding);
     const label=String(key).length<=4 ? String(key) : String(key).slice(0,4);
     const name=displayBuildingName(key,geo);
 
     const el=document.createElement('div');
-    el.className=`campus-marker${isSelected?' selected':''}${hasClassrooms?'':' no-classroom'}`;
+    el.className=`campus-marker${isSelected?' selected pin-selected':''}${hasClassrooms?'':' no-classroom'}`;
     el.style.background=color;
     el.style.opacity=hasClassrooms?'1':'.72';
-    el.innerHTML=`<span style="font-size:9px;font-weight:800;line-height:1">${label}</span>`;
+    el.innerHTML=isSelected
+      ? `<span class="marker-pin-label">${label}</span><span class="marker-pin-caption">${name}</span>`
+      : `<span style="font-size:9px;font-weight:800;line-height:1">${label}</span>`;
     el.title=hasClassrooms ? `${name} — 빈 강의실 ${freeCount}/${total}` : `${name} — 강의 데이터 없음`;
     if(hasClassrooms) el.addEventListener('click',()=>window.__selectBld(rooms[0].building));
 

@@ -4659,6 +4659,54 @@ body[data-page="classroom"] .campus-marker.selected {
   transform: scale(1.34);
 }
 
+body[data-page="classroom"] .campus-marker.pin-selected {
+  width: 46px;
+  height: 46px;
+  border-radius: 50% 50% 50% 12px;
+  background: #2563eb !important;
+  border: 3px solid #fff !important;
+  color: #fff;
+  transform: rotate(-45deg) scale(1.22);
+  box-shadow: 0 0 0 7px rgba(37,99,235,.22), 0 14px 30px rgba(15,23,42,.34) !important;
+  z-index: 30;
+}
+
+body[data-page="classroom"] .campus-marker.pin-selected::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.65);
+}
+
+.marker-pin-label {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  transform: rotate(45deg);
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.marker-pin-caption {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  transform: translateX(-50%) rotate(45deg);
+  white-space: nowrap;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(15,23,42,.22);
+}
+
 @keyframes mapBadgePop {
   0% { opacity: 0; transform: translateY(-8px) scale(.88); }
   55% { opacity: 1; transform: translateY(0) scale(1.05); }
@@ -4672,9 +4720,9 @@ body[data-page="classroom"] .campus-marker.selected {
 }
 
 @keyframes markerPop {
-  0% { transform: scale(.72); }
-  62% { transform: scale(1.48); }
-  100% { transform: scale(1.34); }
+  0% { transform: rotate(-45deg) scale(.72); }
+  62% { transform: rotate(-45deg) scale(1.38); }
+  100% { transform: rotate(-45deg) scale(1.22); }
 }
 
 @keyframes markerPulse {
@@ -5174,6 +5222,14 @@ body[data-page="classroom"] #campusMap {
 body[data-page="library"] .map-fit-frame {
   height: 100%;
   min-height: 260px;
+  padding: 4px;
+  align-items: center;
+  justify-items: center;
+}
+
+body[data-page="library"] .map-scale-stage {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 body[data-page="library"] .map-legend {

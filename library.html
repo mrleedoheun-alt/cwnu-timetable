@@ -363,8 +363,8 @@
   function calcMapScale(info) {
     const container = document.getElementById('seatContainer');
     const card = container.closest('.card');
-    const width = Math.max(280, (card?.clientWidth || container.clientWidth || window.innerWidth) - 48);
-    const height = Math.max(260, Math.min(window.innerHeight - 330, 640));
+    const width = Math.max(280, (container.clientWidth || card?.clientWidth || window.innerWidth) - 8);
+    const height = Math.max(240, (container.clientHeight || window.innerHeight - 330) - 8);
     return Math.max(0.2, Math.min(width / info.w, height / info.h, 1));
   }
 
