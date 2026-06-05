@@ -1567,6 +1567,15 @@ const STYLE_META = {
   liberal_req_first: { label: '교양 졸업요건 우선', desc: '필수 교양(기초·균형) 영역을 랜덤 없이 반드시 먼저 채웁니다. 졸업이 촉박할 때 권장합니다.' }
 };
 
+const DEPT_COURSE_PREFERENCES = [
+  {
+    departmentIncludes: '건설시스템',
+    courseName: '일반물리학',
+    professorIncludes: '류시완',
+    score: 10000,
+  },
+];
+
 /* ── 과목 슬롯 → 분 단위 변환 ── */
 function courseToFlat(course) {
   return (course.slots || []).map(s => ({
@@ -1643,10 +1652,26 @@ function normName(name) {
 function baseName(name) {
   return name
     .replace(/★/g, '')
-    .replace(/\s*\([^)]*\)\s*/g, '') // (괄호 내용) 전체 제거
+    .replace(/\s*\(.*/g, '') // 첫 괄호 이후 설명 제거
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
+}
+
+function courseNameMatchesBase(courseName, targetName) {
+  const courseBase = baseName(courseName);
+  const targetBase = baseName(targetName);
+  return courseBase === targetBase || courseBase.startsWith(targetBase) || normName(courseName).startsWith(targetBase);
+}
+
+function deptCoursePreferenceScore(course, dept) {
+  if (!course || !dept) return 0;
+  return DEPT_COURSE_PREFERENCES.reduce((score, rule) => {
+    if (!dept.includes(rule.departmentIncludes)) return score;
+    if (!courseNameMatchesBase(course.name || '', rule.courseName)) return score;
+    if (rule.professorIncludes && !(course.professor || '').includes(rule.professorIncludes)) return score;
+    return score + rule.score;
+  }, 0);
 }
 
 /* ── 기초교양 필수 이수 그룹 (전교 공통, subtitle 기준)
@@ -1782,6 +1807,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
 
   // 스타일 없이 선택할 때 사용하는 빈 prefs (1·2단계용)
   const NOSTYLE = new Set();
+  const autoScoreCourse = (course, sp = prefs) => scoreCourse(course, usedFlat, sp) + deptCoursePreferenceScore(course, dept);
 
   /* 풀에서 베스트 섹션 선택 — sp(stylePrefs) 기본값 = prefs(스타일 적용) */
   /* 상위 N개 후보 중 랜덤 선택 (seed=0이면 항상 1등 확정) */
@@ -1796,7 +1822,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     const valid = pool.filter(canAdd);
     if (!valid.length) return null;
     const scored = valid
-      .map(c => ({ c, s: scoreCourse(c, usedFlat, sp) }))
+      .map(c => ({ c, s: autoScoreCourse(c, sp) }))
       .sort((a, b) => b.s - a.s);
     return pickRandom(scored);
   };
@@ -1810,7 +1836,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     if (!prefs.size) return valid[Math.floor(rng() * valid.length)];
     // 스타일 점수 → 가중치 (음수여도 최소 0.05 보장)
     const scored = valid.map(c => ({
-      c, w: Math.max(0.05, 1 + scoreCourse(c, usedFlat, prefs) * 0.025)
+      c, w: Math.max(0.05, 1 + autoScoreCourse(c, prefs) * 0.025)
     }));
     const totalW = scored.reduce((s, x) => s + x.w, 0);
     let rand = rng() * totalW;
@@ -1843,7 +1869,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     const nameMap = new Map();
     for (const c of pool.filter(c => !usedBaseNames.has(baseName(c.name)) && canAdd(c))) {
       const key = baseName(c.name);
-      const s = scoreCourse(c, usedFlat, sp);
+      const s = autoScoreCourse(c, sp);
       if (!nameMap.has(key) || s > nameMap.get(key).s) nameMap.set(key, { c, s });
     }
     let candidates = [...nameMap.values()].sort((a, b) => b.s - a.s);
@@ -1888,7 +1914,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       const valid = candidates.filter(c => !checkConflict(c, schedule));
       if (!valid.length) continue;
       const picked = valid.sort((a, b) =>
-        scoreCourse(b, usedFlat, NOSTYLE) - scoreCourse(a, usedFlat, NOSTYLE)
+        autoScoreCourse(b, NOSTYLE) - autoScoreCourse(a, NOSTYLE)
       )[shuffleSeed ? Math.floor(rng() * Math.min(valid.length, 2)) : 0];
       if (picked) { addCourse(picked); usedBase.add(bn); }
     }
@@ -1926,7 +1952,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
       if (!candidates.length) continue;
       // 분반 선택만 — 스타일 없이
       const scored = candidates
-        .map(c => ({ c, s: scoreCourse(c, usedFlat, NOSTYLE) + (shuffleSeed ? (rng() - 0.5) * 10 : 0) }))
+        .map(c => ({ c, s: autoScoreCourse(c, NOSTYLE) + (shuffleSeed ? (rng() - 0.5) * 10 : 0) }))
         .sort((a, b) => b.s - a.s);
       addCourse(scored[0].c);
     }
@@ -2023,7 +2049,7 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
     const effectiveW = (c) => {
       const gw = getWeight(c);                              // 졸업 가중치
       if (!prefs.size) return gw;
-      const ss = scoreCourse(c, usedFlat, prefs);           // 스타일 점수
+      const ss = autoScoreCourse(c, prefs);                 // 스타일 점수 + 학과별 우선 분반
       const multiplier = Math.max(0.05, 1 + ss * 0.025);   // 스타일 배율
       return gw * multiplier;
     };
@@ -2069,8 +2095,9 @@ function generateVariant(state, { grade, prefs, inclRequired, inclElective, incl
   );
   const fillRecommendedLiberal = () => {
     if (!inclLiberal || totalCr >= maxCr || !recLibNames.size) return;
+    const recommendedNames = [...recLibNames];
     const pool = getLiberalPool(grade).filter(c =>
-      recLibNames.has(baseName(c.name))
+      recommendedNames.some(name => courseNameMatchesBase(c.name, name))
     );
     addPoolByName(pool, NOSTYLE);   // 권장교양은 스타일 없이
   };
