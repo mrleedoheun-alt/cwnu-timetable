@@ -5300,3 +5300,48 @@ body[data-page="settings"] .card {
     font-size: 11px;
   }
 }
+
+/* Library needs natural scrolling because the real seat maps are very wide. */
+body[data-page="library"] {
+  height: auto !important;
+  min-height: 100dvh;
+  overflow: auto !important;
+  padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+body[data-page="library"] .app-shell {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+body[data-page="library"] .content {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  display: block;
+  padding-bottom: 96px;
+}
+
+body[data-page="library"] .library-card {
+  display: block;
+  min-height: 0;
+  overflow: visible;
+}
+
+body[data-page="library"] #seatContainer {
+  overflow: visible;
+}
+
+body[data-page="library"] .map-fit-frame {
+  height: clamp(460px, calc(100dvh - 330px), 760px);
+  min-height: 460px;
+  overflow: auto;
+  align-items: start;
+  justify-items: start;
+}
+
+body[data-page="library"] .map-legend {
+  max-height: none;
+  overflow: visible;
+}
