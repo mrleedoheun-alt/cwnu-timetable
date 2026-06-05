@@ -4485,3 +4485,241 @@ body:not([data-page="login"]) {
     max-height: 210px;
   }
 }
+
+/* ==============================
+   Final app shell polish
+   ============================== */
+body[data-page="index"],
+body[data-page="generate"],
+body[data-page="classroom"],
+body[data-page="library"],
+body[data-page="settings"] {
+  background: #f5f5f6;
+}
+
+body[data-page="index"] .content,
+body[data-page="generate"] .content,
+body[data-page="classroom"] .content,
+body[data-page="library"] .content,
+body[data-page="settings"] .content {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 24px 24px 32px;
+}
+
+body[data-page="settings"] .content.narrow {
+  width: min(980px, 100%);
+}
+
+body[data-page="index"] .page-header,
+body[data-page="generate"] .page-header,
+body[data-page="classroom"] .page-header,
+body[data-page="library"] .page-header,
+body[data-page="settings"] .page-header {
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.page-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+body[data-page="index"] .page-header h1,
+body[data-page="generate"] .page-header h1,
+body[data-page="classroom"] .page-header h1,
+body[data-page="library"] .page-header h1,
+body[data-page="settings"] .page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+body[data-page="index"] .subtext,
+body[data-page="generate"] .subtext,
+body[data-page="classroom"] .subtext,
+body[data-page="library"] .subtext,
+body[data-page="settings"] .subtext,
+.auto-gen-header p,
+.auto-gen-hint,
+.style-desc-row,
+.pinned-notice {
+  display: none !important;
+}
+
+.home-top-actions {
+  display: none !important;
+}
+
+body[data-page="index"] .header-actions,
+body[data-page="generate"] .header-actions,
+body[data-page="classroom"] .header-actions,
+body[data-page="library"] .header-actions {
+  margin-left: auto;
+}
+
+body[data-page="generate"] .header-actions,
+body[data-page="index"] .header-actions {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 999px;
+  padding: 6px;
+  gap: 4px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+body[data-page="generate"] .field.compact,
+body[data-page="index"] .field.compact {
+  gap: 4px;
+}
+
+body[data-page="generate"] .field.compact label,
+body[data-page="index"] .field.compact label {
+  display: none;
+}
+
+body[data-page="generate"] .field.compact select,
+body[data-page="index"] .field.compact select {
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f4f5;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 0 28px 0 12px;
+}
+
+body[data-page="generate"] .info-chip-row {
+  display: none;
+}
+
+.top-logout-btn {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  margin-left: 0;
+  padding: 0;
+  border-radius: 15px;
+}
+
+.top-logout-label {
+  display: none;
+}
+
+.top-logout-icon {
+  margin: 0;
+}
+
+body[data-page="generate"] .auto-gen-wrap,
+body[data-page="classroom"] .cal-card,
+body[data-page="classroom"] .map-panel,
+body[data-page="classroom"] .rooms-panel-top,
+body[data-page="classroom"] .cls-stat,
+body[data-page="library"] .lib-stat-card,
+body[data-page="library"] .library-card,
+body[data-page="settings"] .card {
+  border: 1px solid #e7e7e7;
+  border-radius: 20px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.07);
+}
+
+body[data-page="generate"] .auto-gen-header {
+  padding: 16px 18px;
+}
+
+body[data-page="generate"] .auto-gen-title-row {
+  align-items: center;
+}
+
+body[data-page="generate"] .auto-gen-title-row h2,
+body[data-page="classroom"] .map-panel-head h2,
+body[data-page="library"] .card-head h2,
+body[data-page="settings"] .card-head h2 {
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+body[data-page="classroom"] .cal-card {
+  overflow: visible;
+}
+
+body[data-page="classroom"] .selected-date-badge {
+  margin-bottom: 14px;
+}
+
+body[data-page="classroom"] .classroom-stats-row,
+body[data-page="library"] .library-stats {
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+body[data-page="classroom"] .cls-stat,
+body[data-page="library"] .lib-stat-card {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+body[data-page="library"] .floor-tabs,
+body[data-page="library"] .refresh-row {
+  margin-bottom: 12px;
+}
+
+body[data-page="library"] .refresh-row {
+  justify-content: space-between;
+}
+
+body[data-page="library"] .link-to-clicker {
+  display: none;
+}
+
+body[data-page="library"] .map-fit-note,
+body[data-page="classroom"] .map-legend-bar {
+  display: none;
+}
+
+@media (max-width: 920px) {
+  body[data-page="index"] .content,
+  body[data-page="generate"] .content,
+  body[data-page="classroom"] .content,
+  body[data-page="library"] .content,
+  body[data-page="settings"] .content {
+    padding: 18px 14px 24px;
+  }
+
+  body[data-page="index"] .page-header,
+  body[data-page="generate"] .page-header,
+  body[data-page="classroom"] .page-header,
+  body[data-page="library"] .page-header,
+  body[data-page="settings"] .page-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  body[data-page="index"] .page-header-title,
+  body[data-page="generate"] .page-header-title,
+  body[data-page="classroom"] .page-header-title,
+  body[data-page="library"] .page-header-title,
+  body[data-page="settings"] .page-header-title {
+    flex: 1;
+  }
+
+  body[data-page="index"] .page-header h1,
+  body[data-page="generate"] .page-header h1,
+  body[data-page="classroom"] .page-header h1,
+  body[data-page="library"] .page-header h1,
+  body[data-page="settings"] .page-header h1 {
+    font-size: 24px;
+  }
+
+  body[data-page="generate"] .header-actions,
+  body[data-page="index"] .header-actions {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    border-radius: 16px;
+  }
+}
