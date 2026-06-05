@@ -101,6 +101,9 @@ async function socialSignup(payload) {
 async function socialLogin(studentId, password) {
   return apiJson('/api/social/login', { method: 'POST', body: JSON.stringify({ studentId, password }) });
 }
+async function socialResetPassword(payload) {
+  return apiJson('/api/social/password/reset', { method: 'POST', body: JSON.stringify(payload) });
+}
 async function socialProfile(studentId) {
   return apiJson(`/api/social/profile?studentId=${encodeURIComponent(studentId)}`);
 }
@@ -438,29 +441,37 @@ async function setupLoginPage() {
   const tabs       = document.querySelectorAll('.auth-tab');
   const loginForm  = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
+  const resetForm  = document.getElementById('resetForm');
   const loginErr   = document.getElementById('loginError');
   const signupErr  = document.getElementById('signupError');
+  const resetErr   = document.getElementById('resetError');
 
   // 학과 목록 로드 후 select 채우기
   await loadDepartments();
   fillDepartmentOptions(document.getElementById('signupDepartment'));
+  fillDepartmentOptions(document.getElementById('resetDepartment'));
 
   // Tab switching
   tabs.forEach(tab => tab.addEventListener('click', () => {
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     const isLogin = tab.dataset.tab === 'login';
+    const isSignup = tab.dataset.tab === 'signup';
+    const isReset = tab.dataset.tab === 'reset';
     loginForm.classList.toggle('hidden', !isLogin);
-    signupForm.classList.toggle('hidden', isLogin);
+    signupForm.classList.toggle('hidden', !isSignup);
+    resetForm?.classList.toggle('hidden', !isReset);
     loginErr.classList.add('hidden');
     signupErr.classList.add('hidden');
+    resetErr?.classList.add('hidden');
   }));
 
   // Enter key
   document.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
     if (!loginForm.classList.contains('hidden')) document.getElementById('loginBtn')?.click();
-    else document.getElementById('signupBtn')?.click();
+    else if (!signupForm.classList.contains('hidden')) document.getElementById('signupBtn')?.click();
+    else document.getElementById('resetPasswordBtn')?.click();
   });
 
   // Login
@@ -517,11 +528,49 @@ async function setupLoginPage() {
     setSession(sid);
     location.href = 'index.html';
   });
+
+  document.getElementById('resetPasswordBtn')?.addEventListener('click', async () => {
+    const sid = document.getElementById('resetStudentId').value.trim();
+    const dept = document.getElementById('resetDepartment')?.value || '';
+    const pass = document.getElementById('resetPassword').value;
+    const pass2 = document.getElementById('resetPasswordConfirm').value;
+    if (!/^\d{8}$/.test(sid)) return showErr(resetErr, '학번은 8자리 숫자로 입력해 주세요.');
+    if (!dept) return showErr(resetErr, '학과를 선택해 주세요.');
+    if (pass.length < 4) return showErr(resetErr, '비밀번호는 4자 이상 입력해 주세요.');
+    if (pass !== pass2) return showErr(resetErr, '비밀번호가 일치하지 않습니다.');
+    try {
+      const data = await socialResetPassword({ studentId: sid, department: dept, password: pass });
+      mergeServerUserLocal(data.user);
+      const users = getUsers();
+      const idx = users.findIndex(u => u.studentId === sid);
+      if (idx >= 0) users[idx] = { ...users[idx], department: dept, password: pass };
+      else users.push({ studentId: sid, department: dept, password: pass, shareTimetable: !!data.user?.shareTimetable });
+      saveUsers(users);
+      showSuccess(loginErr, '비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.');
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === 'login'));
+      loginForm.classList.remove('hidden');
+      signupForm.classList.add('hidden');
+      resetForm?.classList.add('hidden');
+      document.getElementById('loginStudentId').value = sid;
+      document.getElementById('loginPassword').value = '';
+    } catch (e) {
+      showErr(resetErr, e.message || '비밀번호 변경에 실패했습니다.');
+    }
+  });
 }
 
 function showErr(el, msg) {
   if (!el) return;
   el.textContent = msg;
+  el.classList.add('auth-error');
+  el.classList.remove('auth-success');
+  el.classList.remove('hidden');
+}
+function showSuccess(el, msg) {
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('auth-success');
+  el.classList.remove('auth-error');
   el.classList.remove('hidden');
 }
 

@@ -19,6 +19,7 @@
         <div class="auth-tabs">
           <button class="auth-tab active" data-tab="login" type="button">로그인</button>
           <button class="auth-tab" data-tab="signup" type="button">회원가입</button>
+          <button class="auth-tab" data-tab="reset" type="button">비밀번호 재설정</button>
         </div>
 
         <!-- 로그인 폼 -->
@@ -56,6 +57,28 @@
           </div>
           <div id="signupError" class="auth-error hidden"></div>
           <button id="signupBtn" class="primary-btn full" type="button">회원가입</button>
+        </div>
+
+        <!-- 비밀번호 재설정 폼 -->
+        <div class="auth-form hidden" id="resetForm">
+          <div class="field">
+            <label for="resetStudentId">학번</label>
+            <input type="text" id="resetStudentId" maxlength="8" inputmode="numeric" placeholder="8자리 학번 입력" autocomplete="username" />
+          </div>
+          <div class="field">
+            <label for="resetDepartment">학과</label>
+            <select id="resetDepartment"></select>
+          </div>
+          <div class="field">
+            <label for="resetPassword">새 비밀번호</label>
+            <input type="password" id="resetPassword" placeholder="새 비밀번호 입력 (4자 이상)" autocomplete="new-password" />
+          </div>
+          <div class="field">
+            <label for="resetPasswordConfirm">새 비밀번호 확인</label>
+            <input type="password" id="resetPasswordConfirm" placeholder="새 비밀번호 다시 입력" autocomplete="new-password" />
+          </div>
+          <div id="resetError" class="auth-error hidden"></div>
+          <button id="resetPasswordBtn" class="primary-btn full" type="button">비밀번호 변경</button>
         </div>
       </div>
     </div>

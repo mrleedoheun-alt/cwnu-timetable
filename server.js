@@ -27,7 +27,8 @@ const PORT     = Number(process.env.PORT) || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const BASE_URL = 'https://chains.changwon.ac.kr/cnu/haksa/open_subject/open_down_manager.php';
 const TOP_URL  = 'https://chains.changwon.ac.kr/cnu/haksa/open_subject/open_top_manager.php';
-const SOCIAL_PATH = path.join(DATA_DIR, 'social_users.json');
+const SOCIAL_DIR = process.env.YEOGI_DATA_DIR || DATA_DIR;
+const SOCIAL_PATH = path.join(SOCIAL_DIR, 'social_users.json');
 
 function readJsonFileSafe(filePath, fallback) {
   try {
@@ -38,7 +39,8 @@ function readJsonFileSafe(filePath, fallback) {
   }
 }
 function writeJsonFileSafe(filePath, data) {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 function readSocial() {
@@ -490,6 +492,26 @@ const server = http.createServer(async (req, res) => {
       const user = db.users[studentId];
       if (!user || !verifyPassword(password, user.passwordHash)) return sendJson(res, 401, { error: '학번 또는 비밀번호가 일치하지 않습니다.' });
       return sendJson(res, 200, { ok: true, user: publicUser(user), state: user.state || {} });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/password/reset' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const department = String(body.department || '').trim();
+      const password = String(body.password || '');
+      if (!/^\d{8}$/.test(studentId)) return sendJson(res, 400, { error: '학번은 8자리 숫자로 입력해 주세요.' });
+      if (!department) return sendJson(res, 400, { error: '학과를 선택해 주세요.' });
+      if (password.length < 4) return sendJson(res, 400, { error: '비밀번호는 4자 이상 입력해 주세요.' });
+      const db = readSocial();
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      if ((user.department || '') !== department) return sendJson(res, 403, { error: '가입된 학과 정보가 일치하지 않습니다.' });
+      user.passwordHash = hashPassword(password);
+      user.updatedAt = new Date().toISOString();
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, user: publicUser(user) });
     } catch (e) { return sendJson(res, 500, { error: e.message }); }
   }
 

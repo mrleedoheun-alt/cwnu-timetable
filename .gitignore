@@ -4,6 +4,7 @@ node_modules/
 # 크롤링 중간 원본 (불필요)
 data/major_raw.json
 data/extra_raw.json
+data/social_users.json
 courses_all.json
 courses_all.csv
 

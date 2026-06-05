@@ -170,7 +170,21 @@ body {
   font-weight: 600;
 }
 
+.auth-success {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .auth-error.hidden {
+  display: none;
+}
+
+.auth-success.hidden {
   display: none;
 }
 
