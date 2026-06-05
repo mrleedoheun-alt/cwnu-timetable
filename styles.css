@@ -5145,6 +5145,11 @@ body[data-page="classroom"] .rooms-panel {
   height: auto;
 }
 
+body[data-page="classroom"] .map-panel,
+body[data-page="classroom"] .rooms-panel {
+  align-self: stretch;
+}
+
 body[data-page="index"] .timetable-card,
 body[data-page="library"] .library-card {
   display: flex;
@@ -5163,12 +5168,21 @@ body[data-page="library"] #seatContainer {
 body[data-page="classroom"] #campusMap {
   flex: 1 1 auto;
   height: auto !important;
-  min-height: 0 !important;
+  min-height: 240px !important;
 }
 
 body[data-page="library"] .map-fit-frame {
   height: 100%;
-  min-height: 0;
+  min-height: 260px;
+}
+
+body[data-page="library"] .map-legend {
+  flex: 0 0 auto;
+  max-height: 40px;
+  overflow: auto;
+  padding-top: 6px;
+  font-size: 11px;
+  gap: 10px;
 }
 
 body[data-page="settings"] .content {
