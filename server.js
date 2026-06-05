@@ -3,6 +3,7 @@ const https    = require('https');
 const fs       = require('fs');
 const path     = require('path');
 const cheerio  = require('cheerio');
+const crypto   = require('crypto');
 
 // .env 파일 자동 로드 (dotenv 없이 직접 파싱)
 try {
@@ -26,6 +27,84 @@ const PORT     = Number(process.env.PORT) || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const BASE_URL = 'https://chains.changwon.ac.kr/cnu/haksa/open_subject/open_down_manager.php';
 const TOP_URL  = 'https://chains.changwon.ac.kr/cnu/haksa/open_subject/open_top_manager.php';
+const SOCIAL_PATH = path.join(DATA_DIR, 'social_users.json');
+
+function readJsonFileSafe(filePath, fallback) {
+  try {
+    if (!fs.existsSync(filePath)) return fallback;
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch {
+    return fallback;
+  }
+}
+function writeJsonFileSafe(filePath, data) {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+function readSocial() {
+  const db = readJsonFileSafe(SOCIAL_PATH, { users: {} });
+  if (!db.users) db.users = {};
+  return db;
+}
+function writeSocial(db) { writeJsonFileSafe(SOCIAL_PATH, db); }
+function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
+  const hash = crypto.pbkdf2Sync(String(password || ''), salt, 120000, 32, 'sha256').toString('hex');
+  return `${salt}:${hash}`;
+}
+function verifyPassword(password, stored) {
+  if (!stored || !stored.includes(':')) return false;
+  const [salt, expected] = stored.split(':');
+  const actual = crypto.pbkdf2Sync(String(password || ''), salt, 120000, 32, 'sha256').toString('hex');
+  try { return crypto.timingSafeEqual(Buffer.from(actual, 'hex'), Buffer.from(expected, 'hex')); }
+  catch { return false; }
+}
+function publicUser(u) {
+  if (!u) return null;
+  return {
+    studentId: u.studentId,
+    department: u.department || '',
+    shareTimetable: !!u.shareTimetable,
+    friends: Array.isArray(u.friends) ? u.friends : [],
+    createdAt: u.createdAt || '',
+    updatedAt: u.updatedAt || '',
+  };
+}
+function sendJson(res, status, data) {
+  res.writeHead(status, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Access-Control-Allow-Origin': '*',
+    'Cache-Control': 'no-store, max-age=0, must-revalidate',
+  });
+  res.end(JSON.stringify(data));
+}
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk;
+      if (body.length > 5_000_000) {
+        reject(new Error('request body too large'));
+        req.destroy();
+      }
+    });
+    req.on('end', () => {
+      if (!body) return resolve({});
+      try { resolve(JSON.parse(body)); }
+      catch { reject(new Error('invalid json body')); }
+    });
+    req.on('error', reject);
+  });
+}
+function getSocialUserOrSend(res, db, sid) {
+  const user = db.users[String(sid || '')];
+  if (!user) {
+    sendJson(res, 404, { error: '사용자를 찾을 수 없습니다.' });
+    return null;
+  }
+  if (!Array.isArray(user.friends)) user.friends = [];
+  if (!user.state) user.state = {};
+  return user;
+}
 
 /* ─────────────────────────────────────────────
    Shared helpers (copied from crawl_to_courses_json.js)
@@ -380,6 +459,143 @@ const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = urlObj.pathname;
 
+
+  if (pathname === '/api/social/signup' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const department = String(body.department || '').trim();
+      const password = String(body.password || '');
+      if (!/^\d{8}$/.test(studentId)) return sendJson(res, 400, { error: '학번은 8자리 숫자로 입력해 주세요.' });
+      if (!department) return sendJson(res, 400, { error: '학과를 선택해 주세요.' });
+      if (password.length < 4) return sendJson(res, 400, { error: '비밀번호는 4자 이상 입력해 주세요.' });
+      const db = readSocial();
+      if (db.users[studentId]) return sendJson(res, 409, { error: '이미 등록된 학번입니다.' });
+      const now = new Date().toISOString();
+      db.users[studentId] = {
+        studentId, department, passwordHash: hashPassword(password),
+        shareTimetable: false, friends: [], state: body.state || {}, createdAt: now, updatedAt: now,
+      };
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, user: publicUser(db.users[studentId]), state: db.users[studentId].state });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/login' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const password = String(body.password || '');
+      const db = readSocial();
+      const user = db.users[studentId];
+      if (!user || !verifyPassword(password, user.passwordHash)) return sendJson(res, 401, { error: '학번 또는 비밀번호가 일치하지 않습니다.' });
+      return sendJson(res, 200, { ok: true, user: publicUser(user), state: user.state || {} });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/profile' && req.method === 'GET') {
+    const sid = urlObj.searchParams.get('studentId');
+    const db = readSocial();
+    const user = getSocialUserOrSend(res, db, sid);
+    if (!user) return;
+    return sendJson(res, 200, { ok: true, user: publicUser(user), state: user.state || {} });
+  }
+
+  if (pathname === '/api/social/profile' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const oldStudentId = String(body.oldStudentId || '').trim();
+      const db = readSocial();
+      if (oldStudentId && oldStudentId !== studentId && db.users[oldStudentId]) {
+        if (db.users[studentId]) return sendJson(res, 409, { error: '이미 등록된 학번입니다.' });
+        db.users[studentId] = { ...db.users[oldStudentId], studentId };
+        delete db.users[oldStudentId];
+        for (const u of Object.values(db.users)) {
+          u.friends = (u.friends || []).map(id => id === oldStudentId ? studentId : id);
+        }
+      }
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      if (body.department !== undefined) user.department = String(body.department || '').trim();
+      if (body.shareTimetable !== undefined) user.shareTimetable = !!body.shareTimetable;
+      user.updatedAt = new Date().toISOString();
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, user: publicUser(user) });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/state' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const db = readSocial();
+      let user = db.users[studentId];
+      if (!user) {
+        const now = new Date().toISOString();
+        user = db.users[studentId] = {
+          studentId, department: body.state?.department || '', passwordHash: '',
+          shareTimetable: false, friends: [], state: {}, createdAt: now, updatedAt: now,
+        };
+      }
+      user.state = body.state || {};
+      if (body.state?.department) user.department = body.state.department;
+      user.updatedAt = new Date().toISOString();
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/friends/add' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const friendId = String(body.friendId || '').trim();
+      if (studentId === friendId) return sendJson(res, 400, { error: '자기 자신은 친구로 추가할 수 없습니다.' });
+      const db = readSocial();
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      const friend = getSocialUserOrSend(res, db, friendId);
+      if (!friend) return;
+      if (!user.friends.includes(friendId)) user.friends.push(friendId);
+      user.updatedAt = new Date().toISOString();
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, friend: publicUser(friend), friends: user.friends });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/friends/remove' && req.method === 'POST') {
+    try {
+      const body = await readBody(req);
+      const studentId = String(body.studentId || '').trim();
+      const friendId = String(body.friendId || '').trim();
+      const db = readSocial();
+      const user = getSocialUserOrSend(res, db, studentId);
+      if (!user) return;
+      user.friends = user.friends.filter(id => id !== friendId);
+      user.updatedAt = new Date().toISOString();
+      writeSocial(db);
+      return sendJson(res, 200, { ok: true, friends: user.friends });
+    } catch (e) { return sendJson(res, 500, { error: e.message }); }
+  }
+
+  if (pathname === '/api/social/friends' && req.method === 'GET') {
+    const studentId = urlObj.searchParams.get('studentId');
+    const year = urlObj.searchParams.get('year');
+    const semester = urlObj.searchParams.get('semester');
+    const key = year && semester ? `${year}_${semester}` : '';
+    const db = readSocial();
+    const user = getSocialUserOrSend(res, db, studentId);
+    if (!user) return;
+    const friends = (user.friends || []).map(id => {
+      const friend = db.users[id];
+      if (!friend) return null;
+      const state = friend.state || {};
+      const courses = friend.shareTimetable && key ? (state.timetables?.[key] || state.courses || []) : [];
+      return { ...publicUser(friend), sharedCourses: courses, canViewTimetable: !!friend.shareTimetable };
+    }).filter(Boolean);
+    return sendJson(res, 200, { ok: true, friends });
+  }
   /* ── /api/courses?year=YYYY&semester=1학기 ── */
   if (pathname === '/api/courses') {
     const year = urlObj.searchParams.get('year') || String(new Date().getFullYear());

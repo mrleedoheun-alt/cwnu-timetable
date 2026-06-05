@@ -362,6 +362,128 @@ body {
   gap: 16px;
 }
 
+.friend-card {
+  padding-bottom: 18px;
+}
+
+.friend-add-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.friend-add-row input {
+  min-width: 0;
+  height: 42px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.friend-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.friend-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.friend-main strong {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.friend-main span {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friend-status {
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+}
+
+.friend-status.open {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.friend-status.closed {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.friend-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+}
+
+.friend-actions button,
+.friend-back-btn {
+  flex: 1;
+  min-height: 34px;
+  justify-content: center;
+}
+
+.friend-empty {
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ghost-btn {
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.ghost-btn:hover {
+  border-color: #ef4444;
+  color: #dc2626;
+  background: #fff5f5;
+}
+
+#friendMessage[data-tone="ok"] {
+  color: #15803d;
+}
+
+#friendMessage[data-tone="error"] {
+  color: #dc2626;
+}
+
 /* ==============================
    Cards
    ============================== */
@@ -387,6 +509,46 @@ body {
 .small-note {
   font-size: 12px;
   color: var(--muted);
+}
+
+.settings-share-box {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.toggle-row span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggle-row strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.toggle-row small {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 42px;
+  height: 24px;
+  flex: 0 0 auto;
+  accent-color: var(--primary);
 }
 
 /* ==============================

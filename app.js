@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    Constants & Storage Keys
    ============================================================ */
 const USERS_KEY    = 'tt_users_v1';
@@ -84,6 +84,58 @@ function clearSession() {
 function findUser(sid) {
   return getUsers().find(u => u.studentId === sid) || null;
 }
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    cache: 'no-store',
+  });
+  let data = null;
+  try { data = await res.json(); } catch { data = {}; }
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+async function socialSignup(payload) {
+  return apiJson('/api/social/signup', { method: 'POST', body: JSON.stringify(payload) });
+}
+async function socialLogin(studentId, password) {
+  return apiJson('/api/social/login', { method: 'POST', body: JSON.stringify({ studentId, password }) });
+}
+async function socialProfile(studentId) {
+  return apiJson(`/api/social/profile?studentId=${encodeURIComponent(studentId)}`);
+}
+async function socialUpdateProfile(payload) {
+  return apiJson('/api/social/profile', { method: 'POST', body: JSON.stringify(payload) });
+}
+async function socialAddFriend(studentId, friendStudentId) {
+  return apiJson('/api/social/friends/add', { method: 'POST', body: JSON.stringify({ studentId, friendId: friendStudentId }) });
+}
+async function socialRemoveFriend(studentId, friendStudentId) {
+  return apiJson('/api/social/friends/remove', { method: 'POST', body: JSON.stringify({ studentId, friendId: friendStudentId }) });
+}
+async function socialFriends(studentId, year, semester) {
+  const qs = new URLSearchParams({ studentId, year: year || '', semester: semester || '' });
+  return apiJson(`/api/social/friends?${qs.toString()}`);
+}
+function syncStateToServer(state) {
+  if (!state?.studentId) return;
+  apiJson('/api/social/state', { method: 'POST', body: JSON.stringify({ studentId: state.studentId, state }) })
+    .catch(e => console.warn('[social] state sync failed:', e.message));
+}
+function mergeServerUserLocal(user) {
+  if (!user?.studentId) return;
+  const users = getUsers();
+  const idx = users.findIndex(u => u.studentId === user.studentId);
+  const merged = { ...(idx >= 0 ? users[idx] : {}), studentId: user.studentId, department: user.department || '', shareTimetable: !!user.shareTimetable };
+  if (idx >= 0) users[idx] = merged; else users.push(merged);
+  saveUsers(users);
+}
+function applyServerState(studentId, serverState) {
+  if (!studentId || !serverState || !Object.keys(serverState).length) return;
+  const base = { ...DEFAULT_STATE, ...serverState, studentId };
+  migrateLegacyCourses(base);
+  localStorage.setItem(STATE_PREFIX + studentId, JSON.stringify(base));
+}
 
 /* ============================================================
    Per-user state
@@ -97,7 +149,8 @@ const DEFAULT_STATE = {
   excludedCourses: [],   // array of course names to exclude from auto-gen
   pinnedCourses: [],     // array of course names to force-include in auto-gen
   retakeCourses: [],     // array of course names marked as needing retake (not counted as completed)
-  allowRetake: false     // if true, completed courses can appear in auto-gen
+  allowRetake: false,    // if true, completed courses can appear in auto-gen
+  shareTimetable: false
 };
 
 function loadState() {
@@ -117,6 +170,7 @@ function loadState() {
 function saveState(s) {
   if (!s.studentId) return;
   localStorage.setItem(STATE_PREFIX + s.studentId, JSON.stringify(s));
+  syncStateToServer(s);
 }
 
 /* ============================================================
@@ -410,20 +464,28 @@ async function setupLoginPage() {
   });
 
   // Login
-  document.getElementById('loginBtn')?.addEventListener('click', () => {
+  document.getElementById('loginBtn')?.addEventListener('click', async () => {
     const sid  = document.getElementById('loginStudentId').value.trim();
     const pass = document.getElementById('loginPassword').value;
     if (!/^\d{8}$/.test(sid)) return showErr(loginErr, '학번은 8자리 숫자로 입력해 주세요.');
     if (!pass)                 return showErr(loginErr, '비밀번호를 입력해 주세요.');
-    const user = findUser(sid);
-    if (!user)              return showErr(loginErr, '등록되지 않은 학번입니다. 회원가입을 해주세요.');
-    if (user.password !== pass) return showErr(loginErr, '비밀번호가 일치하지 않습니다.');
-    setSession(sid);
-    location.href = 'index.html';
+    try {
+      const data = await socialLogin(sid, pass);
+      mergeServerUserLocal(data.user);
+      applyServerState(sid, data.state);
+      setSession(sid);
+      location.href = 'index.html';
+    } catch (e) {
+      const user = findUser(sid);
+      if (!user) return showErr(loginErr, e.message || '등록되지 않은 학번입니다. 회원가입을 해주세요.');
+      if (!user.password) return showErr(loginErr, e.message || '서버 로그인이 필요합니다. 잠시 후 다시 시도해 주세요.');
+      if (user.password !== pass) return showErr(loginErr, '비밀번호가 일치하지 않습니다.');
+      setSession(sid);
+      location.href = 'index.html';
+    }
   });
-
   // Signup
-  document.getElementById('signupBtn')?.addEventListener('click', () => {
+  document.getElementById('signupBtn')?.addEventListener('click', async () => {
     const sid   = document.getElementById('signupStudentId').value.trim();
     const dept  = document.getElementById('signupDepartment')?.value || '';
     const pass  = document.getElementById('signupPassword').value;
@@ -433,13 +495,24 @@ async function setupLoginPage() {
     if (pass.length < 4)       return showErr(signupErr, '비밀번호는 4자 이상 입력해 주세요.');
     if (pass !== pass2)        return showErr(signupErr, '비밀번호가 일치하지 않습니다.');
     if (findUser(sid))         return showErr(signupErr, '이미 등록된 학번입니다. 로그인해 주세요.');
-    const users = getUsers();
-    users.push({ studentId: sid, department: dept, password: pass });
-    saveUsers(users);
     const initState = {
       ...DEFAULT_STATE, studentId: sid, department: dept,
       year: String(getAdmissionYear(sid) || new Date().getFullYear())
     };
+    try {
+      const data = await socialSignup({ studentId: sid, department: dept, password: pass, state: initState });
+      mergeServerUserLocal(data.user);
+    } catch (e) {
+      console.warn('[social] signup sync failed:', e.message);
+    }
+    const users = getUsers();
+    const idx = users.findIndex(u => u.studentId === sid);
+    if (idx >= 0) {
+      users[idx] = { ...users[idx], department: dept, password: pass, shareTimetable: !!users[idx].shareTimetable };
+    } else {
+      users.push({ studentId: sid, department: dept, password: pass, shareTimetable: false });
+    }
+    saveUsers(users);
     saveState(initState);
     setSession(sid);
     location.href = 'index.html';
@@ -459,11 +532,19 @@ function setupIndexPage(state) {
   const admYear    = getAdmissionYear(state.studentId);
   const yearSel    = document.getElementById('yearSelect');
   const semSel     = document.getElementById('semesterSelect');
+  const container  = document.getElementById('timetableContainer');
+  const title      = document.getElementById('timetableTitle');
 
   const defaultYear = state.year || new Date().getFullYear();
   fillYearOptions(yearSel, defaultYear, admYear);
   if (!state.year && yearSel?.value) { state.year = yearSel.value; saveState(state); }
   if (semSel) semSel.value = state.semester || '1학기';
+
+  const renderOwnTimetable = () => {
+    if (title) title.textContent = '주간 시간표';
+    renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
+    setupBlockClicks(container, state);
+  };
 
   const refreshIndex = () => {
     state.year     = yearSel?.value || state.year;
@@ -472,8 +553,8 @@ function setupIndexPage(state) {
     state.courses = getTimetable(state, state.year, state.semester);
     saveState(state);
     updateSummary(state);
-    renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
-    setupBlockClicks(container, state);
+    renderOwnTimetable();
+    setupFriendsPanel(state, renderOwnTimetable);
   };
 
   yearSel?.addEventListener('change', refreshIndex);
@@ -483,10 +564,121 @@ function setupIndexPage(state) {
   state.courses = getTimetable(state, state.year, state.semester);
   updateSummary(state);
 
-  const container = document.getElementById('timetableContainer');
-  renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
-  setupBlockClicks(container, state);
+  renderOwnTimetable();
+  setupFriendsPanel(state, renderOwnTimetable);
+}
 
+async function setupFriendsPanel(state, renderOwnTimetable) {
+  const input = document.getElementById('friendStudentId');
+  const addBtn = document.getElementById('addFriendBtn');
+  const msg = document.getElementById('friendMessage');
+  const list = document.getElementById('friendsList');
+  const container = document.getElementById('timetableContainer');
+  const title = document.getElementById('timetableTitle');
+  if (!input || !addBtn || !list) return;
+
+  const setMsg = (text, tone = '') => {
+    if (!msg) return;
+    msg.textContent = text || '';
+    msg.dataset.tone = tone;
+  };
+
+  const renderLoading = () => {
+    list.innerHTML = '<div class="friend-empty">친구 목록을 불러오는 중입니다.</div>';
+  };
+
+  const renderFriends = (friends) => {
+    if (!friends.length) {
+      list.innerHTML = '<div class="friend-empty">학번으로 친구를 추가하면 공유된 시간표를 볼 수 있습니다.</div>';
+      return;
+    }
+
+    list.innerHTML = friends.map(friend => {
+      const canView = !!friend.canViewTimetable;
+      const status = canView ? '공유 가능' : '비공개';
+      const statusClass = canView ? 'open' : 'closed';
+      return `
+        <div class="friend-item" data-friend-id="${friend.studentId}">
+          <div class="friend-main">
+            <strong>${esc(friend.studentId)}</strong>
+            <span>${esc(friend.department || '학과 미입력')}</span>
+          </div>
+          <span class="friend-status ${statusClass}">${status}</span>
+          <div class="friend-actions">
+            ${canView ? '<button class="friend-view-btn secondary-btn" type="button">보기</button>' : ''}
+            <button class="friend-remove-btn ghost-btn" type="button">삭제</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('.friend-item').forEach(item => {
+      const friendId = item.dataset.friendId;
+      const friend = friends.find(f => f.studentId === friendId);
+
+      item.querySelector('.friend-view-btn')?.addEventListener('click', () => {
+        const courses = friend?.sharedCourses || [];
+        if (title) title.textContent = `${friendId} 시간표`;
+        renderTimetable(container, courses, { retakeCourses: [] });
+        setMsg(`${friendId}님의 ${state.year} ${state.semester} 시간표를 보고 있습니다.`, 'ok');
+        if (!list.querySelector('.friend-back-btn')) {
+          const back = document.createElement('button');
+          back.className = 'friend-back-btn primary-btn';
+          back.type = 'button';
+          back.textContent = '내 시간표로 돌아가기';
+          back.addEventListener('click', () => {
+            renderOwnTimetable();
+            setMsg('', '');
+            back.remove();
+          });
+          list.prepend(back);
+        }
+      });
+
+      item.querySelector('.friend-remove-btn')?.addEventListener('click', async () => {
+        try {
+          await socialRemoveFriend(state.studentId, friendId);
+          setMsg('친구 목록에서 삭제했습니다.', 'ok');
+          await loadFriends();
+        } catch (e) {
+          setMsg(e.message || '친구 삭제에 실패했습니다.', 'error');
+        }
+      });
+    });
+  };
+
+  async function loadFriends() {
+    renderLoading();
+    try {
+      const data = await socialFriends(state.studentId, state.year, state.semester);
+      renderFriends(data.friends || []);
+    } catch (e) {
+      list.innerHTML = '<div class="friend-empty">친구 기능을 불러오지 못했습니다.</div>';
+      setMsg(e.message || '서버 연결을 확인해 주세요.', 'error');
+    }
+  }
+
+  if (!addBtn.dataset.bound) {
+    addBtn.dataset.bound = '1';
+    addBtn.addEventListener('click', async () => {
+      const friendId = input.value.trim();
+      if (!/^\d{8}$/.test(friendId)) {
+        setMsg('친구 학번은 8자리 숫자로 입력해 주세요.', 'error');
+        input.focus();
+        return;
+      }
+      try {
+        await socialAddFriend(state.studentId, friendId);
+        input.value = '';
+        setMsg('친구를 추가했습니다.', 'ok');
+        await loadFriends();
+      } catch (e) {
+        setMsg(e.message || '친구 추가에 실패했습니다.', 'error');
+      }
+    });
+  }
+
+  await loadFriends();
 }
 
 function setupBlockClicks(container, state) {
@@ -1210,13 +1402,15 @@ async function setupSettingsPage(state) {
   const sidInp  = document.getElementById('settingsStudentId');
   const deptSel = document.getElementById('settingsDepartment');
   const saveBtn = document.getElementById('saveSettingsBtn');
+  const shareToggle = document.getElementById('shareTimetableToggle');
 
   if (sidInp) sidInp.value = state.studentId || '';
+  if (shareToggle) shareToggle.checked = !!state.shareTimetable;
 
   await loadDepartments();
   fillDepartmentOptions(deptSel, state.department || '');
 
-  saveBtn?.addEventListener('click', () => {
+  saveBtn?.addEventListener('click', async () => {
     const id   = sidInp?.value.trim() || '';
     const dept = deptSel?.value || '';
     if (!/^\d{8}$/.test(id)) { alert('학번은 8자리 숫자로 입력해 주세요.'); sidInp?.focus(); return; }
@@ -1224,15 +1418,19 @@ async function setupSettingsPage(state) {
 
     const users = getUsers();
     const idx   = users.findIndex(u => u.studentId === state.studentId);
+    const oldStudentId = state.studentId;
     if (idx >= 0) {
       users[idx].studentId  = id;
       users[idx].department = dept;
-      saveUsers(users);
+      users[idx].shareTimetable = !!shareToggle?.checked;
+    } else {
+      users.push({ studentId: id, department: dept, shareTimetable: !!shareToggle?.checked });
     }
+    saveUsers(users);
 
     // 학번이 바뀌면 기존 state를 새 키로 이전
-    if (id !== state.studentId) {
-      const oldKey = STATE_PREFIX + state.studentId;
+    if (id !== oldStudentId) {
+      const oldKey = STATE_PREFIX + oldStudentId;
       const existing = localStorage.getItem(oldKey);
       if (existing) {
         localStorage.setItem(STATE_PREFIX + id, existing);
@@ -1243,11 +1441,19 @@ async function setupSettingsPage(state) {
 
     state.studentId  = id;
     state.department = dept;
+    state.shareTimetable = !!shareToggle?.checked;
     const admYear = getAdmissionYear(id);
     if (!buildAllowedYears(admYear).includes(Number(state.year))) state.year = String(admYear);
-    saveState(state);
-    alert('설정이 저장되었습니다.');
-    location.href = 'index.html';
+    saveBtn.disabled = true;
+    try {
+      saveState(state);
+      await socialUpdateProfile({ studentId: id, oldStudentId, department: dept, shareTimetable: state.shareTimetable });
+      alert('설정이 저장되었습니다.');
+      location.href = 'index.html';
+    } catch (e) {
+      alert(e.message || '설정 저장 중 오류가 발생했습니다.');
+      saveBtn.disabled = false;
+    }
   });
 }
 
@@ -3437,7 +3643,18 @@ async function init() {
 
   setupLogout();
   setupSidebarToggle();
-  const state = loadState();
+  let state = loadState();
+  try {
+    const profile = await socialProfile(state.studentId);
+    mergeServerUserLocal(profile.user);
+    if (profile.state && Object.keys(profile.state).length) {
+      applyServerState(state.studentId, profile.state);
+      state = loadState();
+    }
+    if (profile.user) state.shareTimetable = !!profile.user.shareTimetable;
+  } catch (e) {
+    console.warn('[social] profile load failed:', e.message);
+  }
 
   if (page === 'index')    setupIndexPage(state);
   if (page === 'generate') setupGeneratePage(state);
