@@ -498,6 +498,321 @@ body {
   color: #dc2626;
 }
 
+body[data-page="index"] {
+  background: #f5f5f6;
+}
+
+body[data-page="index"] .content {
+  padding: 24px 24px 32px;
+  max-width: 1280px;
+}
+
+body[data-page="index"] .page-header {
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+body[data-page="index"] .page-header h1 {
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+body[data-page="index"] .subtext {
+  display: none;
+}
+
+body[data-page="index"] .header-actions {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 999px;
+  padding: 6px;
+  gap: 4px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+body[data-page="index"] .field.compact {
+  gap: 4px;
+}
+
+body[data-page="index"] .field.compact label {
+  display: none;
+}
+
+body[data-page="index"] .field.compact select {
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f4f5;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 0 28px 0 12px;
+}
+
+body[data-page="index"] .board-grid {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 0;
+  align-items: stretch;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+body[data-page="index"] .card {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+body[data-page="index"] .timetable-card {
+  padding: 18px 18px 20px;
+  border-right: 1px solid #ececec;
+}
+
+body[data-page="index"] .timetable-card .card-head {
+  margin-bottom: 12px;
+}
+
+body[data-page="index"] #timetableTitle {
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.timetable-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.timetable-stats span {
+  background: #f4f4f5;
+  border-radius: 999px;
+  padding: 7px 10px;
+}
+
+.timetable-stats strong {
+  color: #111827;
+}
+
+body[data-page="index"] .side-stack {
+  gap: 0;
+  min-height: 100%;
+}
+
+body[data-page="index"] .friend-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 18px;
+  background: #fbfbfc;
+}
+
+body[data-page="index"] .friend-card .card-head {
+  margin-bottom: 12px;
+}
+
+body[data-page="index"] .friend-card .card-head h2 {
+  font-size: 18px;
+}
+
+body[data-page="index"] .friend-add-row {
+  grid-template-columns: 1fr 44px;
+  gap: 10px;
+  padding: 8px;
+  background: #f0f0f1;
+  border-radius: 18px;
+}
+
+body[data-page="index"] .friend-add-row input {
+  height: 40px;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+body[data-page="index"] .friend-add-row input::placeholder {
+  color: #8e8e93;
+  font-weight: 700;
+}
+
+body[data-page="index"] #addFriendBtn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 14px;
+  padding: 0;
+  font-size: 0;
+  background: #111827;
+  color: #fff;
+}
+
+body[data-page="index"] #addFriendBtn::before {
+  content: '+';
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+body[data-page="index"] .friend-list {
+  gap: 0;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+
+body[data-page="index"] .friend-item {
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid #ececec;
+  border-radius: 0;
+  padding: 16px 2px;
+  background: transparent;
+}
+
+body[data-page="index"] .friend-main strong {
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+body[data-page="index"] .friend-main span {
+  font-size: 13px;
+}
+
+body[data-page="index"] .friend-status {
+  align-self: start;
+  margin-top: 2px;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+}
+
+body[data-page="index"] .friend-status.open {
+  color: #2563eb;
+}
+
+body[data-page="index"] .friend-status.closed {
+  color: #8e8e93;
+}
+
+body[data-page="index"] .friend-actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  display: flex;
+  gap: 0;
+  border: 1px solid #e1e1e1;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+body[data-page="index"] .friend-actions button {
+  flex: 0 0 auto;
+  min-width: 58px;
+  min-height: 40px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  padding: 0 12px;
+}
+
+body[data-page="index"] .friend-actions button + button {
+  border-left: 1px solid #e1e1e1;
+}
+
+body[data-page="index"] .friend-view-btn::before {
+  content: '보기';
+}
+
+body[data-page="index"] .friend-view-btn {
+  font-size: 0;
+}
+
+body[data-page="index"] .friend-view-btn::before,
+body[data-page="index"] .friend-remove-btn {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+body[data-page="index"] .friend-empty {
+  border: 0;
+  padding: 18px 4px;
+  color: #8e8e93;
+}
+
+body[data-page="index"] .friend-back-btn {
+  width: 100%;
+  margin: 8px 0 10px;
+  border-radius: 14px;
+}
+
+body[data-page="index"] .timetable-container {
+  overflow-x: auto;
+  border: 1px solid #2f2f32;
+  border-radius: 18px;
+  background: #111;
+}
+
+body[data-page="index"] .et-wrap {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #111;
+}
+
+body[data-page="index"] .et-top {
+  background: #111;
+  border-bottom: 1px solid #303033;
+}
+
+body[data-page="index"] .et-top .corner,
+body[data-page="index"] .et-top .day {
+  color: #c8c8c8;
+  font-weight: 900;
+  border-color: #303033;
+}
+
+body[data-page="index"] .et-grid {
+  background: #111;
+}
+
+body[data-page="index"] .time-label {
+  background: #111;
+  color: #a1a1aa;
+  border-color: #303033;
+  font-weight: 800;
+}
+
+body[data-page="index"] .day-cell {
+  background: #111;
+  border-color: #303033;
+}
+
+body[data-page="index"] .course-block {
+  border-radius: 0;
+  border-width: 0;
+  outline: 1px solid rgba(17, 17, 17, 0.6);
+  padding: 5px 7px;
+  box-shadow: none;
+}
+
+body[data-page="index"] .course-title {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+body[data-page="index"] .course-meta {
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0.9;
+}
+
 /* ==============================
    Cards
    ============================== */
@@ -3765,3 +4080,95 @@ body {
 .yeogi-quick-desc  { font-size:12px; color:var(--muted); }
 .yeogi-quick-badge { font-size:11px; font-weight:700; color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:8px; width:fit-content; }
 .yeogi-quick-badge.red { color:#dc2626; background:#fee2e2; }
+
+@media (max-width: 920px) {
+  body[data-page="index"] .content {
+    padding: 18px 14px 24px;
+  }
+
+  body[data-page="index"] .page-header {
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  body[data-page="index"] .page-header h1 {
+    font-size: 24px;
+  }
+
+  body[data-page="index"] .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    border-radius: 16px;
+  }
+
+  body[data-page="index"] .field.compact {
+    flex: 1;
+  }
+
+  body[data-page="index"] .field.compact select {
+    width: 100%;
+  }
+
+  body[data-page="index"] .board-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 20px;
+  }
+
+  body[data-page="index"] .timetable-card {
+    border-right: 0;
+    border-bottom: 1px solid #ececec;
+    padding: 16px 12px 12px;
+  }
+
+  body[data-page="index"] #timetableTitle {
+    font-size: 26px;
+  }
+
+  body[data-page="index"] .timetable-stats {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  body[data-page="index"] .timetable-stats span {
+    padding: 5px 8px;
+  }
+
+  body[data-page="index"] .timetable-container {
+    border-radius: 14px;
+  }
+
+  body[data-page="index"] .course-title {
+    font-size: 13px;
+  }
+
+  body[data-page="index"] .course-meta {
+    font-size: 11px;
+  }
+
+  body[data-page="index"] .friend-card {
+    max-height: 340px;
+    padding: 14px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  body[data-page="index"] .friend-card::before {
+    content: '';
+    display: block;
+    width: 58px;
+    height: 5px;
+    border-radius: 999px;
+    background: #d4d4d8;
+    margin: 0 auto 12px;
+  }
+
+  body[data-page="index"] .friend-add-row {
+    border-radius: 16px;
+  }
+
+  body[data-page="index"] .friend-list {
+    max-height: 210px;
+  }
+}

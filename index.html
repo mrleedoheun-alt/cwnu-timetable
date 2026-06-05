@@ -55,57 +55,22 @@
         </div>
       </header>
 
-      <section class="summary-grid two">
-        <article class="summary-card">
-          <span class="summary-label">신청학점</span>
-          <strong class="summary-value"><span id="appliedCredits">15</span>학점</strong>
-          <p class="summary-help">이번 학기에 담은 과목 기준</p>
-        </article>
-        <article class="summary-card">
-          <span class="summary-label">현재까지 총 학점</span>
-          <strong class="summary-value"><span id="totalCredits">82</span>학점</strong>
-          <p class="summary-help">누적 취득 학점</p>
-        </article>
-      </section>
-
       <section class="board-grid">
         <article class="card timetable-card">
           <div class="card-head">
-            <h2 id="timetableTitle">주간 시간표</h2>
-            <span class="small-note">09:00 ~ 18:00 / 30분 기준 정렬</span>
+            <div>
+              <span class="small-note" id="timetableTerm">2026년 1학기</span>
+              <h2 id="timetableTitle">시간표 1</h2>
+            </div>
+            <div class="timetable-stats">
+              <span><strong id="appliedCredits">15</strong>학점</span>
+              <span>총 <strong id="totalCredits">82</strong>학점</span>
+            </div>
           </div>
           <div id="timetableContainer" class="timetable-container"></div>
         </article>
 
         <aside class="side-stack">
-          <article class="card">
-            <div class="card-head">
-              <h2>빠른 메뉴</h2>
-            </div>
-            <div class="yeogi-quick-grid">
-              <a class="yeogi-quick-card" href="generate.html">
-                <span class="yeogi-quick-icon">📅</span>
-                <span class="yeogi-quick-title">시간표 생성</span>
-                <span class="yeogi-quick-desc">강의를 검색하고 시간표를 완성하세요</span>
-              </a>
-              <a class="yeogi-quick-card" href="classroom.html">
-                <span class="yeogi-quick-icon">🏫</span>
-                <span class="yeogi-quick-title">강의실 현황</span>
-                <span class="yeogi-quick-desc">지금 빈 강의실을 확인하세요</span>
-              </a>
-              <a class="yeogi-quick-card" href="library.html">
-                <span class="yeogi-quick-icon">📚</span>
-                <span class="yeogi-quick-title">도서관 자리</span>
-                <span class="yeogi-quick-desc">열람실 좌석을 확인하고 예약하세요</span>
-              </a>
-              <a class="yeogi-quick-card" href="settings.html">
-                <span class="yeogi-quick-icon">⚙️</span>
-                <span class="yeogi-quick-title">설정</span>
-                <span class="yeogi-quick-desc">학번과 학과 정보를 수정하세요</span>
-              </a>
-            </div>
-          </article>
-
           <article class="card friend-card">
             <div class="card-head">
               <h2>친구 시간표</h2>
@@ -116,17 +81,6 @@
             </div>
             <p id="friendMessage" class="small-note"></p>
             <div id="friendsList" class="friend-list"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-head">
-              <h2>안내</h2>
-            </div>
-            <ul class="info-list">
-              <li>시간은 왼쪽에만 고정해 표시합니다.</li>
-              <li>과목 블록은 30분 단위로 정확히 맞춰 들어갑니다.</li>
-              <li>서로 다른 과목은 서로 다른 색으로 표시됩니다.</li>
-            </ul>
           </article>
         </aside>
       </section>

@@ -583,6 +583,7 @@ function setupIndexPage(state) {
   const semSel     = document.getElementById('semesterSelect');
   const container  = document.getElementById('timetableContainer');
   const title      = document.getElementById('timetableTitle');
+  const termLabel  = document.getElementById('timetableTerm');
 
   const defaultYear = state.year || new Date().getFullYear();
   fillYearOptions(yearSel, defaultYear, admYear);
@@ -590,7 +591,8 @@ function setupIndexPage(state) {
   if (semSel) semSel.value = state.semester || '1학기';
 
   const renderOwnTimetable = () => {
-    if (title) title.textContent = '주간 시간표';
+    if (title) title.textContent = '시간표 1';
+    if (termLabel) termLabel.textContent = `${state.year || new Date().getFullYear()}년 ${state.semester || '1학기'}`;
     renderTimetable(container, state.courses, { retakeCourses: state.retakeCourses });
     setupBlockClicks(container, state);
   };
@@ -667,7 +669,8 @@ async function setupFriendsPanel(state, renderOwnTimetable) {
 
       item.querySelector('.friend-view-btn')?.addEventListener('click', () => {
         const courses = friend?.sharedCourses || [];
-        if (title) title.textContent = `${friendId} 시간표`;
+        if (title) title.textContent = `${friendId}`;
+        if (termLabel) termLabel.textContent = `${state.year}년 ${state.semester} 친구 시간표`;
         renderTimetable(container, courses, { retakeCourses: [] });
         setMsg(`${friendId}님의 ${state.year} ${state.semester} 시간표를 보고 있습니다.`, 'ok');
         if (!list.querySelector('.friend-back-btn')) {
